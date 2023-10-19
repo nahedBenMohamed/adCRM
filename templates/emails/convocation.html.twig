@@ -1,0 +1,74 @@
+{% block body %}
+    <div class="container-fluid col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                CONVOCATION <br>
+                à une formation professionnelle continue
+            </div>
+            <div class="card-body">
+                <div class="container">
+                    <p class="card-text">Stagiaire : {{ dataS.nom }} {{ dataS.Prenom }}</p> {# AJOUTER LE CHEMIN POUR RECUP NOM #}
+                    <p class="card-text">Entreprise/Organisme : {{ dataS.entreprise }} </p>
+                    <p class="card-text">Formateur.trice :  {{ dataF.nom }} {{ dataS.Prenom }}</p>
+                    <h6 class="card-title font-italic text-black"><mark>Important : merci de compléter le formulaire de recueil des attentes avant la
+                            formation</mark></h6>
+                    <p class="card-text"> Madame, Monsieur, <br>
+                        Nous avons le plaisir de vous confirmer votre participation à la formation  {{ dataF.nomFormation }}
+                        qui se tiendra selon les modalités pratiques suivantes : <br> </p>
+
+                    <p class="card-text"> <b>Dates et horaires :</b> <br>
+                         {{ dataF.dateDebutFormation }} et  {{ dataF.dateFinFormation }} </p>
+
+                    <p class="card-text"> <b>Modalité :</b> <br>
+                        {{ dataF.modaliteFormation }} </p>
+
+                    <p class="card-text"><b>Lien de connexion à votre classe virtuelle : </b> <br>
+                        {{ dataF.lienFormation }} </p> {#DONNEE REEL#}
+
+                    <p>
+                        N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles
+                    </p>
+                </div>
+                <div class="container">
+                    <p class="card-text"> Pour suivre votre formation dans de bonnes conditions, vous aurez besoin :  <br> </p>
+                    <ul>
+                        <li>D'une connexion Internet stable</li>
+                        <li>D'un ordinateur équipé d'une sortie son, d'une webcam et d'un micro </li>
+                        <li>De vous assurer d’être au calme pendant la durée de votre formation</li>
+                    </ul>
+                </div>
+                <p> Vous trouverez joints à la présente convocation le programme de la formation,
+                    votre livret d’accueil et le guide d’utilisation de la classe virtuelle sous forme de liens en bas de page. </p>
+            </div>
+
+            <div class="container">
+                <p class="card-text"> Nous vous rappelons qu’il est important : <br></p>
+                <ul>
+                    <li>De nous avertir dans les plus brefs délais, en cas d’absence ou de retard le jour de la formation
+                        aux coordonnées suivantes : 01 46 68 88 88 / <a href="mailto:formation@adconseil.org">formation@adconseil.org</a></li>
+                    <li>D’informer votre employeur en cas d’absence à la formation </li>
+                    <li>De suivre la formation dans son intégralité</li>
+                </ul> <br>
+                <p class="card-text"> Nous restons à votre disposition pour tout complément d'information et vous souhaitons un agréable temps de formation à nos côtés. <br></p>
+            </div> <br>
+
+            <div class="container">
+                <h6 class="card-title font-italic text-black"><b>Documents joints à la convocations (Liens Hypertexte Cliquables) : </b><br></h6>
+                <ul>
+                    <li><a href="https://onedrive.live.com/?authkey=%21AHqs83%5FsKCjsaWU&id=14C71EA35B2C8113%21123088&cid=14C71EA35B2C8113&parId=root&parQt=sharedby&o=OneUp">Programme de votre formation précisant les objectifs et les prérequis</a></li>
+                    <li><a href="https://onedrive.live.com/?authkey=%21APZWp5RKaiB8EWA&id=14C71EA35B2C8113%2166340&cid=14C71EA35B2C8113&parId=root&parQt=sharedby&o=OneUp">Livret d’accueil des stagiaires incluant le règlement intérieur applicable pendant la formation</a></li>
+                    <li><a href="https://adconseil.org/guide-de-votre-classe-virtuelle/">Guide pratique d’utilisation de votre classe virtuelle </a></li>
+                </ul> <br>
+            </div>
+
+            <div class="container">
+                <h6 class="card-title font-italic"><b>Vous êtes en situation de handicap ?</b> <br><h6>
+                        <p class="card-text"> N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <a href="mailto:referent-handicap@adconseil.org">referent-handicap@adconseil.org</a></p>
+            </div>
+
+            <div class="card-footer text-muted text-center">
+                AD CONSEIL
+            </div>
+        </div>
+    </div>
+{% endblock %}

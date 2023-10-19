@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StagiaireController!{% endblock %}
+
+{% block body %}
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h3 class="m-0 font-weight-bold text-primary">Convocation Pour les stagiaires</h3>
+        </div>
+        <div class="card-body">
+        <div class="col-lg-7 mx-auto">
+            <div class="card mt-2 mx-auto p-4 bg-light">
+                <div class="card-body bg-light">
+                    <div class="container">
+                        <h2 class="text-center">Mon formulaire</h2>
+                        {{ form_start(convocationGenerate, {'attr': {'class': 'my-form-class'}}) }}
+                        <div class="form-group">
+                            {{ form_label(convocationGenerate.stagiaire, 'Stagiaire') }}
+                            {{ form_widget(convocationGenerate.stagiaire, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(convocationGenerate.formation, 'Formation') }}
+                            {{ form_widget(convocationGenerate.formation, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(convocationGenerate.message, 'Message') }}
+                            {{ form_widget(convocationGenerate.message, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(convocationGenerate.valider, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
+                        </div>
+                        {{ form_end(convocationGenerate) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+
+{% endblock %}

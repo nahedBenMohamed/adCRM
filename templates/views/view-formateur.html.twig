@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="col-lg-6">
+            <div class="card mb-4 py-1 border-bottom-primary">
+                <div class="card-body">
+                    <h2 class="header-title">Bonjour User Test !</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- LISTE FORMATIONS-->
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h5 class="m-0 font-weight-bold text-primary">Stagiaires</h5>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom</th>
+                        <th scope="col">Fonction</th>
+                        <th scope="col">Employeur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th id = "element-1" scope="row">1</th>
+                        <td>Test</td>
+                        <td>Test</td>
+                        <td>Ingénieur</td>
+                        <td>ESIEE-IT</td>
+                    </tr>
+                    <tr>
+                        <th id = "element-2" scope="row">2</th>
+                        <td>Test</td>
+                        <td>Test</td>
+                        <td>Ingénieur</td>
+                        <td>ESIEE-IT</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

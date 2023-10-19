@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+
+        <!-- LISTE FORMATIONS-->
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h5 class="m-0 font-weight-bold text-primary">EMARGEMENT EN LIGNE </br> </h5>
+                <h6 class="m-0 font-weight-bold text-warning"> Formation professionnelle à distance</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="col-lg-10">
+                <form>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Sélectionner la formation </label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Sélectionner un(e) formateur.trice </label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Date</label>
+                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Date">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="m-0 font-weight-bold text-gray-700">Période : </label>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio1">Matin</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio2">Après-midi</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="m-0 font-weight-bold text-gray-700">Vous êtes : </label>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio1">Formateur.trice</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadio2">Stagiaire</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

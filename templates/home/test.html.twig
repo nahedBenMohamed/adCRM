@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{{ form_start(formSend) }}
+    {{ form_widget(formSend) }}
+
+    <button type ="submit">Send</button>    
+{{ form_end(formSend) }}
+{% endblock %}

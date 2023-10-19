@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AD CONSEIL - Liste des stagiaires {% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h5 class="m-0 font-weight-bold text-primary">Liste des stagiaires</h5>
+                <div class="dropdown no-arrow">
+                   <a href="{{ path('admin') }}" class="btn btn-success btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-cogs"></i>
+                            </span>
+                            <span class="text">Back-office</span>
+                        </a>
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="stagiaires-container">
+               
+                    {% if formation.stagiaire is empty %}
+                        <p class="d-flex justify-content-center align-items-center">Aucun stagiaire enregistré pour cette formation.</p>
+                    {% else %}
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="font-weight-bold text-info">Nom</th>
+                        <th scope="col" class="font-weight-bold text-info">Prénom</th>
+                        <th scope="col" class="font-weight-bold text-info">Email</th>
+                        <th scope="col" class="font-weight-bold text-info">Téléphone</th>
+                        <th scope="col" class="font-weight-bold text-info">Entreprise</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                     {% for form in formation.stagiaire %}
+                    <tr> 
+                       
+                        <td>{{ form.nom }}</td> 
+                        <td>{{ form.Prenom }}</td>
+                        <td>{{ form.email }}</td> 
+                        <td>{{ form.telephone }}</td>
+                        <td>{{ form.entreprise }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

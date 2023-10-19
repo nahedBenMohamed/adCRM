@@ -1,0 +1,12 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+pdf_generate:
+    path: /pdf/generate/{formation}
+    controller: App\Controller\PdfController::generatePdf
+    methods: [GET]
+    requirements:
+        formation: \d+ # Correspond à un ID de type entier
