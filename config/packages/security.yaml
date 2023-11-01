@@ -7,22 +7,10 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         chain_provider:
             chain:
-                providers: [app_gestionnaire_provider, app_employeur_provider, app_formateur_provider, app_stagiaire_provider]
-        app_gestionnaire_provider:
+                providers: [app_user_provider]
+        app_user_provider:
             entity:
-                class: App\Entity\Gestionnaire
-                property: email
-        app_employeur_provider:
-            entity:
-                class: App\Entity\Employeur
-                property: email
-        app_formateur_provider:
-            entity:
-                class: App\Entity\Formateur
-                property: email
-        app_stagiaire_provider:
-            entity:
-                class: App\Entity\Stagiaire
+                class: App\Entity\User
                 property: email
     firewalls:
         dev:
@@ -47,7 +35,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
        # - { path: ^/admin, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_SUPER_ADMIN }
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

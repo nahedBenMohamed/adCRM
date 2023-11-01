@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FormationRepository::class)]
-class Formation 
+class Formation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,12 +37,6 @@ class Formation
     #[ORM\ManyToOne(inversedBy: 'formations')]
     private ?Formateur $formateur = null;
 
-    #[ORM\ManyToMany(targetEntity: Employeur::class, mappedBy: 'formation')]
-    private Collection $employeurs;
-
-    #[ORM\ManyToMany(targetEntity: Stagiaire::class, inversedBy: 'formations')]
-    private Collection $stagiaire;
-
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'formation')]
     private Collection $users;
 
@@ -57,8 +51,6 @@ class Formation
 
     public function __construct()
     {
-        $this->employeurs = new ArrayCollection();
-        $this->stagiaire = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
     public function __toString()
@@ -150,57 +142,6 @@ class Formation
     public function setFormateur(?Formateur $formateur): self
     {
         $this->formateur = $formateur;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Employeur>
-     */
-    public function getEmployeurs(): Collection
-    {
-        return $this->employeurs;
-    }
-
-    public function addEmployeur(Employeur $employeur): self
-    {
-        if (!$this->employeurs->contains($employeur)) {
-            $this->employeurs->add($employeur);
-            $employeur->addFormation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEmployeur(Employeur $employeur): self
-    {
-        if ($this->employeurs->removeElement($employeur)) {
-            $employeur->removeFormation($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Stagiaire>
-     */
-    public function getStagiaire(): Collection
-    {
-        return $this->stagiaire;
-    }
-
-    public function addStagiaire(Stagiaire $stagiaire): self
-    {
-        if (!$this->stagiaire->contains($stagiaire)) {
-            $this->stagiaire->add($stagiaire);
-        }
-
-        return $this;
-    }
-
-    public function removeStagiaire(Stagiaire $stagiaire): self
-    {
-        $this->stagiaire->removeElement($stagiaire);
 
         return $this;
     }

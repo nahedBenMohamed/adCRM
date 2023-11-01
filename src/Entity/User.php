@@ -17,9 +17,8 @@ use Doctrine\ORM\Mapping\DiscriminatorColumn;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType("JOINED")]
 #[DiscriminatorColumn(name: "type", type: "string")]
-#[DiscriminatorMap(["gestionnaire" => Gestionnaire::class, "employeur" => Employeur::class, "stagiaire" => Stagiaire::class, "formateur" => Formateur::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -42,13 +41,13 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $formations;
 
     #[ORM\Column(length: 70, nullable: true)]
-    private ?string $nom = null;
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 70, nullable: true)]
-    private ?string $Prenom = null;
+    private ?string $lastName = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $telephone = null;
+    private ?string $phone = null;
 
     public function __construct()
     {
@@ -149,38 +148,38 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->nom;
+        return $this->firstName;
     }
 
-    public function setNom(?string $nom): self
+    public function setFirstName(?string $firstName): self
     {
-        $this->nom = $nom;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getLastName(): ?string
     {
-        return $this->Prenom;
+        return $this->lastName;
     }
 
-    public function setPrenom(?string $Prenom): self
+    public function setPrenom(?string $lastName): self
     {
-        $this->Prenom = $Prenom;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
-    public function getTelephone(): ?string
+    public function getPhone(): ?string
     {
-        return $this->telephone;
+        return $this->phone;
     }
 
-    public function setTelephone(?string $telephone): self
+    public function setPhone(?string $phone): self
     {
-        $this->telephone = $telephone;
+        $this->phone = $phone;
 
         return $this;
     }
