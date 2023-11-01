@@ -25,7 +25,7 @@ class Formateur extends User
     public function __construct()
     {
         $this->formations = new ArrayCollection();
-    
+
     }
 
     /**
@@ -74,5 +74,5 @@ class Formateur extends User
 
         return $this;
     }
-    
+
 }

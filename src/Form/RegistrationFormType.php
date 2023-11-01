@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\textType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,34 +19,34 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email')
-
-            ->add('agreeTerms', CheckboxType::class, [
+            ->add('firstName',   textType::class,[
+                'label' =>'Nom',
                 'mapped' => false,
-                'required' => true,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devez accepté les termes',
-                    ]),
-                ],
             ])
-            
+
+            ->add('lastName',   textType::class,[
+                'label' =>'Prénom',
+                'mapped' => false,
+            ])
+
+            ->add('phone',   textType::class,[
+                'label' =>'Télephone',
+                'mapped' => false,
+            ])
+
             ->add('password', RepeatedType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'type' => PasswordType::class,
                 'mapped' => true,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
                 'attr' => ['class' => 'password-field'],
                 'required' => true,
 
                 'first_options'  => array(
-                    'label' => 'Password',
-                    'attr' => array('placeholder' => 'Enter password')
+                    'label' => 'Mot de passe'
                 ),
 
                 'second_options' => array(
-                    'label' => 'Repeat Password',
-                    'attr' => array('placeholder' => 'Retype password')
+                    'label' => 'Répéter le mot de passe'
                 ),
 
                 'constraints' => [
