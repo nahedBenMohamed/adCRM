@@ -43,13 +43,6 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div><!-- End Search Bar -->
-
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
@@ -69,7 +62,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{{path('app_edit_user',{ 'id': app.user.id })}}">
                 <i class="bi bi-person"></i>
                 <span>Mon profile</span>
               </a>
@@ -112,25 +105,32 @@
       </li><!-- End Formations Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/">
+        <a class="nav-link collapsed" href="{{path('app_trainees')}}">
           <i class="bx bxs-user-account"></i>
-          <span>Stagiaire</span>
+          <span>Stagiaires</span>
         </a>
       </li><!-- End Stagiaire Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
+        <a class="nav-link collapsed" href="{{path('app_teachers')}}">
+          <i class="bx bxs-user-account"></i>
+          <span>Formateurs</span>
         </a>
-      </li><!-- End Contact Page Nav -->
+      </li><!-- End Stagiaire Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{path('app_user')}}">
           <i class="bx bxs-user-detail"></i>
-          <span>Utilisateurs</span>
+          <span>Administrateurs</span>
         </a>
       </li><!-- End Utilisateurs Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{path('app_edit_user',{ 'id': app.user.id })}}">
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
     </ul>
 
   </aside><!-- End Sidebar-->
