@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\TraineeFormType;
+use App\Form\UpdateUserFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,17 +16,18 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserController extends AbstractController
 {
+    /** User CRUD */
     #[Route('/user', name: 'app_user')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $users = $entityManager->getRepository(User::class)->findAll();
+        $users = $entityManager->getRepository(User::class)->findUsers("ROLE_SUPER_ADMIN");
         return $this->render('user/index.html.twig', [
             'users' => $users,
         ]);
     }
 
     #[Route('/user/add', name: 'app_add_user')]
-    public function registerGestionnaire(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, EntityManagerInterface $entityManager): Response
+    public function addUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -48,6 +51,88 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_user');
         }
         return $this->render('user/new.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/user/profile/{id}', name: 'app_edit_user')]
+    public function updateUserProfile(Request $request, EntityManagerInterface $entityManager, $id): Response
+    {
+        if($id) {
+            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        } else {
+            $user = $this->getUser();
+        }
+        $form = $this->createForm(UpdateUserFormType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            // do anything else you need here, like send an email
+            return $this->redirectToRoute('app_user');
+        }
+        return $this->render('user/update.html.twig', [
+            'setUserForm' => $form->createView(),
+        ]);
+    }
+    /** Trainees CRUD */
+    #[Route('/user/trainees', name: 'app_trainees')]
+    public function listOfTrainees(EntityManagerInterface $entityManager): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findUsers('ROLE_TRAINEE');
+        return $this->render('user/trainees.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    #[Route('/user/addTrainee', name: 'app_add_trainee')]
+    public function addTrainees(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(TraineeFormType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            //set default password for Trainees
+            $user->setPassword('00000000');
+
+            $user->setRoles(['ROLE_TRAINEE']);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_trainees');
+        }
+        return $this->render('user/new_trainee.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
+    /** Teacher CRUD */
+    #[Route('/user/teachers', name: 'app_teachers')]
+    public function listOfTeacher(EntityManagerInterface $entityManager): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findUsers('ROLE_TEACHER');
+        return $this->render('user/teachers.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    #[Route('/user/addTeacher', name: 'app_add_teacher')]
+    public function addTeacher(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(TraineeFormType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            //set default password for Trainees
+            $user->setPassword('00000000');
+
+            $user->setRoles(['ROLE_TEACHER']);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_teachers');
+        }
+        return $this->render('user/new_teacher.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }

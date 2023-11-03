@@ -1,0 +1,49 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ajouter un nouveau formateur</h5>
+
+                        <!-- add user Form -->
+                        {{ form_start(registrationForm) }}
+                        <div class="row mb-3">
+                            {{ form_row(registrationForm.firstName,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(registrationForm.lastName,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(registrationForm.phone,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(registrationForm.email,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-12 offset-9">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </div>
+                        {{ form_end(registrationForm) }} <!-- End add user form -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
