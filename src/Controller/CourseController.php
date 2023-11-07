@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
-use App\Entity\FormationUser;
+use App\Entity\Trainee;
+use App\Entity\TraineeFormation;
 use App\Entity\User;
 use App\Form\FormationFormType;
 use App\Form\TraineeFormationFormType;
@@ -34,16 +35,13 @@ class CourseController extends AbstractController
         $course = new Formation();
         $form = $this->createForm(FormationFormType::class, $course);
         $form->handleRequest($request);
-        $formationUser = new FormationUser();
+        $formationUser = new TraineeFormation();
         $formTrainee = $this->createForm(TraineeFormationFormType::class, $formationUser);
         $formTrainee->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($course);
             $entityManager->flush();
-    
-            if ($request->request->has('proceed')) {
-                return new JsonResponse(['success' => true]);
-            }
+            return new JsonResponse(['courseId' => $course->getId()]);
         }
     
         return $this->render('courses/add.html.twig', [
@@ -55,11 +53,12 @@ class CourseController extends AbstractController
     public function createFormationUsers(Request $request, EntityManagerInterface $entityManager)
         {
             $data = json_decode($request->getContent(), true);
-
-            foreach ($data['selectedUserIds'] as $userId) {
-                $formationUser = new FormationUser();
-                $formationUser->setFormation($entityManager->getReference(Formation::class, $data['formationId']));
-                $formationUser->setUser($entityManager->getReference(User::class, $userId));
+            $formation = $entityManager->getRepository(Formation::class)->find($data['formationId']);
+            foreach ($data['selectedUserIds'] as $traineeId) {
+                $trainee = $entityManager->getRepository(Trainee::class)->find($traineeId);
+                $formationUser = new TraineeFormation();
+                $formationUser->setFormation($formation);
+                $formationUser->setTrainee($trainee);
 
                 $entityManager->persist($formationUser);
             }

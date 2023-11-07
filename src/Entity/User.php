@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\ManyToMany(targetEntity: Formation::class, mappedBy: 'users')]
+    #[ORM\OneToMany(targetEntity: Formation::class, mappedBy: "formateur")]
     private Collection $formations;
 
     #[ORM\Column(length: 70, nullable: true)]
@@ -132,11 +132,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->formations;
     }
 
-    public function addFormation(Formation $formation): self
+    public function addFormation(Formation $formations): self
     {
-        if (!$this->formations->contains($formation)) {
-            $this->formations->add($formation);
-            $formation->addUser($this);
+        if (!$this->formations->contains($formations)) {
+            $this->formations->add($formations);
         }
 
         return $this;

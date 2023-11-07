@@ -2,9 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\FormationUser;
-use App\Entity\User;
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Trainee;
+use App\Entity\TraineeFormation;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,26 +20,21 @@ class TraineeFormationFormType extends AbstractType
                 'required' => true,
                 'disabled' => true,
             ])
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => function($user) {
-                    return $user->getFirstName() . ' ' . $user->getLastName();
+            ->add('trainee', EntityType::class, [
+                'class' => Trainee::class,
+                'choice_label' => function($trainee) {
+                    return $trainee->getFirstName() . ' ' . $trainee->getLastName();
                 },
                 'label' => 'Stagiaires',
                 'required' => true,
-                'multiple' => true,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->where('u.roles LIKE :roles')
-                        ->setParameter('roles', '["ROLE_TRAINEE"]');
-                },
+                'multiple' => true
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => FormationUser::class,
+            'data_class' => TraineeFormation::class,
         ]);
     }
 }

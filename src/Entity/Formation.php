@@ -34,12 +34,32 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $pdfFormation = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?User $user = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
+    private ?User $formateur;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'formations')]
-    #[ORM\JoinTable(name: 'formation_user')]
-    private Collection $users;
+    #[ORM\ManyToMany(targetEntity: Trainee::class, mappedBy: "formations")]
+    private Collection $trainees;
+
+    public function __construct() {
+        $this->trainees = new ArrayCollection();
+    }
+
+    public function addTrainee(Trainee $trainee): self {
+        if (!$this->trainees->contains($trainee)) {
+            $this->trainees[] = $trainee;
+            $trainee->addFormation($this); 
+        }
+
+        return $this;
+    }
+
+    public function removeTrainee(Trainee $trainee): self {
+        if ($this->trainees->removeElement($trainee)) {
+            $trainee->removeFormation($this); 
+        }
+
+        return $this;
+    }
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDebutFormation = null;
@@ -50,10 +70,6 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $modaliteFormation = null;
 
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
     public function __toString()
     {
         return $this->getNomFormation();
@@ -135,40 +151,14 @@ class Formation
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getFormateur(): ?User
     {
-        return $this->user;
+        return $this->formateur;
     }
 
-    public function setUser(?User $user): self
+    public function setFormateur(?User $formateur): self
     {
-        $this->user = $user;
-
-        return $this;
-    } 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-        {
-            if (!$this->users->contains($user)) {
-                $this->users->add($user);
-                $user->addFormation($this);
-            }
-
-            return $this;
-        }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeFormation($this);
-        }
+        $this->formateur = $formateur;
 
         return $this;
     }

@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Formateur;
 use App\Entity\Formation;
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -53,7 +52,7 @@ class FormationFormType extends AbstractType
                 'required' => true,
             ])
             
-            ->add('user', EntityType::class, [
+            ->add('formateur', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function($user) {
                     return $user->getFirstName() . ' ' . $user->getLastName();

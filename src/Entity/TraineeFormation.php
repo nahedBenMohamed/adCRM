@@ -2,10 +2,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\FormationUserRepository;
+use App\Repository\TraineeFormationRepository;
 
-#[ORM\Entity(repositoryClass: FormationUserRepository::class)]
-class FormationUser
+#[ORM\Entity(repositoryClass: TraineeFormationRepository::class)]
+class TraineeFormation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,9 +16,9 @@ class FormationUser
     #[ORM\JoinColumn(name: "formation_id", referencedColumnName: "id")]
     private $formation;
 
-    #[ORM\ManyToOne(targetEntity: "User")]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    private $user;
+    #[ORM\ManyToOne(targetEntity: "Trainee")]
+    #[ORM\JoinColumn(name: "trainee_id", referencedColumnName: "id")]
+    private $trainee;
 
     public function getId(): ?int
     {
@@ -36,14 +36,14 @@ class FormationUser
         return $this;
     }
 
-    public function getUser()
+    public function getTrainee()
     {
-        return $this->user;
+        return $this->trainee;
     }
 
-    public function setUser($user)
+    public function setTrainee($trainee)
     {
-        $this->user = $user;
+        $this->trainee = $trainee;
         return $this;
     }
 }

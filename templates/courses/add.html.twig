@@ -93,7 +93,7 @@
                             Formateur
                         </h5>
                         <div class="row mb-3">
-                            {{ form_row(formationForm.user, 
+                            {{ form_row(formationForm.formateur, 
                                             {'attr': {'class': 'form-control form-control-user' }}
                             ) }}     
                                                         
@@ -132,7 +132,7 @@
                                                                     
                                     </div>
                                     <div class="row mb-3">
-                                        {{ form_row(formationUserForm.user, 
+                                        {{ form_row(formationUserForm.trainee, 
                                                         {'attr': {'class': 'form-control form-control-user' }}
                                         ) }}     
                                                                     
@@ -158,7 +158,8 @@
         </div>
     </section>
     <script>
-         
+        var selectedId = 0
+        var courseId = 0
         document.addEventListener('DOMContentLoaded', function() {
             var form = document.getElementsByName('formation_form');
             var tabs = document.querySelectorAll('.nav-link');
@@ -167,25 +168,27 @@
                     event.preventDefault();
                     var formData = new FormData(form[0]);
 
-                    fetch(form[0].action, {
+                    fetch('/courses/add', {
                         method: form[0].method,
                         body: formData
                     })
-                    .then(function(response) {
-                    const dropdown = document.getElementById('formation_form_user');
-                    const selectedOption = dropdown.options[dropdown.selectedIndex];
-                    const selectedId = selectedOption.value;
-                    const selectedText = selectedOption.textContent;
-                    document.getElementById('trainee_formation_form_formation').value = selectedText;
-                    document.querySelectorAll('.tab-pane')[1].classList.remove('show', 'active');
-                    document.querySelectorAll('.tab-pane')[2].classList.add('show', 'active');
-                    document.getElementById('tab-2').disabled = false;
-                    document.getElementById('proceed').disabled = true;
-                    document.getElementById('tab-1').classList.remove('active');
-                    document.getElementById('tab-2').classList.add('active');
-                    
-                    tabs[2].setAttribute('aria-selected', 'true');
-                        return response;
+                    .then(response => response.json())
+                    .then(function (data) {
+                        if (data.courseId) {
+                            courseId = data.courseId;
+                        }
+                        const dropdown = document.getElementById('formation_form_formateur');
+                        const selectedOption = dropdown.options[dropdown.selectedIndex];
+                        selectedId = selectedOption.value;
+                        const selectedText = selectedOption.textContent;
+                        document.getElementById('trainee_formation_form_formation').value = selectedText;
+                        document.querySelectorAll('.tab-pane')[1].classList.remove('show', 'active');
+                        document.querySelectorAll('.tab-pane')[2].classList.add('show', 'active');
+                        document.getElementById('tab-2').disabled = false;
+                        document.getElementById('proceed').disabled = true;
+                        document.getElementById('tab-1').classList.remove('active');
+                        document.getElementById('tab-2').classList.add('active');
+                        tabs[2].setAttribute('aria-selected', 'true')
                     })
                     .catch(function(error) {
                         console.log('Error:', error);
@@ -232,7 +235,7 @@
         });
         
         lastButton.addEventListener('click', function() {
-            const selectElement = document.getElementById('trainee_formation_form_user');  
+            const selectElement = document.getElementById('trainee_formation_form_trainee');  
             const selectedOptions = [];
 
             for (const option of selectElement.options) {
@@ -241,11 +244,10 @@
               }
             }
             const data = {
-                formationId: selectedId,
+                formationId: courseId,
                 selectedUserIds: selectedOptions
             };
 
-            console.log(data)
             fetch('/courses/create-formation-users', {
                 method: 'POST',
                 headers: {
@@ -254,6 +256,7 @@
                 body: JSON.stringify(data)
             })
                 .then(response => {
+                    window.location.href = '/courses';
                 })
                 .catch(error => {
                     console.log(error)
