@@ -132,10 +132,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->formations;
     }
 
-    public function addFormation(Formation $formations): self
+    public function addFormation(Formation $formation): self
     {
-        if (!$this->formations->contains($formations)) {
-            $this->formations->add($formations);
+        if (!$this->formations->contains($formation)) {
+            $this->formations->add($formation);
+            $formation->addUser($this);
         }
 
         return $this;

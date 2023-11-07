@@ -34,10 +34,11 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $pdfFormation = null;
 
-    #[ORM\ManyToOne(inversedBy: 'formations')]
-    private ?Formateur $formateur = null;
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?User $user = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'formation')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'formations')]
+    #[ORM\JoinTable(name: 'formation_user')]
     private Collection $users;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -134,18 +135,17 @@ class Formation
         return $this;
     }
 
-    public function getFormateur(): ?Formateur
+    public function getUser(): ?User
     {
-        return $this->formateur;
+        return $this->user;
     }
 
-    public function setFormateur(?Formateur $formateur): self
+    public function setUser(?User $user): self
     {
-        $this->formateur = $formateur;
+        $this->user = $user;
 
         return $this;
-    }
-
+    } 
     /**
      * @return Collection<int, User>
      */
@@ -155,14 +155,14 @@ class Formation
     }
 
     public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addFormation($this);
-        }
+        {
+            if (!$this->users->contains($user)) {
+                $this->users->add($user);
+                $user->addFormation($this);
+            }
 
-        return $this;
-    }
+            return $this;
+        }
 
     public function removeUser(User $user): self
     {
