@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Trainee;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\TraineeFormType;
@@ -80,7 +81,7 @@ class UserController extends AbstractController
     #[Route('/user/trainees', name: 'app_trainees')]
     public function listOfTrainees(EntityManagerInterface $entityManager): Response
     {
-        $users = $entityManager->getRepository(User::class)->findUsers('ROLE_TRAINEE');
+        $users = $entityManager->getRepository(Trainee::class)->findAll();
         return $this->render('user/trainees.html.twig', [
             'users' => $users,
         ]);
@@ -89,15 +90,11 @@ class UserController extends AbstractController
     #[Route('/user/addTrainee', name: 'app_add_trainee')]
     public function addTrainees(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = new User();
+        $user = new Trainee();
         $form = $this->createForm(TraineeFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            //set default password for Trainees
-            $user->setPassword('00000000');
-
-            $user->setRoles(['ROLE_TRAINEE']);
             $entityManager->persist($user);
             $entityManager->flush();
             return $this->redirectToRoute('app_trainees');

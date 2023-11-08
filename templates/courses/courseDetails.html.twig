@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="card-body">
+    <h5 class="card-title">Informations générales</h5>
+    {{ form_start(formationForm) }}
+    <div class="row mb-3">
+        {{ form_row(formationForm.nomFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+        <div class="row mb-3">
+        {{ form_row(formationForm.domaineFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+        <div class="row mb-3">
+        {{ form_row(formationForm.adresseFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+        <div class="row mb-3">
+        {{ form_row(formationForm.lienFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+        <div class="row mb-3">
+        {{ form_row(formationForm.dureeFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+
+        <div class="row mb-3">
+        {{ form_row(formationForm.dateDebutFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+        <div class="row mb-3">
+        {{ form_row(formationForm.dateFinFormation, 
+                        {'attr': {'class': 'form-control form-control-user'}}
+                        ) }}     
+        </div>
+
+    
+        <div class="row mb-3">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-success" name="save">Enregistrer</button>
+            <button type="submit" class="btn btn-primary" id="formateur-tab" name="proceed" data-bs-target="#formateur" role="tab" aria-controls="formateur">Enregister et procéder</button>
+         </div>
+        </div>
+    {{ form_end(formationForm) }}
+    </div>
+</div>

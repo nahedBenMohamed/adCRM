@@ -1,0 +1,266 @@
+{% extends 'baseAdmin.html.twig' %}
+{% block title %}
+    Ajouter une formation
+{% endblock %}
+{% block body %}
+    <section class="section">
+        <h3 class="card-title">
+            Ajouter une nouvelle formation
+        </h3>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="true">
+                    Informations générales
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#formateur" type="button" role="tab" aria-controls="formateur" aria-selected="false">
+                    Formateur
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-2" disabled="false" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active tab1" id="details" role="tabpanel" aria-labelledby="tab-0">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Informations générales
+                        </h5>
+                        {{ form_start(formationForm) }}
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.nomFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.domaineFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.adresseFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.lienFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.dureeFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.dateDebutFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.dateFinFormation, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-auto me-auto">
+                                
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-primary" id="nextButton">
+                                    Suivant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade tab2" id="formateur" role="tabpanel" aria-labelledby="tab-1">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Formateur
+                        </h5>
+                        <div class="row mb-3">
+                            {{ form_row(formationForm.formateur, 
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                            ) }}     
+                                                        
+                        </div>
+                        <div class="row">
+                            <div class="col-auto me-auto">
+                                <button type="button" class="btn btn-primary" id="prevButton">
+                                    Précédent
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" name="proceed" id="proceed" class="btn btn-primary">
+                                    Suivant
+                                </button>
+                            </div>
+                        </div>
+                            
+                        {{ form_end(formationForm) }}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Stagiaires</h5>  
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        Informations générales
+                                    </h5>
+                                    {{ form_start(formationUserForm) }}
+                                    <div class="row mb-3">
+                                        {{ form_row(formationUserForm.formation, 
+                                                        {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}     
+                                                                    
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationUserForm.trainee, 
+                                                        {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}     
+                                                                    
+                                    </div>
+                                    {{ form_end(formationUserForm) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto me-auto">
+                                    <button type="button" class="btn btn-primary" id="prevButton">
+                                        Précédent
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary" id="lastButton">
+                                        terminer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+            </div>
+        </div>
+    </section>
+    <script>
+        var selectedId = 0
+        var courseId = 0
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementsByName('formation_form');
+            var tabs = document.querySelectorAll('.nav-link');
+            if (form) {
+                form[0].addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    var formData = new FormData(form[0]);
+
+                    fetch('/courses/add', {
+                        method: form[0].method,
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(function (data) {
+                        if (data.courseId) {
+                            courseId = data.courseId;
+                        }
+                        const dropdown = document.getElementById('formation_form_formateur');
+                        const selectedOption = dropdown.options[dropdown.selectedIndex];
+                        selectedId = selectedOption.value;
+                        const selectedText = selectedOption.textContent;
+                        document.getElementById('trainee_formation_form_formation').value = selectedText;
+                        document.querySelectorAll('.tab-pane')[1].classList.remove('show', 'active');
+                        document.querySelectorAll('.tab-pane')[2].classList.add('show', 'active');
+                        document.getElementById('tab-2').disabled = false;
+                        document.getElementById('proceed').disabled = true;
+                        document.getElementById('tab-1').classList.remove('active');
+                        document.getElementById('tab-2').classList.add('active');
+                        tabs[2].setAttribute('aria-selected', 'true')
+                    })
+                    .catch(function(error) {
+                        console.log('Error:', error);
+                    });
+                });
+            }
+            var nextButton = document.getElementById('nextButton');
+            var prevButton = document.getElementById('prevButton');
+            var activeTab = 0;
+
+            nextButton.addEventListener('click', function() {
+                document.getElementById('tab-'+activeTab).classList.remove('active');
+                tabs[activeTab].setAttribute('aria-selected', 'false');
+                document.querySelectorAll('.tab-pane')[activeTab].classList.remove('show', 'active');
+
+                activeTab++;
+                if (activeTab >= tabs.length) {
+                    activeTab = 0;
+                }
+
+                document.getElementById('tab-'+activeTab).classList.add('active');
+                tabs[activeTab].setAttribute('aria-selected', 'true');
+                document.querySelectorAll('.tab-pane')[activeTab].classList.add('show', 'active');
+                tabs[activeTab].removeAttribute('disabled');
+                document.querySelectorAll('.tab-pane')[activeTab].querySelectorAll('button').forEach(button => button.removeAttribute('disabled'));
+            });
+
+            prevButton.addEventListener('click', function() {
+                document.getElementById('tab-'+activeTab).classList.remove('active');
+                tabs[activeTab].setAttribute('aria-selected', 'false');
+                document.querySelectorAll('.tab-pane')[activeTab].classList.remove('show', 'active');
+
+                activeTab--;
+                if (activeTab < 0) {
+                    activeTab = tabs.length - 1;
+                }
+
+                document.getElementById('tab-'+activeTab).classList.add('active');
+                tabs[activeTab].setAttribute('aria-selected', 'true');
+                document.querySelectorAll('.tab-pane')[activeTab].classList.add('show', 'active');
+                tabs[activeTab].removeAttribute('disabled');
+                document.querySelectorAll('.tab-pane')[activeTab].querySelectorAll('button').forEach(button => button.removeAttribute('disabled'));
+            });
+        });
+        
+        lastButton.addEventListener('click', function() {
+            const selectElement = document.getElementById('trainee_formation_form_trainee');  
+            const selectedOptions = [];
+
+            for (const option of selectElement.options) {
+              if (option.selected) {
+                selectedOptions.push(option.value);
+              }
+            }
+            const data = {
+                formationId: courseId,
+                selectedUserIds: selectedOptions
+            };
+
+            fetch('/courses/create-formation-users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    window.location.href = '/courses';
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        });
+    </script>
+{% endblock %}

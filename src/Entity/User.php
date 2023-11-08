@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\ManyToMany(targetEntity: Formation::class, mappedBy: 'users')]
+    #[ORM\OneToMany(targetEntity: Formation::class, mappedBy: "formateur")]
     private Collection $formations;
 
     #[ORM\Column(length: 70, nullable: true)]
