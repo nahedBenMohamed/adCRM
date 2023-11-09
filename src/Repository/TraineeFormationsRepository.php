@@ -4,7 +4,7 @@ namespace App\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class TraineeFormationRepository extends ServiceEntityRepository
+class TraineeFormationsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

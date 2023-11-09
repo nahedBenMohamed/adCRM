@@ -2,10 +2,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\TraineeFormationRepository;
+use App\Repository\TraineeFormationsRepository;
 
-#[ORM\Entity(repositoryClass: TraineeFormationRepository::class)]
-class TraineeFormation
+#[ORM\Entity(repositoryClass: TraineeFormationsRepository::class)]
+class TraineeFormations
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

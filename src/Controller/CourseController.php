@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Formation;
 use App\Entity\Trainee;
-use App\Entity\TraineeFormation;
+use App\Entity\TraineeFormations;
 use App\Entity\User;
 use App\Form\FormationFormType;
 use App\Form\TraineeFormationFormType;
@@ -35,7 +35,7 @@ class CourseController extends AbstractController
         $course = new Formation();
         $form = $this->createForm(FormationFormType::class, $course);
         $form->handleRequest($request);
-        $formationUser = new TraineeFormation();
+        $formationUser = new TraineeFormations();
         $formTrainee = $this->createForm(TraineeFormationFormType::class, $formationUser);
         $formTrainee->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,7 +56,7 @@ class CourseController extends AbstractController
             $formation = $entityManager->getRepository(Formation::class)->find($data['formationId']);
             foreach ($data['selectedUserIds'] as $traineeId) {
                 $trainee = $entityManager->getRepository(Trainee::class)->find($traineeId);
-                $formationUser = new TraineeFormation();
+                $formationUser = new TraineeFormations();
                 $formationUser->setFormation($formation);
                 $formationUser->setTrainee($trainee);
 
