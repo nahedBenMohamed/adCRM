@@ -5,7 +5,7 @@
 {% block body %}
     <section class="section">
         <h3 class="card-title">
-            Ajouter une nouvelle formation
+            Modfier la formation <b> {{ formation.nomFormation }}</b>
         </h3>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -14,7 +14,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-2" disabled="false" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+                <button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="true">Stagiaires</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -24,6 +24,7 @@
                         <h5 class="card-title">
                             Informations générales
                         </h5>
+                        {{ form_start(formationForm) }}
                         <div class="row">
                             <div class="col-md-6">
                                 {{ form_start(formationForm) }}
@@ -87,9 +88,10 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-auto me-auto">
+
                             </div>
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary">
@@ -102,25 +104,78 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Stagiaires</h5>  
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Informations générales
-                                    </h5>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Stagiaires</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6"> <h5 class="card-title">
+                                            Liste des stagières de la formation <b> {{ formation.nomFormation }}</b>
+                                        </h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" class="link-right"> <i class="bi bi-person-plus"></i> Ajouter stagières à la formation</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary" id="lastButton">
-                                        terminer
-                                    </button>
+                                {% if trainees|length > 0 %}
+                                <div class="row">
+                                    <div class="col-md-6 offset-md-8">
+                                        <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" type="button" class="btn btn-warning"><i class="bi bi-envelope-fill m-1"></i> Envoyer convocation à tous les stagiaires</a></div>
                                 </div>
+                                {% endif %}
+
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Prénom</th>
+                                        <th scope="col">Tél</th>
+                                        <th scope="col">E-Mail</th>
+                                        <th scope="col">Entreprise/Organisme</th>
+                                        <th scope="col">Fonction</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for trainee in trainees %}
+                                    <tr>
+                                        <td>{{ trainee.id }}</td>
+                                        <td>{{ trainee.firstName }}</td>
+                                        <td>{{ trainee.lastName }}</td>
+                                        <td>{{ trainee.phone }}</td>
+                                        <td>{{ trainee.email }}</td>
+                                        <td>{{ trainee.company }}</td>
+                                        <td>{{ trainee.function }}</td>
+                                        <td>
+                                            <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Envoyer convocation" class="btn btn-outline-success">
+                                                <i class="bi bi-envelope"></i>
+                                            </a>
+                                            <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="btn btn-outline-danger">
+                                                <i class="bi bi-trash3-fill"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </div>   
+                        <div class="row">
+                            <div class="col-auto me-auto">
+                                <button type="button" class="btn btn-primary" id="prevButton">
+                                    Précédent
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">
+                                    terminer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

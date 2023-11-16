@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\FormationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,7 +21,10 @@ class Formation
     private ?string $dureeFormation = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $domaineFormation = null;
+    private ?string $timesheet = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $zoomAccount = null;
 
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $lienFormation = null;
@@ -32,34 +33,15 @@ class Formation
     private ?string $adresseFormation = null;
 
     #[ORM\Column(length: 255,nullable: true)]
+    private ?string $signatureAddress = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $objective = null;
+    #[ORM\Column(length: 255,nullable: true)]
     private ?string $pdfFormation = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
     private ?User $formateur;
-
-    #[ORM\ManyToMany(targetEntity: Trainee::class, mappedBy: "formations")]
-    private Collection $trainees;
-
-    public function __construct() {
-        $this->trainees = new ArrayCollection();
-    }
-
-    public function addTrainee(Trainee $trainee): self {
-        if (!$this->trainees->contains($trainee)) {
-            $this->trainees[] = $trainee;
-            $trainee->addFormation($this); 
-        }
-
-        return $this;
-    }
-
-    public function removeTrainee(Trainee $trainee): self {
-        if ($this->trainees->removeElement($trainee)) {
-            $trainee->removeFormation($this); 
-        }
-
-        return $this;
-    }
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDebutFormation = null;
@@ -70,10 +52,6 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $modaliteFormation = null;
 
-    public function __toString()
-    {
-        return $this->getNomFormation();
-    }
     public function getId(): ?int
     {
         return $this->id;
@@ -103,14 +81,14 @@ class Formation
         return $this;
     }
 
-    public function getDomaineFormation(): ?string
+    public function getZoomAccount(): ?string
     {
-        return $this->domaineFormation;
+        return $this->zoomAccount;
     }
 
-    public function setDomaineFormation(string $domaineFormation): self
+    public function setZoomAccount(string $zoomAccount): self
     {
-        $this->domaineFormation = $domaineFormation;
+        $this->zoomAccount = $zoomAccount;
 
         return $this;
     }
@@ -195,6 +173,39 @@ class Formation
     public function setModaliteFormation(?string $modaliteFormation): self
     {
         $this->modaliteFormation = $modaliteFormation;
+
+        return $this;
+    }
+
+    public function getTimesheet(): ?string
+    {
+        return $this->timesheet;
+    }
+    public function setTimesheet(string $timesheet): self
+    {
+        $this->timesheet = $timesheet;
+
+        return $this;
+    }
+
+    public function getSignatureAddress(): ?string
+    {
+        return $this->signatureAddress;
+    }
+    public function setSignatureAddress(string $signatureAddress): self
+    {
+        $this->signatureAddress = $signatureAddress;
+
+        return $this;
+    }
+
+    public function getObjective(): ?string
+    {
+        return $this->objective;
+    }
+    public function setObjective(string $objective): self
+    {
+        $this->objective = $objective;
 
         return $this;
     }

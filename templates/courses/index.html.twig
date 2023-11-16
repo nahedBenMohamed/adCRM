@@ -19,11 +19,10 @@
                         <table class="table datatable">
                             <thead>
                             <tr>
-                                <th scope="col">Nom</th>
+                                <th scope="col">Intitulé</th>
                                 <th scope="col">Durée</th>
-                                <th scope="col">Domaine</th>
-                                <th scope="col">Lien</th>
-                                <th scope="col">Adresse</th>
+                                <th scope="col">Lieu/modalité</th>
+                                <th scope="col">Nombre total d'heures</th>
                                 <th scope="col">Début</th>
                                 <th scope="col">Fin</th>
                                 <th scope="col">Actions</th>
@@ -34,18 +33,14 @@
                             <tr>
                                 <td>{{course.nomFormation}}</td>
                                 <td>{{course.dureeFormation}}</td>
-                                <td>{{course.domaineFormation}}</td>
-                                <td>{{course.lienFormation | slice(0, 20)}}...</td>
+                                <td>{{course.timesheet}}</td>
                                 <td>{{course.adresseFormation | slice(0, 20)}}...</td>
                                 <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
                                 <td>{{course.dateFinFormation |date('d-m-Y')}}</td>
                                 <td>
-                                <button class="btn btn-outline-secondary" type="submit">
-                                      <i class="bi bi-search"></i>
-                                </button>
-                                <button class="btn btn-outline-warning" type="submit">
+                                <a href="{{ path('app_courses_edit', { 'id':course.id }) }}" class="btn btn-outline-warning">
                                       <i class="bi bi-pencil-square"></i>
-                                </button>
+                                </a>
                                 <button class="btn btn-outline-danger" type="submit">
                                       <i class="bi bi-trash3-fill"></i>
                                 </button>

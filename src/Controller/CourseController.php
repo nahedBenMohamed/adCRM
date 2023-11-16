@@ -8,8 +8,12 @@ use App\Entity\TraineeFormation;
 use App\Entity\User;
 use App\Form\FormationFormType;
 use App\Form\TraineeFormationFormType;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,36 +39,115 @@ class CourseController extends AbstractController
         $course = new Formation();
         $form = $this->createForm(FormationFormType::class, $course);
         $form->handleRequest($request);
-        $formationUser = new TraineeFormation();
-        $formTrainee = $this->createForm(TraineeFormationFormType::class, $formationUser);
-        $formTrainee->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($course);
             $entityManager->flush();
-            return new JsonResponse(['courseId' => $course->getId()]);
+            return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
         }
     
         return $this->render('courses/add.html.twig', [
-            'formationForm' => $form->createView(),
-            'formationUserForm' => $formTrainee->createView(),
+            'formationForm' => $form->createView()
         ]);
     }
-    #[Route('/courses/create-formation-users', name: 'app_courses_add_trainees')]
-    public function createFormationUsers(Request $request, EntityManagerInterface $entityManager)
-        {
-            $data = json_decode($request->getContent(), true);
-            $formation = $entityManager->getRepository(Formation::class)->find($data['formationId']);
-            foreach ($data['selectedUserIds'] as $traineeId) {
-                $trainee = $entityManager->getRepository(Trainee::class)->find($traineeId);
-                $formationUser = new TraineeFormation();
-                $formationUser->setFormation($formation);
-                $formationUser->setTrainee($trainee);
 
-                $entityManager->persist($formationUser);
-            }
-
-            $entityManager->flush();
-
-            return new JsonResponse(['message' => 'FormationUser records created']);
+    #[Route('/courses/edit/{id}', name: 'app_courses_edit')]
+    public function updateCourse(Request $request, EntityManagerInterface $entityManager, $id): Response
+    {
+        $course =  $entityManager->getRepository(Formation::class)->find($id);
+        $form = $this->createForm(FormationFormType::class, $course);
+        $form->handleRequest($request);
+        $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course]);
+        $trainees = [];
+        foreach ($formationUser as $item) {
+            array_push($trainees, $item->getTrainee() );
         }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($course);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
+        }
+        return $this->render('courses/edit.html.twig', [
+            'formationForm' => $form->createView(),
+            'formation' => $course,
+            'trainees' => $trainees
+
+        ]);
+    }
+
+    #[Route('/courses/deleteTrainee/{idFormation}/{idTrainee}', name: 'app_trainee_formation_delete')]
+    public function deleteTraineeFromFormation(Request $request, EntityManagerInterface $entityManager, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $traineeToDelete = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' =>$trainee]);
+        $entityManager->remove($traineeToDelete);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+
+    }
+
+    #[Route('/courses/sendConvocation/{idFormation}/{idTrainee}', name: 'app_trainee_send_conv')]
+    public function sendConvToTrainee(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
+        $this->generate_pdf($formation,$trainee);
+        $email = (new Email())
+            ->from('nahedbenmohamed57@gmail.com')
+            ->text('Bonjour, voici le doc de convocation')
+            //->html('<p>Lorem ipsum...</p>')
+            ->to('nahed1606@hotmail.fr')
+            ->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
+        $mailer->send($email);
+        $traineesFormation->setSendConvocation(true);
+        $entityManager->persist($traineesFormation);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+    }
+
+    #[Route('/courses/sendConvocation/{idFormation}', name: 'app_allTrainees_send_conv')]
+    public function sendConvToAllTrainees(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        foreach ($traineesFormation as $item) {
+            $trainee = $item->getTrainee();
+            $this->generate_pdf($formation, $trainee);
+            $email = (new Email())
+                ->from('nahedbenmohamed57@gmail.com')
+                ->text('Bonjour, voici le doc de convocation')
+                //->html('<p>Lorem ipsum...</p>')
+                ->to('nahed1606@hotmail.fr')
+                ->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
+            //$mailer->send($email);
+
+            $item->setSendConvocation(true);
+            $entityManager->persist($item);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+    }
+
+    /**
+     * this function generate pdf for the given trainee and the given formation and save it in public/pdf
+     * @param $formation
+     * @param $trainee
+     * @return void
+     */
+    public function generate_pdf($formation, $trainee){
+
+        $options = new Options();
+        $options->set('defaultFont', 'Roboto');
+        $dompdf = new Dompdf($options);
+        $html = $this->renderView('emails/convocation.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $output = $dompdf->output();
+        file_put_contents('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf', $output);
+    }
 }

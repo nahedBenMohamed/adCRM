@@ -7,9 +7,9 @@
             </div>
             <div class="card-body">
                 <div class="container">
-                    <p class="card-text">Stagiaire : {{ dataS.nom }} {{ dataS.Prenom }}</p> {# AJOUTER LE CHEMIN POUR RECUP NOM #}
-                    <p class="card-text">Entreprise/Organisme : {{ dataS.entreprise }} </p>
-                    <p class="card-text">Formateur.trice :  {{ dataF.nom }} {{ dataS.Prenom }}</p>
+                    <p class="card-text">Stagiaire : {{ dataS.firstName }} {{ dataS.lastName }}</p>
+                    <p class="card-text">Entreprise/Organisme : {{ dataS.company }} </p>
+                    <p class="card-text">Formateur.trice :  {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %}</p>
                     <h6 class="card-title font-italic text-black"><mark>Important : merci de compléter le formulaire de recueil des attentes avant la
                             formation</mark></h6>
                     <p class="card-text"> Madame, Monsieur, <br>
@@ -17,14 +17,13 @@
                         qui se tiendra selon les modalités pratiques suivantes : <br> </p>
 
                     <p class="card-text"> <b>Dates et horaires :</b> <br>
-                         {{ dataF.dateDebutFormation }} et  {{ dataF.dateFinFormation }} </p>
+                         {{ dataF.dateDebutFormation|date('d-m-Y') }} et  {{ dataF.dateFinFormation|date('d-m-Y') }} </p>
 
                     <p class="card-text"> <b>Modalité :</b> <br>
                         {{ dataF.modaliteFormation }} </p>
 
                     <p class="card-text"><b>Lien de connexion à votre classe virtuelle : </b> <br>
-                        {{ dataF.lienFormation }} </p> {#DONNEE REEL#}
-
+                        {{ dataF.lienFormation }} </p>
                     <p>
                         N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles
                     </p>

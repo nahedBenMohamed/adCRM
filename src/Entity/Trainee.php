@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\Collection;
+use App\Repository\TraineeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: TraineeRepository::class)]
 class Trainee
 {
     #[ORM\Id]
@@ -17,18 +17,23 @@ class Trainee
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 70, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstName = null;
 
-    #[ORM\Column(length: 70, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\ManyToMany(targetEntity: Formation::class, inversedBy: "trainees")]
-    #[ORM\JoinTable(name: "trainee_formation")]
-    private Collection $formations;
+    #[ORM\Column(length: 70, nullable: true)]
+    private ?string $civility = null;
+
+    #[ORM\Column(length: 70, nullable: true)]
+    private ?string $function = null;
+
+    #[ORM\Column(length: 150, nullable: true)]
+    private ?string $company = null;
 
     public function getId(): ?int
     {
@@ -49,25 +54,6 @@ class Trainee
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
-    }
-
-    public function getFormations(): Collection
-    {
-        return $this->formations;
-    }
-
-    public function addFormation(Formation $formation): self
-    {
-        if (!$this->formations->contains($formation)) {
-            $this->formations[] = $formation;
-        }
-        return $this;
-    }
-
-    public function removeFormation(Formation $formation): self
-    {
-        $this->formations->removeElement($formation);
-        return $this;
     }
 
     public function getFirstName(): ?string
@@ -102,7 +88,36 @@ class Trainee
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+        return $this;
+    }
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+    public function setCivility(?string $civility): self
+    {
+        $this->civility = $civility;
+        return $this;
+    }
 
+    public function getFunction(): ?string
+    {
+        return $this->function;
+    }
+
+    public function setFunction(?string $function): self
+    {
+        $this->function = $function;
+        return $this;
+    }
+    public function getCompany(): ?string
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?string $company): self
+    {
+        $this->company = $company;
         return $this;
     }
 }

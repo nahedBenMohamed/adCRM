@@ -34,7 +34,7 @@ class TraineeFormationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => TraineeFormation::class,
+            'data_class' => null,
         ]);
     }
 }

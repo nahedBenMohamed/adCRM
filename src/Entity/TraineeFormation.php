@@ -20,6 +20,9 @@ class TraineeFormation
     #[ORM\JoinColumn(name: "trainee_id", referencedColumnName: "id")]
     private $trainee;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $sendConvocation = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,17 @@ class TraineeFormation
     public function setTrainee($trainee)
     {
         $this->trainee = $trainee;
+        return $this;
+    }
+
+    public function getSendConvocation(): ?string
+    {
+        return $this->sendConvocation;
+    }
+
+    public function setSendConvocation(?string $sendConvocation): self
+    {
+        $this->sendConvocation = $sendConvocation;
         return $this;
     }
 }

@@ -10,27 +10,42 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Ajouter un nouveau stagiaire</h5>
+                        <h5 class="card-title">Modifier les informations</h5>
 
                         <!-- add user Form -->
-                        {{ form_start(registrationForm) }}
+                        {{ form_start(setTraineeForm) }}
                         <div class="row mb-3">
-                            {{ form_row(registrationForm.firstName,
+                            {{ form_row(setTraineeForm.civility,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
                         <div class="row mb-3">
-                            {{ form_row(registrationForm.lastName,
+                            {{ form_row(setTraineeForm.firstName,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
                         <div class="row mb-3">
-                            {{ form_row(registrationForm.phone,
+                            {{ form_row(setTraineeForm.lastName,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
                         <div class="row mb-3">
-                            {{ form_row(registrationForm.email,
+                            {{ form_row(setTraineeForm.function,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(setTraineeForm.company,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(setTraineeForm.phone,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(setTraineeForm.email,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
@@ -39,7 +54,7 @@
                                 <button type="submit" class="btn btn-primary">Enregistrer</button>
                             </div>
                         </div>
-                        {{ form_end(registrationForm) }} <!-- End add user form -->
+                        {{ form_end(setTraineeForm) }} <!-- End add user form -->
                     </div>
                 </div>
 
