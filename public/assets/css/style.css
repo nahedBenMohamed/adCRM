@@ -1231,3 +1231,7 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+a.link-right {
+  padding: 20px 0 15px 0;
+  float: right;
+}

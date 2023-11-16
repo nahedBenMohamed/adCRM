@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,27 +19,11 @@ class FormationFormType extends AbstractType
     {
         $builder
             ->add('nomFormation',   TextType::class, [
-                'label' => 'Nom de la formation',
+                'label' => 'Intitulé de la formation',
                 'required' => true,
             ])
-
-            ->add('domaineFormation',   TextType::class, [
-                'label' => 'Domaine de la formation',
-                'required' => true,
-            ])
-
-            ->add('lienFormation',   TextType::class, [
-                'label' => 'Lien de la formation',
-                'required' => true,
-            ])
-
-            ->add('adresseFormation',   TextType::class, [
-                'label' => 'Adresse de la formation',
-                'required' => true,
-            ])
-
-            ->add('dureeFormation',   TextType::class, [
-                'label' => 'Durée de la formation',
+            ->add('timesheet',   TextType::class, [
+                'label' => 'Dates et horaires',
                 'required' => true,
             ])
 
@@ -51,6 +36,37 @@ class FormationFormType extends AbstractType
                 'label' => 'Date de fin',
                 'required' => true,
             ])
+
+            ->add('dureeFormation',   TextType::class, [
+                'label' => "Nombre total d'heures",
+                'required' => true,
+            ])
+
+            ->add('adresseFormation',   TextType::class, [
+                'label' => 'Lieu ou modalité',
+                'required' => true,
+            ])
+
+            ->add('lienFormation',   TextType::class, [
+                'label' => 'Lien ZOOM',
+                'required' => false,
+            ])
+
+            ->add('zoomAccount',   TextType::class, [
+                'label' => 'Compte ZOOM utilisé',
+                'required' => false,
+            ])
+
+            ->add('signatureAddress',   TextType::class, [
+                'label' => "Lieu de signature de l'attestation par le formateur",
+                'required' => false,
+            ])
+
+            ->add('objective',   TextareaType::class, [
+                'label' => "Objectifs de l'action de formation",
+                'required' => false,
+                'attr' => ['rows' => '10']
+            ])
             
             ->add('formateur', EntityType::class, [
                 'class' => User::class,
@@ -58,11 +74,12 @@ class FormationFormType extends AbstractType
                     return $user->getFirstName() . ' ' . $user->getLastName();
                 },
                 'label' => 'Formateur',
-                'required' => true, 
+                'required' => false,
+                'empty_data' => '',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
-                        ->where('u.roles = :roles')
-                        ->setParameter('roles', '["ROLE_TEACHER"]');
+                           ->andWhere('u.roles LIKE :val')
+                            ->setParameter('val', '%ROLE_TEACHER%');
                 },
             ]);
     }

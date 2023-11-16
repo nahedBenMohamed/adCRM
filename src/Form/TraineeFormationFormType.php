@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Trainee;
-use App\Entity\TraineeFormations;
+use App\Entity\TraineeFormation;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,7 +34,7 @@ class TraineeFormationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => TraineeFormations::class,
+            'data_class' => null,
         ]);
     }
 }

@@ -2,10 +2,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\TraineeFormationsRepository;
+use App\Repository\TraineeFormationRepository;
 
-#[ORM\Entity(repositoryClass: TraineeFormationsRepository::class)]
-class TraineeFormations
+#[ORM\Entity(repositoryClass: TraineeFormationRepository::class)]
+class TraineeFormation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,6 +19,9 @@ class TraineeFormations
     #[ORM\ManyToOne(targetEntity: "Trainee")]
     #[ORM\JoinColumn(name: "trainee_id", referencedColumnName: "id")]
     private $trainee;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $sendConvocation = false;
 
     public function getId(): ?int
     {
@@ -44,6 +47,17 @@ class TraineeFormations
     public function setTrainee($trainee)
     {
         $this->trainee = $trainee;
+        return $this;
+    }
+
+    public function getSendConvocation(): ?string
+    {
+        return $this->sendConvocation;
+    }
+
+    public function setSendConvocation(?string $sendConvocation): self
+    {
+        $this->sendConvocation = $sendConvocation;
         return $this;
     }
 }
