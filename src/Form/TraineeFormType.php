@@ -39,10 +39,11 @@ class TraineeFormType extends AbstractType
                 ]
             ])
 
-            ->add('function',   textType::class,[
+            ->add('position',   textType::class,[
                 'label' =>'Fonction',
                 'required' => false,
             ])
+
             ->add('company',   textType::class,[
                 'label' =>'Entreprise/Organisme',
                 'required' => false,
