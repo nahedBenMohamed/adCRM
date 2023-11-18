@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\Customer;
+use App\Entity\Financier;
 use App\Entity\Formation;
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -81,6 +83,25 @@ class FormationFormType extends AbstractType
                            ->andWhere('u.roles LIKE :val')
                             ->setParameter('val', '%ROLE_TEACHER%');
                 },
+            ])
+
+            ->add('customer', EntityType::class, [
+                'class' => Customer::class,
+                'choice_label' => function($customer) {
+                    return $customer->getFirstName() . ' ' . $customer->getLastName();
+                },
+                'label' => 'Client',
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('financier', EntityType::class, [
+                'class' => Financier::class,
+                'choice_label' => function($customer) {
+                    return $customer->getName();
+                },
+                'label' => 'Financeur',
+                'required' => false,
+                'empty_data' => '',
             ]);
     }
 

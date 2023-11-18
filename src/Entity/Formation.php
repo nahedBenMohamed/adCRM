@@ -43,6 +43,12 @@ class Formation
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
     private ?User $formateur;
 
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: "formations")]
+    private ?Customer $customer;
+
+    #[ORM\ManyToOne(targetEntity: Financier::class, inversedBy: "formations")]
+    private ?Financier $financier;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDebutFormation = null;
 
@@ -206,6 +212,30 @@ class Formation
     public function setObjective(string $objective): self
     {
         $this->objective = $objective;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getFinancier(): ?Financier
+    {
+        return $this->financier;
+    }
+
+    public function setFinancier(?Financier $financier): self
+    {
+        $this->financier = $financier;
 
         return $this;
     }

@@ -104,7 +104,6 @@ class UserController extends AbstractController
             $user = $form->getData();
             $entityManager->persist($user);
             $entityManager->flush();
-
            if ($request->request->get('formation_id')) {
                 $TraineeFormation = new TraineeFormation();
                 $TraineeFormation->setTrainee($user);
@@ -155,7 +154,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/trainee/edit/{id}', name: 'app_edit_user')]
+    #[Route('/trainee/edit/{id}', name: 'app_edit_user_trainee')]
     public function updateTrainee(Request $request, EntityManagerInterface $entityManager, $id): Response
     {
         $user = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);

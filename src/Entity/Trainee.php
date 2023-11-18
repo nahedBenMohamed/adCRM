@@ -29,8 +29,8 @@ class Trainee
     #[ORM\Column(length: 70, nullable: true)]
     private ?string $civility = null;
 
-    #[ORM\Column(length: 70, nullable: true)]
-    private ?string $function = null;
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $position= null;
 
     #[ORM\Column(length: 150, nullable: true)]
     private ?string $company = null;
@@ -100,16 +100,17 @@ class Trainee
         return $this;
     }
 
-    public function getFunction(): ?string
+    public function getPosition(): ?string
     {
-        return $this->function;
+        return $this->position;
     }
 
-    public function setFunction(?string $function): self
+    public function setPosition(?string $position): self
     {
-        $this->function = $function;
+        $this->position = $position;
         return $this;
     }
+
     public function getCompany(): ?string
     {
         return $this->company;
