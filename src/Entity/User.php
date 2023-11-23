@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping\DiscriminatorColumn;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType("JOINED")]
 #[DiscriminatorColumn(name: "type", type: "string")]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cette email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -48,6 +48,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $phone = null;
+
+    #[ORM\Column(length: 70, nullable: true)]
+    private ?string $functionFormateur = null;
 
     public function __construct()
     {
@@ -180,6 +183,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getFunctionFormateur(): ?string
+    {
+        return $this->functionFormateur;
+    }
+
+    public function setFunctionFormateur(?string $functionFormateur): self
+    {
+        $this->functionFormateur = $functionFormateur;
 
         return $this;
     }

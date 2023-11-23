@@ -24,21 +24,41 @@ class Formation
     private ?string $timesheet = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $zoomAccount = null;
+    private ?string $linkType = null;
 
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $lienFormation = null;
 
     #[ORM\Column(length: 255,nullable: true)]
-    private ?string $adresseFormation = null;
+    private ?string $lieuFormation = null;
 
     #[ORM\Column(length: 255,nullable: true)]
-    private ?string $signatureAddress = null;
+    private ?string $formationAddress = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $objective = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $infoTrainees = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $infoCustomer = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $infoFormateur = null;
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $pdfFormation = null;
+
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $linkToProgram = null;
+
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $linkToLivretAccueil = null;
+
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $linkGuide = null;
+
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $linkFormulaire = null;
+
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
     private ?User $formateur;
@@ -87,14 +107,14 @@ class Formation
         return $this;
     }
 
-    public function getZoomAccount(): ?string
+    public function getLinkType(): ?string
     {
-        return $this->zoomAccount;
+        return $this->linkType;
     }
 
-    public function setZoomAccount(string $zoomAccount): self
+    public function setLinkType(string $linkType): self
     {
-        $this->zoomAccount = $zoomAccount;
+        $this->linkType = $linkType;
 
         return $this;
     }
@@ -111,14 +131,14 @@ class Formation
         return $this;
     }
 
-    public function getAdresseFormation(): ?string
+    public function getLieuFormation(): ?string
     {
-        return $this->adresseFormation;
+        return $this->lieuFormation;
     }
 
-    public function setAdresseFormation(string $adresseFormation): self
+    public function setLieuFormation(string $lieuFormation): self
     {
-        $this->adresseFormation = $adresseFormation;
+        $this->lieuFormation = $lieuFormation;
 
         return $this;
     }
@@ -194,13 +214,13 @@ class Formation
         return $this;
     }
 
-    public function getSignatureAddress(): ?string
+    public function getFormationAddress(): ?string
     {
-        return $this->signatureAddress;
+        return $this->formationAddress;
     }
-    public function setSignatureAddress(string $signatureAddress): self
+    public function setFormationAddress(string $formationAddress): self
     {
-        $this->signatureAddress = $signatureAddress;
+        $this->formationAddress = $formationAddress;
 
         return $this;
     }
@@ -215,6 +235,87 @@ class Formation
 
         return $this;
     }
+
+    public function getInfoFormateur(): ?string
+    {
+        return $this->infoFormateur;
+    }
+    public function setInfoFormateur(string $infoFormateur): self
+    {
+        $this->infoFormateur = $infoFormateur;
+
+        return $this;
+    }
+
+    public function getInfoCustomer(): ?string
+    {
+        return $this->infoCustomer;
+    }
+    public function setInfoCustomer(string $infoCustomer): self
+    {
+        $this->infoCustomer = $infoCustomer;
+
+        return $this;
+    }
+
+    public function getInfoTrainees(): ?string
+    {
+        return $this->infoTrainees;
+    }
+    public function setInfoTrainees(string $infoTrainees): self
+    {
+        $this->infoTrainees = $infoTrainees;
+
+        return $this;
+    }
+
+    public function getLinkToProgram(): ?string
+    {
+        return $this->linkToProgram;
+    }
+    public function setLinkToProgram(string $linkToProgram): self
+    {
+        $this->linkToProgram= $linkToProgram;
+
+        return $this;
+    }
+
+    public function getLinkToLivretAccueil(): ?string
+    {
+        return $this->linkToLivretAccueil;
+    }
+
+    public function setLinkToLivretAccueil(string $linkToLivretAccueil): self
+    {
+        $this->linkToLivretAccueil = $linkToLivretAccueil;
+
+        return $this;
+    }
+
+    public function getLinkGuide(): ?string
+    {
+        return $this->linkGuide;
+    }
+
+    public function setLinkGuide(string $linkGuide): self
+    {
+        $this->linkGuide = $linkGuide;
+
+        return $this;
+    }
+
+    public function getLinkFormulaire(): ?string
+    {
+        return $this->linkFormulaire;
+    }
+
+    public function setLinkFormulaire(string $linkFormulaire): self
+    {
+        $this->linkFormulaire = $linkFormulaire;
+
+        return $this;
+    }
+
 
     public function getCustomer(): ?Customer
     {

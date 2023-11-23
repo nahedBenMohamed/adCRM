@@ -11,32 +11,30 @@
                     <div class="card-body">
                         <h5 class="card-title">Liste des formations</h5>
                         <div class="row">
-                            <div class="col-md-3"><a href="{{path('app_courses_add')}}" type="button" class="btn btn-primary">Ajouter une formation</a></div>
-                            <div class="col-md-9"></div>
+                            <div class="col-lg-9"></div>
+                            <div class="col-md-3"><a href="{{path('app_courses_add')}}" type="button" class="btn btn-primary float-end">Ajouter une formation</a></div>
                         </div>
                         <br/>
                         <!-- Table with stripped rows -->
-                        <table class="table datatable">
+                        <table class="table" id="list-formations">
                             <thead>
                             <tr>
-                                <th scope="col">Intitulé</th>
-                                <th scope="col">Durée</th>
-                                <th scope="col">Lieu/modalité</th>
-                                <th scope="col">Nombre total d'heures</th>
-                                <th scope="col">Début</th>
-                                <th scope="col">Fin</th>
+                                <th scope="col">Id</th>
+                                <th scope="col">Client</th>
+                                <th scope="col">Intitulé de la formation</th>
+                                <th scope="col">Formateur</th>
+                                <th scope="col">Date de début</th>
                                 <th scope="col">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for course in courses %}
                             <tr>
+                                <td>{{course.id}}</td>
+                                <td>{% if course.customer is defined and course.customer is not null %} {{course.customer.firstName}} {% else %} - {% endif %}</td>
                                 <td>{{course.nomFormation}}</td>
-                                <td>{{course.dureeFormation}}</td>
-                                <td>{{course.timesheet}}</td>
-                                <td>{{course.adresseFormation | slice(0, 20)}}...</td>
+                                <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
                                 <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
-                                <td>{{course.dateFinFormation |date('d-m-Y')}}</td>
                                 <td>
                                 <a href="{{ path('app_courses_edit', { 'id':course.id }) }}" class="btn btn-outline-warning">
                                       <i class="bi bi-pencil-square"></i>
@@ -56,4 +54,12 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block javascripts %}
+     <script>
+         const datatablesSimple = document.getElementById('list-formations');
+         new simpleDatatables.DataTable(datatablesSimple, {
+             perPage: 100
+         });
+     </script>
 {% endblock %}

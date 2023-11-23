@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\TraineeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TraineeRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cette email')]
 class Trainee
 {
     #[ORM\Id]
@@ -22,9 +24,6 @@ class Trainee
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastName = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $phone = null;
 
     #[ORM\Column(length: 70, nullable: true)]
     private ?string $civility = null;
@@ -80,16 +79,6 @@ class Trainee
         return $this;
     }
 
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?string $phone): self
-    {
-        $this->phone = $phone;
-        return $this;
-    }
     public function getCivility(): ?string
     {
         return $this->civility;

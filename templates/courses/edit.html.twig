@@ -2,6 +2,21 @@
 {% block title %}
     Ajouter une formation
 {% endblock %}
+{% block stylesheets %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
+   <style>
+       body {padding-top: 60px;}
+       #formation_form_lieuFormation label, #formation_form_linkType label {
+           padding: 10px
+       }
+       .tox-tinymce {
+           height: 350px;
+       }
+       .hidden {
+           display: none;
+       }
+   </style>
+{% endblock %}
 {% block body %}
     <section class="section">
         <h3 class="card-title">
@@ -27,9 +42,36 @@
                         {{ form_start(formationForm) }}
                         <div class="row">
                             <div class="col-md-6">
-                                {{ form_start(formationForm) }}
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.nomFormation,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.lieuFormation,
+                                        {'attr': {'class': '' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3 hidden lieuFormation">
+                                    {{ form_row(formationForm.formationAddress,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3 hidden linkType">
+                                    {{ form_row(formationForm.linkType,
+                                        {'attr': {'class': '' }}
+                                    ) }}
+                                </div>
+
+                                <div class="row mb-3 hidden teacher">
+                                    {{ form_row(formationForm.formateur,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                    <a href="{{path('app_add_teacher')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter formateur</a>
+                                </div>
+
+                                <div class="row mb-3 hidden linkVirFormation">
+                                    {{ form_row(formationForm.lienFormation,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
                                 </div>
@@ -40,46 +82,18 @@
                                 </div>
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.dateDebutFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
+                                        {'attr': {'class': 'form-control form-control-user js-datepicker' }}
                                     ) }}
                                 </div>
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.dateFinFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
+                                        {'attr': {'class': 'form-control form-control-user js-datepicker' }}
                                     ) }}
                                 </div>
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.dureeFormation,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.adresseFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.lienFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.zoomAccount,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.signatureAddress,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.formateur,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                    <a href="{{path('app_add_teacher')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter formateur</a>
                                 </div>
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.customer,
@@ -94,13 +108,49 @@
                                     <a href="{{path('app_financier_add')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter financeur</a>
                                 </div>
                                 <div class="row mb-3">
-                                    {{ form_row(formationForm.objective,
+                                    {{ form_row(formationForm.linkToProgram,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkToLivretAccueil,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkGuide,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkFormulaire,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.objective,
+                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.infoTrainees,
+                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.infoFormateur,
+                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.infoCustomer,
+                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                    ) }}
+                                </div>
+                            </div>
                         </div>
-
                         <div class="row">
                             <div class="col-auto me-auto">
 
@@ -118,16 +168,20 @@
             <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Stagiaires</h5>
+                        <h5 class="card-title">Stagiaire</h5>
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6"> <h5 class="card-title">
-                                            Liste des stagières de la formation <b> {{ formation.nomFormation }}</b>
+                                            {% if trainees|length == 1 %}
+                                            {{ trainees|length }} stagaire inscrit
+                                            {% else%}
+                                            {{ trainees|length }} stagaires inscrits
+                                            {% endif %}
                                         </h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" class="link-right"> <i class="bi bi-person-plus"></i> Ajouter stagières à la formation</a>
+                                        <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" class="link-right"> <i class="bi bi-person-plus"></i> Ajouter Stagiaire à la formation</a>
                                     </div>
                                 </div>
                                 {% if trainees|length > 0 %}
@@ -143,7 +197,6 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Nom</th>
                                         <th scope="col">Prénom</th>
-                                        <th scope="col">Tél</th>
                                         <th scope="col">E-Mail</th>
                                         <th scope="col">Entreprise/Organisme</th>
                                         <th scope="col">Fonction</th>
@@ -156,7 +209,6 @@
                                         <td>{{ trainee.id }}</td>
                                         <td>{{ trainee.firstName }}</td>
                                         <td>{{ trainee.lastName }}</td>
-                                        <td>{{ trainee.phone }}</td>
                                         <td>{{ trainee.email }}</td>
                                         <td>{{ trainee.company }}</td>
                                         <td>{{ trainee.position }}</td>
@@ -194,4 +246,40 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script>
+        jQuery(document).ready(function() {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                minDate: new Date()
+            });
+            $('input[type="radio"]').on('change', function(e) {
+                if(this.value == 'Distanciel') {
+                    $('.lieuFormation').addClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                } else if(this.value == 'Présentiel') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').addClass('hidden');
+                }else if(this.value == 'Mixte') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                }
+
+                if(this.value == 'LienBBB') {
+                    $('.teacher').removeClass('hidden');
+                    $('.linkVirFormation').addClass('hidden');
+                }
+                if(this.value == 'Lienexterne') {
+                    $('.teacher').addClass('hidden');
+                    $('.linkVirFormation').removeClass('hidden');
+                }
+            });
+            tinyMCE.init({
+                height : "300"
+            });
+        });
+    </script>
 {% endblock %}

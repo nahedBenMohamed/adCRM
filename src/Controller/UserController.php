@@ -9,9 +9,12 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\TraineeFormType;
 use App\Form\UpdateUserFormType;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -169,6 +172,66 @@ class UserController extends AbstractController
         }
         return $this->render('trainees/update_trainee.html.twig', [
             'setTraineeForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/update-password', name: 'app_update_password')]
+    public function updatePassword(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    {
+        if ($request->isMethod('POST')) {
+            $email = $request->request->get('email');
+            if($email != "") {
+                $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+                if ($user) {
+                    //send mail to user with token
+                    $link = 'https://adformation.online'.$this->generateUrl('app_update_user_password',['email'=>$email]);
+                    $emailToSend = (new Email())
+                        ->from('adconseil@gmail.com')
+                        ->html('<p>Bonjour, cliquer sur le lien pour modifier votre mot de passe:<br><a href="'.$link.'">'.$link.'</a></p>')
+                        ->to($email);
+                    $mailer->send($emailToSend);
+                    $this->addFlash('success', "Un email est envoyé à votre compte.");
+                    return $this->redirectToRoute('app_update_password');
+                } else {
+                    // show error message
+                    $this->addFlash('warning', "Cet email n'existe pas!");
+                    return $this->redirectToRoute('app_update_password');
+                }
+            }
+            return $this->redirectToRoute('app_update_password');
+        }
+        return $this->render('security/resetPassword.html.twig', [
+        ]);
+    }
+
+    #[Route('/update-user-password/{email}', name: 'app_update_user_password')]
+    public function updateUserPassword(Request $request, EntityManagerInterface $entityManager,UserPasswordHasherInterface $userPasswordHasher, $email): Response
+    {
+        if ($request->isMethod('POST')) {
+            $password= $request->request->get('password');
+            if($email != "" && $password != "") {
+                $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+                if ($user) {
+                    //update password
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $password
+                        )
+                    );
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    $this->addFlash('success', "Votre mot de passe aura été changé avec succès");
+                    return $this->redirectToRoute('app_login');
+                } else {
+                    // show error message
+                    $this->addFlash('warning', "Le lien est incorrect");
+                    return $this->redirectToRoute('app_update_user_password');
+                }
+            }
+            return $this->redirectToRoute('app_login');
+        }
+        return $this->render('security/newPassword.html.twig', [
         ]);
     }
 }
