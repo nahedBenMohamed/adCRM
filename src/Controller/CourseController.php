@@ -93,12 +93,16 @@ class CourseController extends AbstractController
         $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
         $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $this->generate_pdf($formation,$trainee);
+        $html = $this->renderView('emails/convocation.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
         $email = (new Email())
             ->from('nahedbenmohamed57@gmail.com')
             ->text('Bonjour, voici le doc de convocation')
-            //->html('<p>Lorem ipsum...</p>')
-            ->to('nahed1606@hotmail.fr')
-            ->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
+            ->html($html)
+            ->to($trainee->getEmail());
+            //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
         $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
@@ -114,13 +118,17 @@ class CourseController extends AbstractController
         foreach ($traineesFormation as $item) {
             $trainee = $item->getTrainee();
             $this->generate_pdf($formation, $trainee);
+            $html = $this->renderView('emails/convocation.html.twig', [
+                'dataF' => $formation,
+                'dataS' => $trainee
+            ]);
             $email = (new Email())
                 ->from('nahedbenmohamed57@gmail.com')
                 ->text('Bonjour, voici le doc de convocation')
-                //->html('<p>Lorem ipsum...</p>')
-                ->to('nahed1606@hotmail.fr')
-                ->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
-            //$mailer->send($email);
+                ->html($html)
+                ->to($trainee->getEmail());
+                //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
+             $mailer->send($email);
 
             $item->setSendConvocation(true);
             $entityManager->persist($item);

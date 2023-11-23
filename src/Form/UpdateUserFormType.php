@@ -24,9 +24,9 @@ class UpdateUserFormType extends AbstractType
                 'required' => false,
             ])
 
-            ->add('phone',   textType::class,[
-                'label' =>'Télephone',
-                'required' => false,
+            ->add('functionFormateur',   textType::class,[
+                'label' =>'Qualité',
+                'required' => false
             ]);
     }
 

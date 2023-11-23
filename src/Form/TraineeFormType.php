@@ -47,11 +47,6 @@ class TraineeFormType extends AbstractType
             ->add('company',   textType::class,[
                 'label' =>'Entreprise/Organisme',
                 'required' => false,
-            ])
-
-            ->add('phone',   textType::class,[
-                'label' =>'Télephone',
-                'required' => false,
             ]);
 
     }

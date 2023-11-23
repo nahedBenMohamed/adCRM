@@ -27,6 +27,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
    {% block stylesheets %}   {% endblock %}
 </head>
 
@@ -36,8 +37,8 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
-        <img src="assets/img/logo.png" alt="">
+      <a href="/" class="logo d-flex align-items-center">
+        <img src="{{asset('assets/img/logo.png')}}" alt="">
         <span class="d-none d-lg-block"> CRM</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -64,7 +65,7 @@
             <li>
               <a class="dropdown-item d-flex align-items-center" href="{{path('app_edit_user',{ 'id': app.user.id })}}">
                 <i class="bi bi-person"></i>
-                <span>Mon profile</span>
+                <span>Mon Compte</span>
               </a>
             </li>
             <li>
@@ -142,7 +143,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{path('app_edit_user',{ 'id': app.user.id })}}">
           <i class="bi bi-person"></i>
-          <span>Profile</span>
+          <span>Compte</span>
         </a>
       </li><!-- End Contact Page Nav -->
     </ul>
