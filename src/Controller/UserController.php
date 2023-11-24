@@ -157,8 +157,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/trainee/edit/{id}', name: 'app_edit_user_trainee')]
-    public function updateTrainee(Request $request, EntityManagerInterface $entityManager, $id): Response
+    #[Route('/trainee/edit/{id}/{idFormation}', name: 'app_edit_user_trainee')]
+    public function updateTrainee(Request $request, EntityManagerInterface $entityManager, $id, $idFormation = null): Response
     {
         $user = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
         $form = $this->createForm(TraineeFormType::class, $user);
@@ -167,7 +167,9 @@ class UserController extends AbstractController
             $user = $form->getData();
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
+            if ($idFormation !== null) {
+                return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+            }
             return $this->redirectToRoute('app_trainees');
         }
         return $this->render('trainees/update_trainee.html.twig', [

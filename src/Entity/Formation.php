@@ -47,17 +47,17 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $pdfFormation = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
-    private ?string $linkToProgram = null;
+    #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
+    private ?Link $linkToProgram = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
-    private ?string $linkToLivretAccueil = null;
+    #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
+    private ?Link $linkToLivretAccueil = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
-    private ?string $linkGuide = null;
+    #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
+    private ?Link $linkGuide = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
-    private ?string $linkFormulaire = null;
+    #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
+    private ?Link $linkFormulaire = null;
 
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
@@ -269,47 +269,47 @@ class Formation
         return $this;
     }
 
-    public function getLinkToProgram(): ?string
+    public function getLinkToProgram(): ?Link
     {
         return $this->linkToProgram;
     }
-    public function setLinkToProgram(string $linkToProgram): self
+    public function setLinkToProgram(Link $linkToProgram): self
     {
         $this->linkToProgram= $linkToProgram;
 
         return $this;
     }
 
-    public function getLinkToLivretAccueil(): ?string
+    public function getLinkToLivretAccueil(): ?Link
     {
         return $this->linkToLivretAccueil;
     }
 
-    public function setLinkToLivretAccueil(string $linkToLivretAccueil): self
+    public function setLinkToLivretAccueil(Link $linkToLivretAccueil): self
     {
         $this->linkToLivretAccueil = $linkToLivretAccueil;
 
         return $this;
     }
 
-    public function getLinkGuide(): ?string
+    public function getLinkGuide(): ?Link
     {
         return $this->linkGuide;
     }
 
-    public function setLinkGuide(string $linkGuide): self
+    public function setLinkGuide(Link $linkGuide): self
     {
         $this->linkGuide = $linkGuide;
 
         return $this;
     }
 
-    public function getLinkFormulaire(): ?string
+    public function getLinkFormulaire(): ?Link
     {
         return $this->linkFormulaire;
     }
 
-    public function setLinkFormulaire(string $linkFormulaire): self
+    public function setLinkFormulaire(Link $linkFormulaire): self
     {
         $this->linkFormulaire = $linkFormulaire;
 
