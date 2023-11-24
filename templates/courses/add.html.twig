@@ -197,6 +197,21 @@
                 autoclose: true,
                 minDate: new Date()
             });
+            $('input[type="radio"]').each(function (e){
+                if(this.value == '') {
+                    this.classList.add('hidden');
+                    $('#formation_form_lieuFormation label:first').addClass('hidden');
+                    $('#formation_form_linkType label:first').addClass('hidden');
+                }
+                if(this.value == 'Distanciel') {
+                    $('.linkType').removeClass('hidden');
+                } else if(this.value == 'Présentiel') {
+                    $('.lieuFormation').removeClass('hidden');
+                }else if(this.value == 'Mixte') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                }
+            });
             $('input[type="radio"]').on('change', function(e) {
                 if(this.value == 'Distanciel') {
                     $('.lieuFormation').addClass('hidden');

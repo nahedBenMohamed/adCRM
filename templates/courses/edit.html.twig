@@ -197,8 +197,6 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Nom</th>
                                         <th scope="col">Prénom</th>
-                                        <th scope="col">E-Mail</th>
-                                        <th scope="col">Entreprise/Organisme</th>
                                         <th scope="col">Fonction</th>
                                         <th></th>
                                     </tr>
@@ -209,14 +207,12 @@
                                         <td>{{ trainee.id }}</td>
                                         <td>{{ trainee.firstName }}</td>
                                         <td>{{ trainee.lastName }}</td>
-                                        <td>{{ trainee.email }}</td>
-                                        <td>{{ trainee.company }}</td>
                                         <td>{{ trainee.position }}</td>
                                         <td>
                                             <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Envoyer convocation" class="btn btn-outline-success">
                                                 <i class="bi bi-envelope"></i>
                                             </a>
-                                            <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id }) }}" title="Envoyer convocation" class="btn btn-outline-warning">
+                                            <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id, 'idFormation':formation.id }) }}" class="btn btn-outline-warning">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                             <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="btn btn-outline-danger">
@@ -255,6 +251,21 @@
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 minDate: new Date()
+            });
+            $('input[type="radio"]').each(function (e){
+                if(this.value == '') {
+                    this.classList.add('hidden');
+                    $('#formation_form_lieuFormation label:first').addClass('hidden');
+                    $('#formation_form_linkType label:first').addClass('hidden');
+                }
+                if(this.value == 'Distanciel') {
+                    $('.linkType').removeClass('hidden');
+                } else if(this.value == 'Présentiel') {
+                    $('.lieuFormation').removeClass('hidden');
+                }else if(this.value == 'Mixte') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                }
             });
             $('input[type="radio"]').on('change', function(e) {
                 if(this.value == 'Distanciel') {

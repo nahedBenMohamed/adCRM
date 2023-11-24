@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Customer;
 use App\Entity\Financier;
 use App\Entity\Formation;
+use App\Entity\Link;
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -49,7 +50,7 @@ class FormationFormType extends AbstractType
 
             ->add('lieuFormation',   ChoiceType::class, [
                 'label' => 'Modalité',
-                'required' => true,
+                'required' => false,
                 'choices'  => [
                     'Présentiel' => 'Présentiel',
                     'Distanciel' => 'Distanciel',
@@ -102,22 +103,42 @@ class FormationFormType extends AbstractType
                 'attr' => ['class' => 'tinymce-editor']
             ])
 
-            ->add('linkToProgram',   TextType::class, [
+            ->add('linkToProgram',   EntityType::class, [
+                'class' => Link::class,
+                'choice_label' => function($link) {
+                    return $link->getValue();
+                },
                 'label' => 'Lien vers le programme',
                 'required' => false,
+                'empty_data' => '',
             ])
 
-            ->add('linkToLivretAccueil',   TextType::class, [
+            ->add('linkToLivretAccueil',   EntityType::class, [
+                'class' => Link::class,
+                'choice_label' => function($link) {
+                    return $link->getValue();
+                },
                 'label' => "Lien vers le livret d'accueil",
                 'required' => false,
+                'empty_data' => '',
             ])
-            ->add('linkGuide',   TextType::class, [
+            ->add('linkGuide',   EntityType::class, [
+                'class' => Link::class,
+                'choice_label' => function($link) {
+                    return $link->getValue();
+                },
                 'label' => 'Guide de votre classe virtuelle',
                 'required' => false,
+                'empty_data' => '',
             ])
-            ->add('linkFormulaire',   TextType::class, [
+            ->add('linkFormulaire',   EntityType::class, [
+                'class' => Link::class,
+                'choice_label' => function($link) {
+                    return $link->getValue();
+                },
                 'label' => 'Formulaire de recueil des attentes',
                 'required' => false,
+                'empty_data' => '',
             ])
             
             ->add('formateur', EntityType::class, [
