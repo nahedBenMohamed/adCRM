@@ -6,31 +6,47 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
-
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-8"></div>
-                            <div class="col-lg-4"><a href="{{path('app_add_link')}}" type="button" class="btn btn-primary float-end mt-4 mb-4">Ajouter un nouveau lien</a></div>
+                            <div class="col-lg-4">
+                                <a href="{{path('app_add_link')}}" title="Ajouter un nouveau lien" class="float-end mt-4 mb-4 add-new">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                </a>
+                            </div>
                         </div>
-
+                        {% for danger in app.flashes('danger') %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ danger }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                        {% for success in app.flashes('danger') %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ success }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
                         <!-- Table with stripped rows -->
-                        <table class="table datatable">
+                        <table class="table datatable table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">lien</th>
-                                <th>Actions</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for link in links %}
                                 <tr>
-                                    <th scope="row">{{link.id}}</th>
                                     <td>{{link.value}}</td>
                                     <td class="text-center">
-                                        <a href="{{path('app_edit_link',{ 'id': link.id })}}" class="btn btn-outline-warning"> <i class="bi bi-pencil-square"></i></a>
-                                        <a href="{{path('app_delete_link',{ 'id': link.id })}}" class="btn btn-outline-danger"> <i class="bi bi-trash-fill"></i></a>
+                                        <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="{{path('app_delete_link',{ 'id': link.id })}}" class="first-btn deleteBtn">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                        </a>
+                                        <a href="{{path('app_edit_link',{ 'id': link.id })}}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

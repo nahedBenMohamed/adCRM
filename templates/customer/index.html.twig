@@ -11,34 +11,34 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-9"></div>
-                            <div class="col-md-3"><a href="{{path('app_customer_add')}}" type="button" class="btn btn-primary mt-4 mb-4 float-end">Ajouter un client</a></div>
+                            <div class="col-md-3">
+                                <a href="{{path('app_customer_add')}}" title="Ajouter un client" class="float-end mt-4 mb-4 add-new">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                </a>
                         </div>
-                        <br/>
                         <!-- Table with stripped rows -->
-                        <table class="table datatable">
+                        <table class="table datatable table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">Id</th>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">email</th>
-                                <th>Actions</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for customer in customers %}
                                 <tr>
-                                    <td>{{customer.id}}</td>
                                     <td>{{customer.firstName}}</td>
                                     <td>{{customer.lastNAme}}</td>
                                     <td>{{customer.email}}...</td>
                                     <td>
-                                        <a href="{{ path('app_customer_edit', { 'id':customer.id }) }}" class="btn btn-outline-warning">
-                                            <i class="bi bi-pencil-square"></i>
+                                        <a href="" class="first-btn" title="supprimer">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
                                         </a>
-                                        <button class="btn btn-outline-danger" type="submit">
-                                            <i class="bi bi-trash3-fill"></i>
-                                        </button>
+                                        <a href="{{ path('app_customer_edit', { 'id':customer.id }) }}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

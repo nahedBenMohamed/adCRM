@@ -87,21 +87,6 @@ class FormationFormType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'tinymce-editor']
             ])
-            ->add('infoTrainees',   TextareaType::class, [
-                'label' => "Infos complémentaires pour les stagiaires",
-                'required' => false,
-                'attr' => ['class' => 'tinymce-editor']
-            ])
-            ->add('infoFormateur',   TextareaType::class, [
-                'label' => "Infos complémentaires pour le formateur",
-                'required' => false,
-                'attr' => ['class' => 'tinymce-editor']
-            ])
-            ->add('infoCustomer',   TextareaType::class, [
-                'label' => "Infos complémentaires pour le client",
-                'required' => false,
-                'attr' => ['class' => 'tinymce-editor']
-            ])
 
             ->add('linkToProgram',   EntityType::class, [
                 'class' => Link::class,

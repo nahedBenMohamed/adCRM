@@ -234,3 +234,34 @@ table.datatable-table:focus {
 	outline: solid 1px black;
     outline-offset: -1px;
 }
+.icon-menu {
+	font-size: 16px;
+	margin-right: 10px;
+}
+.datatable-search {
+	width: 75%;
+	float: left !important;
+	margin-left: 17px;
+}
+.datatable-search .datatable-input {
+	width: 100%;
+	border-radius: 10px;
+	border: 1px solid #ccc;
+}
+.add-new {
+	position: absolute;
+	right: 30px;
+	top: 6px;
+}
+.datatable-table > thead > tr > th {
+	background: #132438;
+}
+.datatable-table th button, .datatable-pagination-list button {
+	color: #fff;
+}
+.datatable-container {
+	margin-top: 10px;
+}
+.datatable-wrapper.no-footer .datatable-container {
+	border: none;
+}

@@ -7,6 +7,7 @@ use App\Entity\Trainee;
 use App\Entity\TraineeFormation;
 use App\Entity\User;
 use App\Form\FormationFormType;
+use App\Form\FormationInfoFormType;
 use App\Form\TraineeFormationFormType;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -56,12 +57,14 @@ class CourseController extends AbstractController
         $course =  $entityManager->getRepository(Formation::class)->find($id);
         $form = $this->createForm(FormationFormType::class, $course);
         $form->handleRequest($request);
+        $formInfo = $this->createForm(FormationInfoFormType::class, $course);
+        $formInfo->handleRequest($request);
         $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course]);
         $trainees = [];
         foreach ($formationUser as $item) {
             array_push($trainees, $item->getTrainee() );
         }
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
             $entityManager->persist($course);
             $entityManager->flush();
             return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
@@ -69,7 +72,8 @@ class CourseController extends AbstractController
         return $this->render('courses/edit.html.twig', [
             'formationForm' => $form->createView(),
             'formation' => $course,
-            'trainees' => $trainees
+            'trainees' => $trainees,
+            'formInfo' => $formInfo->createView()
 
         ]);
     }
