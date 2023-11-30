@@ -53,13 +53,30 @@
                             <input type="hidden" name="formation_id" value="{{ formation.id }}">
                         {% endif %}
                         <div class="row mb-3">
-                            <div class="col-md-7">
+                            <div class="col-md-9">
                             {% if formation|length > 0 and formation.id is not null %}
-                                <a href="{{path('app_courses_edit',{ 'id': formation.id })}}" class="btn btn-primary">Enregistrer et revenir à la liste des stagiaires</a>
+                                <a href="{{path('app_courses_edit',{ 'id': formation.id })}}" class="">
+                                    <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="40">
+                                </a>
+                            {% else %}
+                                <a href="{{path('app_trainees')}}">
+                                    <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="40">
+                                </a>
                             {% endif %}
                             </div>
-                            <div class="col-md-5">
-                                <button type="submit" class="btn btn-primary" style="float: right">Enregistrer et ajouter un autre stagiaire</button>
+                            <div class="col-md-3">
+                                <button type="submit" class="save-icon">
+                                    <img src="{{asset('assets/img/icon/save-disk-solid.svg')}}" width="40">
+                                </button>
+                                {% if formation|length > 0 and formation.id is not null %}
+                                    <a href="{{path('app_add_trainee',{ 'id': formation.id })}}" class="">
+                                        <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="40">
+                                    </a>
+                                {% else %}
+                                    <a href="{{path('app_add_trainee')}}" class="float-end" >
+                                        <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         {{ form_end(registrationForm) }} <!-- End add user form -->

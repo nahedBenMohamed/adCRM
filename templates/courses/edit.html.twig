@@ -280,10 +280,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script>
         jQuery(document).ready(function() {
+            $.datepicker.setDefaults(
+                {
+                    closeText: 'Fermer',
+                    prevText: 'Précédent',
+                    nextText: 'Suivant',
+                    currentText: 'Aujourd\'hui',
+                    monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+                    dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+                    dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+                    dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+                    weekHeader: 'Sem.',
+                    dateFormat: 'dd-mm-yy'
+                });
             $('.js-datepicker').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
-                minDate: new Date()
+                minDate: new Date(),
+                firstDay: 1,
             });
             $('input[type="radio"]').each(function (e){
                 if(this.value == '') {

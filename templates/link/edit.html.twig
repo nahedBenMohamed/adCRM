@@ -18,8 +18,15 @@
                             ) }}
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-5 offset-md-7">
-                                <button type="submit" class="btn btn-primary" style="float: right">Enregistrer</button>
+                            <div class="col-md-9">
+                                <a href="{{path('app_link')}}">
+                                    <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="40">
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="save-icon float-end">
+                                    <img src="{{asset('assets/img/icon/save-disk-solid.svg')}}" width="40">
+                                </button>
                             </div>
                         </div>
                         {{ form_end(linkForm) }}

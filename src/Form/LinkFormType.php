@@ -14,7 +14,8 @@ class LinkFormType extends AbstractType
     {
         $builder
             ->add('value',textType::class,[
-            'label' =>'Lien'
+            'label' =>'Lien',
+            'required' => true
         ]);
     }
 
