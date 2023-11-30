@@ -248,11 +248,6 @@ table.datatable-table:focus {
 	border-radius: 10px;
 	border: 1px solid #ccc;
 }
-.add-new {
-	position: absolute;
-	right: 30px;
-	top: 6px;
-}
 .datatable-table > thead > tr > th {
 	background: #132438;
 }
