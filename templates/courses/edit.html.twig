@@ -202,11 +202,11 @@
                                             <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
                                                 <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
                                             </a>
-                                            <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id, 'idFormation':formation.id }) }}" class="" title="modifier">
+                                            <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
                                                 <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                             </a>
-                                            <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Envoyer convocation" class="btn btn-outline-success">
-                                                <i class="bi bi-envelope"></i>
+                                            <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Envoyer convocation" class="">
+                                                <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                             </a>
                                         </td>
                                     </tr>
