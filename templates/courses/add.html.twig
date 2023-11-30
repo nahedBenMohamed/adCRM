@@ -31,6 +31,9 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-2" disabled="false" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-2" disabled="false" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active tab1" id="details" role="tabpanel" aria-labelledby="tab-0">
@@ -95,6 +98,8 @@
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.customer,
                                         {'attr': {'class': 'form-control form-control-user' }}
@@ -127,25 +132,8 @@
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
                                 </div>
-                            </div>
-                            <div class="col-md-6">
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.objective,
-                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.infoTrainees,
-                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.infoFormateur,
-                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.infoCustomer,
                                         {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
                                     ) }}
                                 </div>
@@ -167,7 +155,7 @@
             <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Stagiaires</h5>  
+                            <h5 class="card-title">Stagiaires</h5>
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">
@@ -184,6 +172,27 @@
                             </div>
                         </div>
                     </div>   
+            </div>
+            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Infos complémentaires</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Informations générales
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary" id="lastButton">
+                                    terminer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -234,7 +243,8 @@
                 }
             });
             tinyMCE.init({
-               height : "300"
+               height : "300",
+               language: 'fr_FR'
             });
         });
     </script>

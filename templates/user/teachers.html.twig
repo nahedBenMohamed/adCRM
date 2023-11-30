@@ -11,32 +11,38 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-10"></div>
-                            <div class="col-lg-2"><a href="{{path('app_add_teacher')}}" type="button" class="btn btn-primary mt-4 mb-4 float-end">Ajouter formateur</a></div>
+                            <div class="col-lg-2">
+                                <a href="{{path('app_add_teacher')}}" title="Ajouter formateur" class="float-end mt-4 mb-4 add-new">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Table with stripped rows -->
-                        <table class="table datatable">
+                        <table class="table datatable table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Télephone</th>
-                                <th>Actions</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for user in users %}
                                 <tr>
-                                    <th scope="row">{{user.id}}</th>
                                     <td>{{user.firstName}}</td>
                                     <td>{{user.lastName}}</td>
                                     <td>{{user.email}}</td>
                                     <td>{{user.phone}}</td>
                                     <td class="text-center">
-                                        <a href="{{path('app_edit_user',{ 'id': user.id })}}" class="btn btn-outline-warning"> <i class="bi bi-pencil-square"></i></a>
-                                        <a href="/" class="btn btn-outline-danger"> <i class="bi bi-trash-fill"></i></a>
+                                        <a href="" class="first-btn" title="supprimer">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                        </a>
+                                        <a href="{{path('app_edit_user',{ 'id': user.id })}}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -301,7 +301,11 @@
    */
   const datatables = select('.datatable', true)
   datatables.forEach(datatable => {
-    new simpleDatatables.DataTable(datatable);
+    new simpleDatatables.DataTable(datatable, {
+      perPage: 100,
+      sDom: 'Rfrtlip',
+      dom: '<"top"f>rt<"bottom"ilp><"clear">'
+    });
   })
 
   /**
@@ -319,3 +323,28 @@
   }
 
 })();
+
+jQuery(document).ready(function() {
+  $('.deleteBtn').on('click', function () {
+    let removeUrl = $(this).attr('data-remove-url');
+    $('.remove_item').attr('data-remove-url', removeUrl);
+  });
+
+  $(".remove_item").click(function () {
+    let removeUrl = $(this).attr('data-remove-url');
+    $.ajax({
+      url: removeUrl,
+      type: 'POST',
+      data: {},
+      contentType: 'text',
+      success: function(data)
+      {
+        location.reload();
+       // $('div.modal-content').html(data)
+      },
+      error: function(jqXHR){
+       // $('div.modal-content').html(jqXHR.responseText)
+      }
+    });
+  });
+});

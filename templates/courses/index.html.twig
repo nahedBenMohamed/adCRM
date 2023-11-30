@@ -11,36 +11,37 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-9"></div>
-                            <div class="col-md-3"><a href="{{path('app_courses_add')}}" type="button" class="btn btn-primary float-end mt-4 mb-4">Ajouter une formation</a></div>
+                            <div class="col-md-3">
+                                <a href="{{path('app_courses_add')}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                </a>
+                            </div>
                         </div>
-                        <br/>
                         <!-- Table with stripped rows -->
-                        <table class="table" id="list-formations">
+                        <table class="table table-striped" id="list-formations">
                             <thead>
                             <tr>
-                                <th scope="col">Id</th>
                                 <th scope="col">Client</th>
                                 <th scope="col">Intitulé de la formation</th>
                                 <th scope="col">Formateur</th>
                                 <th scope="col">Date de début</th>
-                                <th scope="col">Actions</th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for course in courses %}
                             <tr>
-                                <td>{{course.id}}</td>
                                 <td>{% if course.customer is defined and course.customer is not null %} {{course.customer.firstName}} {% else %} - {% endif %}</td>
                                 <td>{{course.nomFormation}}</td>
                                 <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
                                 <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
                                 <td>
-                                <a href="{{ path('app_courses_edit', { 'id':course.id }) }}" class="btn btn-outline-warning">
-                                      <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <button class="btn btn-outline-danger" type="submit">
-                                      <i class="bi bi-trash3-fill"></i>
-                                </button>
+                                    <a href="" class="first-btn" title="supprimer">
+                                        <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                    </a>
+                                    <a href="{{ path('app_courses_edit', { 'id':course.id }) }}" class="" title="modifier">
+                                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}

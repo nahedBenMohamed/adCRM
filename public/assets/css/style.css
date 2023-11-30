@@ -247,7 +247,7 @@ h6 {
 }
 
 .card-body {
-  padding: 0 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
 }
 
 .card-img-overlay {
@@ -684,7 +684,7 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #4154f1;
+  color: #4db4e8;
   transition: 0.3;
   background: #f6f9ff;
   padding: 10px 15px;
@@ -707,7 +707,7 @@ h6 {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #4154f1;
+  color: #4db4e8;
   background: #f6f9ff;
 }
 
@@ -1234,4 +1234,7 @@ h6 {
 a.link-right {
   padding: 20px 0 15px 0;
   float: right;
+}
+.first-btn {
+  margin-right: 10px;
 }

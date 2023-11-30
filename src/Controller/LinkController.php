@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Formation;
 use App\Entity\Link;
 use App\Form\LinkFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -60,8 +61,23 @@ class LinkController extends AbstractController
     public function deleteLink(EntityManagerInterface $entityManager, $id): Response
     {
         $link = $entityManager->getRepository(Link::class)->findOneBy(['id' => $id]);
-        $entityManager->remove($link);
-        $entityManager->flush();
+        //delete all formation that use this link before
+        $fomationLinkToProgram = $entityManager->getRepository(Formation::class)->findOneBy(['linkToProgram' => $link]);
+        $fomationLinkToLivretAccueil = $entityManager->getRepository(Formation::class)->findOneBy(['linkToLivretAccueil' => $link]);
+        $fomationLinkGuide = $entityManager->getRepository(Formation::class)->findOneBy(['linkGuide' => $link]);
+        $fomationLinkFormulaire = $entityManager->getRepository(Formation::class)->findOneBy(['linkFormulaire' => $link]);
+        if($fomationLinkToProgram || $fomationLinkToLivretAccueil || $fomationLinkGuide || $fomationLinkFormulaire) {
+            $this->addFlash(
+                'danger',
+                "Ce lien est utilisé dans des formations, vous devez supprimer les formations qu'ils utilisent avant");
+        } else {
+            $entityManager->remove($link);
+            $entityManager->flush();
+            $this->addFlash(
+                'success',
+                "Ce lien est supprimé avec succes");
+
+        }
         return $this->redirectToRoute('app_link');
     }
 

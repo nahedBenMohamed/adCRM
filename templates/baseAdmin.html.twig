@@ -38,8 +38,7 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="/" class="logo d-flex align-items-center">
-        <img src="{{asset('assets/img/logo.png')}}" alt="">
-        <span class="d-none d-lg-block"> CRM</span>
+        <img src="{{asset('assets/img/logoFormation.png')}}" alt="">
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -50,8 +49,8 @@
         <li class="nav-item dropdown pe-3">
           {% if app.user %}
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{asset('assets/img/profile-img.jpg')}}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{ app.user.firstName }}</span>
+            <img src="{{asset('assets/img/icon/user-solid.svg')}}" alt="Profile" class="rounded-circle" width="23">
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ app.user.lastName }}</span>
           </a><!-- End Profile Iamge Icon -->
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
@@ -93,63 +92,63 @@
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_home' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_home')}}">
-          <i class="bi bi-grid"></i>
+          <img src="{{asset('assets/img/icon/chart-pie-solid.svg')}}" class="icon-menu">
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_courses' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_courses')}}">
-          <i class="bi bi-menu-button-wide"></i>
+          <img src="{{asset('assets/img/icon/book-solid.svg')}}" class="icon-menu">
           <span>Formations</span>
         </a>
       </li><!-- End Formations Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_trainees' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_trainees')}}">
-          <i class="bx bxs-user-account"></i>
+          <img src="{{asset('assets/img/icon/graduation-cap-solid.svg')}}" class="icon-menu">
           <span>Stagiaires</span>
         </a>
       </li><!-- End Stagiaire Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_teachers' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_teachers')}}">
-          <i class="bx bxs-user-account"></i>
+          <img src="{{asset('assets/img/icon/chalkboard-user-solid.svg')}}" class="icon-menu">
           <span>Formateurs</span>
         </a>
       </li><!-- End Stagiaire Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_customer' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_customer')}}">
-          <i class="bx bxs-user-detail"></i>
+          <img src="{{asset('assets/img/icon/landmark-solid.svg')}}" class="icon-menu">
           <span>Clients</span>
         </a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_financier' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_financier')}}">
-          <i class="bx bxs-user-detail"></i>
+          <img src="{{asset('assets/img/icon/money-check-dollar-solid.svg')}}" class="icon-menu">
           <span>Financeurs</span>
         </a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_link' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_link')}}">
-          <i class="bx bxs-user-detail"></i>
+          <img src="{{asset('assets/img/icon/link-solid.svg')}}" class="icon-menu">
           <span>Liens</span>
         </a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_user')}}">
-          <i class="bx bxs-user-detail"></i>
+          <img src="{{asset('assets/img/icon/gear-solid.svg')}}" class="icon-menu">
           <span>Administrateurs</span>
         </a>
       </li><!-- End Utilisateurs Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_edit_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_edit_user',{ 'id': app.user.id })}}">
-          <i class="bi bi-person"></i>
+          <img src="{{asset('assets/img/icon/user-solid.svg')}}" class="icon-menu">
           <span>Compte</span>
         </a>
       </li><!-- End Contact Page Nav -->
@@ -178,7 +177,23 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
  {% block javascripts %} {% endblock %}
-
+  <div class="modal fade" id="confirmationModal" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer cet élément ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+          <button type="button" class="btn btn-primary remove_item">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
