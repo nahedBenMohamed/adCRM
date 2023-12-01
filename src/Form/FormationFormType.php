@@ -26,9 +26,10 @@ class FormationFormType extends AbstractType
                 'label' => 'Intitulé de la formation',
                 'required' => true,
             ])
-            ->add('timesheet',   TextType::class, [
+            ->add('timesheet',   TextareaType::class, [
                 'label' => 'Dates et horaires',
-                'required' => true,
+                'required' => false,
+                'attr' => ['class' => 'tinymce-editor']
             ])
 
             ->add('dateDebutFormation',   DateType::class, [
@@ -50,14 +51,15 @@ class FormationFormType extends AbstractType
 
             ->add('lieuFormation',   ChoiceType::class, [
                 'label' => 'Modalité',
-                'required' => false,
+                'required' => true,
                 'choices'  => [
                     'Présentiel' => 'Présentiel',
                     'Distanciel' => 'Distanciel',
                     'Mixte' => 'Mixte',
                 ],
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
+                'empty_data'  => null
             ])
 
             ->add('lienFormation',   TextType::class, [
@@ -76,10 +78,10 @@ class FormationFormType extends AbstractType
                 'multiple' => false
             ])
 
-            ->add('formationAddress',   TextType::class, [
+            ->add('formationAddress',   TextareaType::class, [
                 'label' => "Lieu de formation",
                 'required' => false,
-                'attr'=> ['class' => 'hidden']
+                'attr'=> ['class' => 'tinymce-editor hidden']
             ])
 
             ->add('objective',   TextareaType::class, [
@@ -122,6 +124,16 @@ class FormationFormType extends AbstractType
                     return $link->getValue();
                 },
                 'label' => 'Formulaire de recueil des attentes',
+                'required' => false,
+                'empty_data' => '',
+            ])
+
+            ->add('linkFormateur',   EntityType::class, [
+                'class' => Link::class,
+                'choice_label' => function($link) {
+                    return $link->getValue();
+                },
+                'label' => 'Lien associé au formateur',
                 'required' => false,
                 'empty_data' => '',
             ])

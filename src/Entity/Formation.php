@@ -20,7 +20,7 @@ class Formation
     #[ORM\Column(length: 255)]
     private ?string $dureeFormation = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $timesheet = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -29,7 +29,7 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $lienFormation = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $lieuFormation = null;
 
     #[ORM\Column(length: 255,nullable: true)]
@@ -77,6 +77,9 @@ class Formation
 
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $modaliteFormation = null;
+
+    #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
+    private ?Link $linkformateur = null;
 
     public function getId(): ?int
     {
@@ -337,6 +340,18 @@ class Formation
     public function setFinancier(?Financier $financier): self
     {
         $this->financier = $financier;
+
+        return $this;
+    }
+
+    public function getLinkFormateur(): ?Link
+    {
+        return $this->linkformateur;
+    }
+
+    public function setLinkformateur(Link $linkformateur): self
+    {
+        $this->linkformateur = $linkformateur;
 
         return $this;
     }
