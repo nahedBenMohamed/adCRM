@@ -1,35 +1,37 @@
 {% extends 'baseAdmin.html.twig' %}
 
-{% block title %}Modification de lien{% endblock %}
+{% block title %}Ajout d'un organisme{% endblock %}
 
 {% block body %}
     <section class="section">
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
-
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Modification de lien </h5>
-                        {{ form_start(linkForm) }}
+                        <h5 class="card-title">Ajouter un nouveau organisme </h5>
+                        {{ form_start(companyForm) }}
                         <div class="row mb-3">
-                            {{ form_row(linkForm.value,
+                            {{ form_row(companyForm.name,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-9">
-                                <a href="{{path('app_link')}}">
+                                <a href="{{path('app_company')}}">
                                     <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="40">
                                 </a>
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="save-icon float-end">
+                                <button type="submit" class="save-icon">
                                     <img src="{{asset('assets/img/icon/save-disk-solid.svg')}}" width="40">
                                 </button>
+                                <a href="{{path('app_add_company')}}" class="float-end" >
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                </a>
                             </div>
                         </div>
-                        {{ form_end(linkForm) }}
+                        {{ form_end(companyForm) }}
                     </div>
                 </div>
 

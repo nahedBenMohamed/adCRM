@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Company;
 use App\Entity\Trainee;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -43,10 +45,14 @@ class TraineeFormType extends AbstractType
                 'label' =>'Fonction',
                 'required' => false,
             ])
-
-            ->add('company',   textType::class,[
-                'label' =>'Entreprise/Organisme',
+            ->add('company',   EntityType::class, [
+                'class' => Company::class,
+                'choice_label' => function($company) {
+                    return $company->getName();
+                },
+                'label' => 'Entreprise/Organisme',
                 'required' => false,
+                'empty_data' => ''
             ]);
 
     }

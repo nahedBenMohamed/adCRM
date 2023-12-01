@@ -31,8 +31,8 @@ class Trainee
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $position= null;
 
-    #[ORM\Column(length: 150, nullable: true)]
-    private ?string $company = null;
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "trainee")]
+    private ?Company $company = null;
 
     public function getId(): ?int
     {
@@ -100,12 +100,12 @@ class Trainee
         return $this;
     }
 
-    public function getCompany(): ?string
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    public function setCompany(?string $company): self
+    public function setCompany(?Company $company): self
     {
         $this->company = $company;
         return $this;
