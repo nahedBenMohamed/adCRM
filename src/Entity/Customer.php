@@ -24,6 +24,15 @@ class Customer
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $position= null;
+
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "trainee")]
+    private ?Company $company = null;
+
+    #[ORM\Column(type: 'string')]
+    private string $infoFilename;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +70,40 @@ class Customer
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?string $position): self
+    {
+        $this->position = $position;
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    public function getInfoFilename(): string
+    {
+        return $this->infoFilename;
+    }
+
+    public function setInfoFilename(string $infoFilename): self
+    {
+        $this->infoFilename = $infoFilename;
 
         return $this;
     }

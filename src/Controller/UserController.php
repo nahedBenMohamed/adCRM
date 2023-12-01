@@ -86,7 +86,7 @@ class UserController extends AbstractController
     #[Route('/user/trainees', name: 'app_trainees')]
     public function listOfTrainees(EntityManagerInterface $entityManager): Response
     {
-        $users = $entityManager->getRepository(Trainee::class)->findAll();
+        $users = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
         return $this->render('trainees/trainees.html.twig', [
             'users' => $users,
         ]);

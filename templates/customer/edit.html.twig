@@ -14,7 +14,7 @@
                         <!-- add user Form -->
                         {{ form_start(newCustomer) }}
                         <div class="row mb-3">
-                            {{ form_row(newCustomer.firstName,
+                            {{ form_row(newCustomer.company,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
@@ -24,7 +24,23 @@
                             ) }}
                         </div>
                         <div class="row mb-3">
+                            {{ form_row(newCustomer.firstName,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(newCustomer.position,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
                             {{ form_row(newCustomer.email,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            <span>Nb: l'ajout d'un nouveau fichier va supprimer l'ancien fichier</span>
+                            {{ form_row(newCustomer.infoFilename,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>

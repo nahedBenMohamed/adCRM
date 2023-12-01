@@ -27,7 +27,7 @@ class CourseController extends AbstractController
     #[Route('/courses', name: 'app_courses')]
     public function viewCourses(EntityManagerInterface $entityManager): Response
     {
-        $courses = $entityManager->getRepository(Formation::class)->findAll();
+        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
         return $this->render('courses/index.html.twig', [
             'courses' => $courses
         ]);

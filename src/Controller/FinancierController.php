@@ -15,7 +15,7 @@ class FinancierController extends AbstractController
     #[Route('/financier', name: 'app_financier')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $financiers = $entityManager->getRepository(Financier::class)->findAll();
+        $financiers = $entityManager->getRepository(Financier::class)->findBy([],['id' => 'DESC']);
         return $this->render('financier/index.html.twig', [
             'financiers' => $financiers,
         ]);

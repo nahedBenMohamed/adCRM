@@ -647,11 +647,13 @@ h6 {
 
   .toggle-sidebar #main,
   .toggle-sidebar #footer {
-    margin-left: 0;
+    margin-left: 70px;
   }
-
   .toggle-sidebar .sidebar {
-    left: -300px;
+    width: 75px;
+  }
+  .toggle-sidebar .sidebar .sidebar-nav span {
+    display: none;
   }
 }
 

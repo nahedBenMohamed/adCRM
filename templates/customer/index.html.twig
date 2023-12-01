@@ -22,16 +22,18 @@
                             <tr>
                                 <th scope="col">Nom</th>
                                 <th scope="col">Prénom</th>
-                                <th scope="col">email</th>
+                                <th scope="col">Email</th>
+                                <th>Entreprise / Organisme</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for customer in customers %}
                                 <tr>
+                                    <td>{{customer.lastName}}</td>
                                     <td>{{customer.firstName}}</td>
-                                    <td>{{customer.lastNAme}}</td>
-                                    <td>{{customer.email}}...</td>
+                                    <td>{{customer.email}}</td>
+                                    <td>{% if customer.company|length >0 %} {{customer.company.name}} {% endif %}</td>
                                     <td>
                                         <a href="" class="first-btn" title="supprimer">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
@@ -39,6 +41,11 @@
                                         <a href="{{ path('app_customer_edit', { 'id':customer.id }) }}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
+                                        {% if customer.infoFilename != '' %}
+                                        <a href="/documents/customerFiles/{{ customer.infoFilename }}" class="" title="Voir fichier" target="_blank" style="margin-left: 10px">
+                                            <img src="{{asset('assets/img/icon/file-solid.svg')}}">
+                                        </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
