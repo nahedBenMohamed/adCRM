@@ -75,9 +75,6 @@ class Formation
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateFinFormation = null;
 
-    #[ORM\Column(length: 255,nullable: true)]
-    private ?string $modaliteFormation = null;
-
     #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
     private ?Link $linkformateur = null;
 
@@ -193,19 +190,6 @@ class Formation
 
         return $this;
     }
-
-    public function getModaliteFormation(): ?string
-    {
-        return $this->modaliteFormation;
-    }
-
-    public function setModaliteFormation(?string $modaliteFormation): self
-    {
-        $this->modaliteFormation = $modaliteFormation;
-
-        return $this;
-    }
-
     public function getTimesheet(): ?string
     {
         return $this->timesheet;

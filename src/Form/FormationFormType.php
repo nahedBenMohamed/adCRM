@@ -35,13 +35,17 @@ class FormationFormType extends AbstractType
             ->add('dateDebutFormation',   DateType::class, [
                 'label' => 'Date de début',
                 'widget' => 'single_text',
-                'html5' => false
+                'html5' => false,
+                'format' => 'dd/MM/yyyy',
+                'attr' => ['class' => 'form-control js-datepicker'],
             ])
 
             ->add('dateFinFormation',   DateType::class, [
                 'label' => 'Date de fin',
                 'widget' => 'single_text',
-                'html5' => false
+                'html5' => false,
+                'format' => 'dd/MM/yyyy',
+                'attr' => ['class' => 'form-control js-datepicker'],
             ])
 
             ->add('dureeFormation',   TextType::class, [
@@ -93,7 +97,7 @@ class FormationFormType extends AbstractType
             ->add('linkToProgram',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getValue();
+                    return $link->getName();
                 },
                 'label' => 'Lien vers le programme',
                 'required' => false,
@@ -103,7 +107,7 @@ class FormationFormType extends AbstractType
             ->add('linkToLivretAccueil',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getValue();
+                    return $link->getName();
                 },
                 'label' => "Lien vers le livret d'accueil",
                 'required' => false,
@@ -112,7 +116,7 @@ class FormationFormType extends AbstractType
             ->add('linkGuide',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getValue();
+                    return $link->getName();
                 },
                 'label' => 'Guide de votre classe virtuelle',
                 'required' => false,
@@ -121,7 +125,7 @@ class FormationFormType extends AbstractType
             ->add('linkFormulaire',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getValue();
+                    return $link->getName();
                 },
                 'label' => 'Formulaire de recueil des attentes',
                 'required' => false,
@@ -131,7 +135,7 @@ class FormationFormType extends AbstractType
             ->add('linkFormateur',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getValue();
+                    return $link->getName();
                 },
                 'label' => 'Lien associé au formateur',
                 'required' => false,

@@ -32,6 +32,7 @@
                         <table class="table datatable table-striped">
                             <thead>
                             <tr>
+                                <th scope="col">Nom de lien</th>
                                 <th scope="col">lien</th>
                                 <th></th>
                             </tr>
@@ -39,6 +40,7 @@
                             <tbody>
                             {% for link in links %}
                                 <tr>
+                                    <td>{{link.name}}</td>
                                     <td>{{link.value}}</td>
                                     <td class="text-center">
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="{{path('app_delete_link',{ 'id': link.id })}}" class="first-btn deleteBtn">

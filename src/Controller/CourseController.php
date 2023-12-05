@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\FormationFormType;
 use App\Form\FormationInfoFormType;
 use App\Form\TraineeFormationFormType;
+use App\Form\TraineeFormType;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,9 +39,10 @@ class CourseController extends AbstractController
     public function addCourse(Request $request, EntityManagerInterface $entityManager): Response
     {
         $course = new Formation();
-        $form = $this->createForm(FormationFormType::class, $course);
+        $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $course = $form->getData();
             $entityManager->persist($course);
             $entityManager->flush();
             return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
@@ -55,25 +57,33 @@ class CourseController extends AbstractController
     public function updateCourse(Request $request, EntityManagerInterface $entityManager, $id): Response
     {
         $course =  $entityManager->getRepository(Formation::class)->find($id);
-        $form = $this->createForm(FormationFormType::class, $course);
+        $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
         $form->handleRequest($request);
-        $formInfo = $this->createForm(FormationInfoFormType::class, $course);
+        $formInfo = $this->createForm(FormationInfoFormType::class, $course, ['allow_extra_fields' =>true]);
         $formInfo->handleRequest($request);
         $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course]);
         $trainees = [];
+        $AllTrainees = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
         foreach ($formationUser as $item) {
             array_push($trainees, $item->getTrainee() );
         }
         if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
+            $course = $form->getData();
             $entityManager->persist($course);
             $entityManager->flush();
+            if ($formInfo->isSubmitted() && $formInfo->isValid()) {
+                $course = $formInfo->getData();
+                $entityManager->persist($course);
+                $entityManager->flush();
+            }
             return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
         }
         return $this->render('courses/edit.html.twig', [
             'formationForm' => $form->createView(),
             'formation' => $course,
             'trainees' => $trainees,
-            'formInfo' => $formInfo->createView()
+            'formInfo' => $formInfo->createView(),
+            'allTrainees' => $AllTrainees
 
         ]);
     }
@@ -161,5 +171,34 @@ class CourseController extends AbstractController
         $dompdf->render();
         $output = $dompdf->output();
         file_put_contents('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf', $output);
+    }
+
+    #[Route('/courses/affectTrainee', name: 'app_affect_trainee')]
+    public function affectTrainee(Request $request,  EntityManagerInterface $entityManager): Response
+    {
+        $itemId = $request->request->get('selecedItem');
+        $formationId = $request->request->get('formationId');
+        if ($formationId && $itemId > 0) {
+            $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
+            $user = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $itemId]);
+            $TraineeFormation = new TraineeFormation();
+            $userInFormation = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $user,'formation' => $formation]);
+            if ($userInFormation == null) {
+                $TraineeFormation->setTrainee($user);
+                $TraineeFormation->setFormation($formation);
+                $entityManager->persist($TraineeFormation);
+                $entityManager->flush();
+                $object = new \stdClass();
+                $object->id = $user->getId();
+                $object->firstName = $user->getFirstName()?$user->getFirstName():'';
+                $object->lastName = $user->getLastName()?$user->getLastName(): '';
+                $object->position = $user->getPosition()?$user->getPosition(): '';
+                return new Response(json_encode($object));
+            } else {
+                return new Response('Utilisateur existe déjà');
+            }
+
+        }
+        return new Response('false');
     }
 }

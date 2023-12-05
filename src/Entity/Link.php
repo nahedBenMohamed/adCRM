@@ -16,6 +16,9 @@ class Link
     #[ORM\Column(length: 255)]
     private ?string $value = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class Link
     public function setValue(string $value): static
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
 
         return $this;
     }
