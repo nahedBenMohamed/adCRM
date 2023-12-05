@@ -1251,3 +1251,10 @@ a.link-right {
   border: none;
   background: none;
 }
+.btn-primary {
+  background: #132438;
+  border-color: #132438;
+}
+.nav-link {
+  color: #4db4e8;
+}

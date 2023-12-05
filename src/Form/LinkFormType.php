@@ -13,6 +13,10 @@ class LinkFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('name',textType::class,[
+                'label' =>'Nom de lien',
+                'required' => true
+            ])
             ->add('value',textType::class,[
             'label' =>'Lien',
             'required' => true

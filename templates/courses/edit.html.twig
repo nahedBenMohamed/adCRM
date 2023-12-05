@@ -3,7 +3,6 @@
     Ajouter une formation
 {% endblock %}
 {% block stylesheets %}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
    <style>
        body {padding-top: 60px;}
        #formation_form_lieuFormation label, #formation_form_linkType label {
@@ -72,12 +71,12 @@
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 checkboxLieu">
                                     {{ form_row(formationForm.lieuFormation,
                                         {'attr': {'class': '' }}
                                     ) }}
                                 </div>
-                                <div class="row mb-3 hidden lieuFormation">
+                                <div class="row mb-3 lieuFormation">
                                     {{ form_row(formationForm.formationAddress,
                                         {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
                                     ) }}
@@ -105,13 +104,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row mb-3">
-                                    {{ form_row(formationForm.dateDebutFormation,
-                                        {'attr': {'class': 'form-control form-control-user js-datepicker' }}
+                                    {{ form_row(formationForm.dateDebutFormation
                                     ) }}
                                 </div>
                                 <div class="row mb-3">
-                                    {{ form_row(formationForm.dateFinFormation,
-                                        {'attr': {'class': 'form-control form-control-user js-datepicker' }}
+                                    {{ form_row(formationForm.dateFinFormation
                                     ) }}
                                 </div>
                                 <div class="row mb-3">
@@ -166,6 +163,20 @@
                         <h5 class="card-title">Stagiaire</h5>
                         <div class="card">
                             <div class="card-body">
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">Choisir un stagaire </label>
+                                    <div class="col-sm-9">
+                                        <select class="js-example-basic-single" name="state" style="width: 100%">
+                                            <option selected="" value="0">Choisir un stagaire de la liste</option>
+                                            {% for trainee in allTrainees %}
+                                                <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-primary" id="addTrainee" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}">Ajouter</button>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6"> <h5 class="card-title">
                                             {% if trainees|length == 1 %}
@@ -186,7 +197,7 @@
                                 </div>
                                 {% endif %}
 
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="trainee-table">
                                     <thead>
                                     <tr>
                                         <th scope="col">Nom</th>
@@ -197,6 +208,7 @@
                                     </thead>
                                     <tbody>
                                     {% for trainee in trainees %}
+                                        {% if trainee is not null %}
                                     <tr>
                                         <td>{{ trainee.firstName }}</td>
                                         <td>{{ trainee.lastName }}</td>
@@ -213,6 +225,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                        {% endif %}
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -280,42 +293,31 @@
     </section>
 {% endblock %}
 {% block javascripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script>
         jQuery(document).ready(function() {
-            $.datepicker.setDefaults(
-                {
-                    closeText: 'Fermer',
-                    prevText: 'Précédent',
-                    nextText: 'Suivant',
-                    currentText: 'Aujourd\'hui',
-                    monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                    monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
-                    dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-                    dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
-                    dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-                    weekHeader: 'Sem.',
-                    dateFormat: 'dd-mm-yy'
-                });
-            $('.js-datepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                minDate: new Date(),
-                firstDay: 1,
-            });
-            $('input[type="radio"]').each(function (e){
-                if(this.value == '') {
-                    this.classList.add('hidden');
-                    $('#formation_form_lieuFormation label:first').addClass('hidden');
-                    $('#formation_form_linkType label:first').addClass('hidden');
-                }
-                if(this.value == 'Distanciel') {
+            $('#formation_form_linkType label:first').addClass('hidden');
+            $('#formation_form_linkType input:first').addClass('hidden');
+            $('.checkboxLieu input[type="radio"]:checked').each(function (e){
+               if(this.value == 'Distanciel') {
+                    $('.lieuFormation').addClass('hidden');
                     $('.linkType').removeClass('hidden');
                 } else if(this.value == 'Présentiel') {
                     $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').addClass('hidden');
+                    $('.teacher').addClass('hidden');
+                    $('.linkVirFormation').addClass('hidden');
                 }else if(this.value == 'Mixte') {
                     $('.lieuFormation').removeClass('hidden');
                     $('.linkType').removeClass('hidden');
+                }
+            });
+            $('.linkType input[type="radio"]:checked').each(function (e){
+                if(this.value == "LienBBB") {
+                    $('.teacher').removeClass('hidden');
+                    $('.linkVirFormation').addClass('hidden');
+                } else {
+                    $('.teacher').addClass('hidden');
+                    $('.linkVirFormation').removeClass('hidden');
                 }
             });
             $('input[type="radio"]').on('change', function(e) {
@@ -341,8 +343,53 @@
             });
             tinyMCE.init({
                 height : "300",
-                language: 'fr_FR'
+                language: 'fr_FR',
+                language_url : '/assets/vendor/tinymce/langs/fr_FR.js',
+                menubar: false,
+                branding: false,
+                statusbar: false
             });
         });
+        $('.js-datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            language: "fr",
+            autoclose: true,
+            orientation: "bottom left",
+            minDate: new Date()
+        });
+        setTimeout(function(){
+          $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
+        }, 1000);
+        $('.js-example-basic-single').select2();
+        $('#addTrainee').on('click',function () {
+            let selecedItem = $(".js-example-basic-single :selected").val()
+            let addTrainee = $(this).attr('data-url');
+            let formationId = $(this).attr('data-formationId');
+            $.ajax({
+                url: addTrainee,
+                type: 'POST',
+                data: {'selecedItem': selecedItem, 'formationId': formationId},
+                success: function(data)
+                {
+                    if(data != false) {
+                        let newData = JSON.parse(data);
+                        let deleteLink = '/courses/deleteTrainee/'+formationId+'/'+newData.id;
+                        let updateLInk = '/trainee/edit/'+newData.id+'/'+formationId;
+                        let sendMailLInk = '/courses/sendConvocation/'+formationId+'/'+newData.id;
+                        $('#trainee-table').find('tbody').append("<tr><td>"+newData.firstName+"</td><td>"+newData.lastName+"</td><td>"+newData.position+"</td>" +
+                            "<td>  <a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
+                            "<img src='/assets/img/icon/circle-delete-solid.svg'></a>" +
+                            "<a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
+                            "<img src='/assets/img/icon/pen-solid.svg'></a>" +
+                            "<a href='"+sendMailLInk+"' title='Envoyer convocation'>" +
+                            "<img src='/assets/img/icon/envelope-solid.svg'></a></td></tr>");
+                        //append data in table
+                    }
+                    console.log(data)
+                    //location.reload();
+                    // $('div.modal-content').html(data)
+                }
+            });
+        })
     </script>
 {% endblock %}
