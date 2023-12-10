@@ -1,73 +1,186 @@
-{% block body %}
-    <div class="container-fluid col-lg-6">
-        <div class="card">
-            <div class="card-header text-center">
-                CONVOCATION <br>
-                à une formation professionnelle continue
-            </div>
-            <div class="card-body">
-                <div class="container">
-                    <p class="card-text">Stagiaire : {{ dataS.firstName }} {{ dataS.lastName }}</p>
-                    <p class="card-text">Entreprise/Organisme : {{ dataS.company }} </p>
-                    <p class="card-text">Formateur.trice :  {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %}</p>
-                    <h6 class="card-title font-italic text-black"><mark>Important : merci de compléter le formulaire de recueil des attentes avant la
-                            formation</mark></h6>
-                    <p class="card-text"> Madame, Monsieur, <br>
-                        Nous avons le plaisir de vous confirmer votre participation à la formation  {{ dataF.nomFormation }}
-                        qui se tiendra selon les modalités pratiques suivantes : <br> </p>
+<!-- Free to use, HTML email template designed & built by FullSphere. Learn more about us at www.fullsphere.co.uk -->
 
-                    <p class="card-text"> <b>Dates et horaires :</b> <br>
-                         {{ dataF.dateDebutFormation|date('d-m-Y') }} et  {{ dataF.dateFinFormation|date('d-m-Y') }} </p>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
-                    <p class="card-text"> <b>Modalité :</b> <br>
-                        {{ dataF.modaliteFormation }} </p>
+<head>
 
-                    <p class="card-text"><b>Lien de connexion à votre classe virtuelle : </b> <br>
-                        {{ dataF.lienFormation }} </p>
-                    <p>
-                        N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles
-                    </p>
-                </div>
-                <div class="container">
-                    <p class="card-text"> Pour suivre votre formation dans de bonnes conditions, vous aurez besoin :  <br> </p>
-                    <ul>
-                        <li>D'une connexion Internet stable</li>
-                        <li>D'un ordinateur équipé d'une sortie son, d'une webcam et d'un micro </li>
-                        <li>De vous assurer d’être au calme pendant la durée de votre formation</li>
-                    </ul>
-                </div>
-                <p> Vous trouverez joints à la présente convocation le programme de la formation,
-                    votre livret d’accueil et le guide d’utilisation de la classe virtuelle sous forme de liens en bas de page. </p>
-            </div>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
 
-            <div class="container">
-                <p class="card-text"> Nous vous rappelons qu’il est important : <br></p>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
+    <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+
+    <!-- Your title goes here -->
+    <title>CONVOCATION</title>
+    <!-- End title -->
+
+    <!-- Start stylesheet -->
+    <style type="text/css">
+        a,a[href],a:hover, a:link, a:visited {
+            /* This is the link colour */
+            text-decoration: none!important;
+            color: #4db4e8;
+        }
+        .link {
+            text-decoration: underline!important;
+        }
+        p, p:visited {
+            /* Fallback paragraph style */
+            font-size:15px;
+            line-height:24px;
+            font-family:'Helvetica', Arial, sans-serif;
+            font-weight:300;
+            text-decoration:none;
+            color: #000000;
+            text-align: left;
+        }
+        h1 {
+            /* Fallback heading style */
+            font-size:22px;
+            line-height:24px;
+            font-family:'Helvetica', Arial, sans-serif;
+            font-weight:normal;
+            text-decoration:none;
+            color: #000000;
+        }
+        .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;}
+        .ExternalClass {width: 100%;}
+        li {
+            text-align: left;
+        }
+    </style>
+    <!-- End stylesheet -->
+
+</head>
+
+<!-- You can change background colour here -->
+<body style="text-align: center; margin: 0; padding-top: 10px; padding-bottom: 10px; padding-left: 0; padding-right: 0; -webkit-text-size-adjust: 100%;background-color: #f2f4f6; color: #000000" align="center">
+
+<!-- Fallback force center content -->
+<div style="text-align: center;">
+
+
+    <!-- Start single column section -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
+        <tbody>
+        <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 0px; padding-bottom: 0px;" width="596">
+
+                <h1 style="font-size: 20px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 600; text-decoration: none; color: #000000;">CONVOCATION</h1>
+
+                <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; text-align: center">à une formation professionnelle continue</p>
+                <hr>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- End single column section -->
+
+    <!-- Start heading for double column section -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
+        <tbody>
+        <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
+            <ul>
+                <li>Apprenant.e : {{ dataS.civility }} - {{ dataS.lastName }} {{ dataS.firstName }} - {{ dataS.position }}</li>
+                <li>Entreprise/Organisme : {% if dataS.company is not null %} {{ dataS.company.name }} {% endif %}</li>
+                <li>Formateur.trice : {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %}</li>
+            </ul>
+                {% if dataF.linkFormulaire is defined and dataF.linkFormulaire is not null %}
+                <b>
+                    Important : merci de compléter le formulaire de recueil des attentes avant la formation ⇒ {{ dataF.linkFormulaire.value }}
+                </b>
+                {% endif %}
+                <p>Madame, Monsieur,</p>
+                <p>Nous avons le plaisir de vous confirmer votre participation à la formation test qui se tiendra selon les modalités pratiques suivantes :</p>
+                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags }}</p>
+                <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
+                {% if (dataF.lieuFormation == 'Présentiel') %}
+                <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress }}</p>
+                {% elseif (dataF.lieuFormation == 'Distanciel')%}
+                <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
+                <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
+                {% else %}
+                    <p>📍 <b>Lieu de formation :</b> (Lieu de formation)</p>
+                    <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
+                    <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
+                {% endif %}
+                <p>Pour suivre votre formation dans de bonnes conditions, vous aurez besoin :</p>
                 <ul>
-                    <li>De nous avertir dans les plus brefs délais, en cas d’absence ou de retard le jour de la formation
-                        aux coordonnées suivantes : 01 46 68 88 88 / <a href="mailto:formation@adconseil.org">formation@adconseil.org</a></li>
-                    <li>D’informer votre employeur en cas d’absence à la formation </li>
+                    <li>D'une connexion Internet stable</li>
+                    <li>D'un ordinateur équipé d'une sortie son, d'une webcam et d'un micro</li>
+                    <li>De vous assurer d’être au calme pendant la durée de votre formation</li>
+                </ul>
+                <p>Vous trouverez joints à la présente convocation le programme de la formation, votre livret d’accueil et le guide d’utilisation de la classe virtuelle sous forme de liens en bas de page.</p>
+                <p>Nous vous rappelons qu’il est important :</p>
+                <ul>
+                    <li>De nous avertir dans les plus brefs délais, en cas d’absence ou de retard le jour de la formation aux coordonnées suivantes : 01 46 68 88 88 / <span style="color: #4db4e8">formation@adconseil.org</span></li>
+                    <li>D’informer votre employeur en cas d’absence à la formation</li>
                     <li>De suivre la formation dans son intégralité</li>
-                </ul> <br>
-                <p class="card-text"> Nous restons à votre disposition pour tout complément d'information et vous souhaitons un agréable temps de formation à nos côtés. <br></p>
-            </div> <br>
+                </ul>
+                <p>Nous restons à votre disposition pour tout complément d'information et vous souhaitons un agréable temps de formation à nos côtés.</p>
+                <p><b>Documents joints à votre convocations (cliquez sur les liens pour y accéder) :</b></p>
+                {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
+                <p><a href="{{ dataF.linkToProgram.value }}"> Programme de votre formation précisant les objectifs et les prérequis</a></p>
+                {% endif %}
+                {% if dataF.linkToLivretAccueil is defined and dataF.linkToLivretAccueil is not null %}
+                <p><a href="{{ dataF.linkToLivretAccueil.value }}">Livret d’accueil des stagiaires incluant le règlement intérieur applicable pendant la formation</a></p>
+                {% endif %}
+                {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
+                <p><a href="{{ dataF.linkGuide.value }}">Guide pratique d’utilisation de votre classe virtuelle</a></p>
+                {% endif %}
+                <p><b>Vous êtes en situation de handicap ?</b></p>
+                <p>N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <span style="color: #4db4e8">referent-handicap@adconseil.org</span></p>
+                {% if dataF.infoTrainees is not null %}
+                <b style="text-align: left">Informations complémentaire stagiaire</b>
+                <p>{{ dataF.infoTrainees }}</p>
+                {% endif %}
 
-            <div class="container">
-                <h6 class="card-title font-italic text-black"><b>Documents joints à la convocations (Liens Hypertexte Cliquables) : </b><br></h6>
-                <ul>
-                    <li><a href="https://onedrive.live.com/?authkey=%21AHqs83%5FsKCjsaWU&id=14C71EA35B2C8113%21123088&cid=14C71EA35B2C8113&parId=root&parQt=sharedby&o=OneUp">Programme de votre formation précisant les objectifs et les prérequis</a></li>
-                    <li><a href="https://onedrive.live.com/?authkey=%21APZWp5RKaiB8EWA&id=14C71EA35B2C8113%2166340&cid=14C71EA35B2C8113&parId=root&parQt=sharedby&o=OneUp">Livret d’accueil des stagiaires incluant le règlement intérieur applicable pendant la formation</a></li>
-                    <li><a href="https://adconseil.org/guide-de-votre-classe-virtuelle/">Guide pratique d’utilisation de votre classe virtuelle </a></li>
-                </ul> <br>
-            </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- End heading for double column section -->
 
-            <div class="container">
-                <h6 class="card-title font-italic"><b>Vous êtes en situation de handicap ?</b> <br><h6>
-                        <p class="card-text"> N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <a href="mailto:referent-handicap@adconseil.org">referent-handicap@adconseil.org</a></p>
-            </div>
+    <!-- Start footer -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #4db4e8;;" width="600">
+        <tbody>
+        <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 30px;" width="596">
+                L’équipe pédagogique AD CONSEIL
+                <hr>
+                <!-- Your inverted logo is here -->
+                <img style="width: 180px; max-width: 180px; height: 85px; max-height: 85px; text-align: center; color: #ffffff;" alt="Logo" src="/assets/img/logo.png" align="left" width="180" height="85">
 
-            <div class="card-footer text-muted text-center">
-                AD CONSEIL
-            </div>
-        </div>
-    </div>
-{% endblock %}
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-left: 30px">
+                <p style="font-size: 13px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #ffffff; margin-top: 0; margin-bottom: 0;">
+                    formation@adconseil.org<br>
+                    01 46 68 88 88
+                </p>
+
+                <p style="margin-bottom: 0;margin-top: 0; font-size: 13px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #ffffff;">
+                    <a target="_blank" style="text-decoration: underline; color: #ffffff;" href="https://adconseil.org/">
+                        adconseil.org
+                    </a>
+                </p>
+            </td></tr>
+        </tbody>
+    </table>
+    <!-- End footer -->
+</div>
+
+</body>
+
+</html>

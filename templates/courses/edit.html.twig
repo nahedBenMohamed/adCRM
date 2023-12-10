@@ -14,6 +14,9 @@
        .hidden {
            display: none;
        }
+       .custom-file-upload {
+
+       }
    </style>
 {% endblock %}
 {% block body %}
@@ -42,9 +45,6 @@
             <div class="tab-pane fade show active tab1" id="details" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            Informations générales
-                        </h5>
                         {{ form_start(formationForm) }}
                         <div class="row">
                             <div class="col-md-6">
@@ -160,21 +160,25 @@
             <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Stagiaire</h5>
                         <div class="card">
                             <div class="card-body">
                                 <div class="row mb-3">
                                     <label class="col-sm-2 col-form-label">Choisir un stagaire </label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-8">
                                         <select class="js-example-basic-single" name="state" style="width: 100%">
                                             <option selected="" value="0">Choisir un stagaire de la liste</option>
                                             {% for trainee in allTrainees %}
                                                 <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
                                             {% endfor %}
                                         </select>
+                                        <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" class="link-right pt-0"> <i class="bi bi-person-plus"></i> Ajouter Stagiaire à la formation</a>
                                     </div>
                                     <div class="col-sm-1">
                                         <button class="btn btn-primary" id="addTrainee" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}">Ajouter</button>
+                                    </div>
+                                    <div class="col-sm-1 custom-file-upload">
+                                        <input type="file" id="html_btn" class="file-type" style="display: none">
+                                        <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -185,9 +189,6 @@
                                             {{ trainees|length }} stagaires inscrits
                                             {% endif %}
                                         </h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" class="link-right"> <i class="bi bi-person-plus"></i> Ajouter Stagiaire à la formation</a>
                                     </div>
                                 </div>
                                 {% if trainees|length > 0 %}
@@ -251,9 +252,6 @@
                     <div class="card-body">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">
-                                    Informations complémentaires
-                                </h5>
                                 {{ form_start(formInfo) }}
                                 <div class="row">
                                     <div class="col-md-12">
@@ -383,13 +381,13 @@
                             "<img src='/assets/img/icon/pen-solid.svg'></a>" +
                             "<a href='"+sendMailLInk+"' title='Envoyer convocation'>" +
                             "<img src='/assets/img/icon/envelope-solid.svg'></a></td></tr>");
-                        //append data in table
                     }
-                    console.log(data)
-                    //location.reload();
-                    // $('div.modal-content').html(data)
                 }
             });
         })
+        $('.new_Btn').click(function() {
+            console.log('test')
+            $('#html_btn').click();
+        });
     </script>
 {% endblock %}
