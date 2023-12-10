@@ -1258,3 +1258,6 @@ a.link-right {
 .nav-link {
   color: #4db4e8;
 }
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  --bs-table-bg-type: rgb(246 249 255);
+}
