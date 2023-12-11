@@ -224,6 +224,9 @@
                                             <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Envoyer convocation" class="">
                                                 <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                             </a>
+                                            <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Voir convocation" class="" target="_blank">
+                                                <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                            </a>
                                         </td>
                                     </tr>
                                         {% endif %}

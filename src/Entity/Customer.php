@@ -30,9 +30,6 @@ class Customer
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "trainee")]
     private ?Company $company = null;
 
-    #[ORM\Column(type: 'string')]
-    private string $infoFilename;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -93,18 +90,6 @@ class Customer
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
-        return $this;
-    }
-
-    public function getInfoFilename(): string
-    {
-        return $this->infoFilename;
-    }
-
-    public function setInfoFilename(string $infoFilename): self
-    {
-        $this->infoFilename = $infoFilename;
-
         return $this;
     }
 }

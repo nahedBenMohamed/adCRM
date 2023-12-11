@@ -16,6 +16,9 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(type: 'string')]
+    private string $infoFilename;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class Company
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getInfoFilename(): string
+    {
+        return $this->infoFilename;
+    }
+
+    public function setInfoFilename(string $infoFilename): self
+    {
+        $this->infoFilename = $infoFilename;
 
         return $this;
     }

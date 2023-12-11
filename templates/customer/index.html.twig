@@ -41,11 +41,6 @@
                                         <a href="{{ path('app_customer_edit', { 'id':customer.id }) }}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
-                                        {% if customer.infoFilename != '' %}
-                                        <a href="/documents/customerFiles/{{ customer.infoFilename }}" class="" title="Voir fichier" target="_blank" style="margin-left: 10px">
-                                            <img src="{{asset('assets/img/icon/file-solid.svg')}}">
-                                        </a>
-                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
