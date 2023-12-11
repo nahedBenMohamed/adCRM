@@ -35,6 +35,11 @@
                                         <a href="{{path('app_edit_company',{ 'id': company.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
+                                        {% if company.infoFilename != '' %}
+                                            <a href="/documents/companyFiles/{{ company.infoFilename }}" class="" title="Voir fichier" target="_blank" style="margin-left: 10px">
+                                                <img src="{{asset('assets/img/icon/file-solid.svg')}}">
+                                            </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

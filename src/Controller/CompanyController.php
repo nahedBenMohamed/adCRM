@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Form\CompanyFormType;
-use App\Form\LinkFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CompanyController extends AbstractController
 {
@@ -22,12 +22,35 @@ class CompanyController extends AbstractController
         ]);
     }
     #[Route('/company/add', name: 'app_add_company')]
-    public function addNewCompany(EntityManagerInterface $entityManager, Request $request): Response
+    public function addNewCompany(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger): Response
     {
         $company = new Company();
         $form = $this->createForm(CompanyFormType::class, $company);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $infoFile = $form->get('infoFilename')->getData();
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($infoFile) {
+                $originalFilename = pathinfo($infoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$infoFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $infoFile->move(
+                        $this->getParameter('company_file_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $company->setInfoFilename($newFilename);
+            }
             $company = $form->getData();
             $entityManager->persist($company);
             $entityManager->flush();
@@ -40,12 +63,32 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/edit/{id}', name: 'app_edit_company')]
-    public function editCompany(EntityManagerInterface $entityManager, Request $request, $id): Response
+    public function editCompany(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger, $id): Response
     {
         $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $id]);
         $form = $this->createForm(CompanyFormType::class, $company);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $infoFile = $form->get('infoFilename')->getData();
+            if ($infoFile) {
+                $originalFilename = pathinfo($infoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$infoFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $infoFile->move(
+                        $this->getParameter('company_file_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $company->setInfoFilename($newFilename);
+            }
             $company = $form->getData();
             $entityManager->persist($company);
             $entityManager->flush();

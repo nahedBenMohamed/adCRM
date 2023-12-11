@@ -201,4 +201,16 @@ class CourseController extends AbstractController
         }
         return new Response('false');
     }
+
+    #[Route('/courses/seeConvocation/{idFormation}/{idTrainee}', name: 'app_trainee_see_conv')]
+    public function seeConvToTrainee(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $this->generate_pdf($formation,$trainee);
+        return $this->render('emails/convocation.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+    }
 }
