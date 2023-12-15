@@ -15,7 +15,18 @@
            display: none;
        }
        .custom-file-upload {
-
+           cursor: pointer;
+       }
+       #trainee-table th {
+           background: #132438;
+           color: #fff;
+       }
+       .list-btn {
+           justify-content: flex-end;
+       }
+       .td-action {
+           display: flex;
+           justify-content: flex-end;
        }
    </style>
 {% endblock %}
@@ -161,42 +172,45 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Choisir un stagaire </label>
-                                    <div class="col-sm-8">
-                                        <select class="js-example-basic-single" name="state" style="width: 100%">
-                                            <option selected="" value="0">Choisir un stagaire de la liste</option>
-                                            {% for trainee in allTrainees %}
-                                                <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" class="link-right pt-0"> <i class="bi bi-person-plus"></i> Ajouter Stagiaire à la formation</a>
-                                    </div>
-                                    <div class="col-sm-1">
-                                        <button class="btn btn-primary" id="addTrainee" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}">Ajouter</button>
-                                    </div>
-                                    <div class="col-sm-1 custom-file-upload">
-                                        <input type="file" id="html_btn" class="file-type" style="display: none">
-                                        <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6"> <h5 class="card-title">
-                                            {% if trainees|length == 1 %}
-                                            {{ trainees|length }} stagaire inscrit
-                                            {% else%}
-                                            {{ trainees|length }} stagaires inscrits
+                            <div class="card-body ps-0 pe-0">
+                                <div class="ml-2 mr-2 m-lg-3">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-6">
+                                            <select class="js-example-basic-single" name="state" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}" style="width: 100%">
+                                                <option selected="" value="0">Choisir un stagaire de la liste</option>
+                                                {% for trainee in allTrainees %}
+                                                    <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="add-stag-alert mt-2">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 offset-md-3 d-inline-flex list-btn">
+                                            <div class="mx-lg-2">
+                                            <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" title="Ajouter Stagiaire à la formation"> <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="40"></a>
+                                            </div>
+                                                <div class="custom-file-upload mx-lg-2">
+                                                <input type="file" id="html_btn" class="file-type" style="display: none">
+                                                <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
+                                            </div>
+                                            {% if trainees|length > 0 %}
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" Envoyer convocation à tous les stagiaires> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
+                                            </div>
                                             {% endif %}
-                                        </h5>
+                                        </div>
+                                    </div>
+                                    <div class="row hidden">
+                                        <div class="col-md-6"> <h5 class="card-title">
+                                                {% if trainees|length == 1 %}
+                                                {{ trainees|length }} stagaire inscrit
+                                                {% else%}
+                                                {{ trainees|length }} stagaires inscrits
+                                                {% endif %}
+                                            </h5>
+                                        </div>
                                     </div>
                                 </div>
-                                {% if trainees|length > 0 %}
-                                <div class="row">
-                                    <div class="col-md-6 offset-md-8">
-                                        <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" type="button" class="btn btn-warning"><i class="bi bi-envelope-fill m-1"></i> Envoyer convocation à tous les stagiaires</a></div>
-                                </div>
-                                {% endif %}
 
                                 <table class="table table-striped" id="trainee-table">
                                     <thead>
@@ -214,18 +228,18 @@
                                         <td>{{ trainee.firstName }}</td>
                                         <td>{{ trainee.lastName }}</td>
                                         <td>{{ trainee.position }}</td>
-                                        <td>
-                                            <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
-                                                <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
-                                            </a>
+                                        <td class="td-action">
                                             <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
                                                 <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                             </a>
-                                            <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Envoyer convocation" class="">
+                                            <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
                                                 <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                             </a>
-                                            <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" title="Voir convocation" class="" target="_blank">
+                                            <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
                                                 <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                            </a>
+                                            <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
+                                                <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
                                             </a>
                                         </td>
                                     </tr>
@@ -362,31 +376,47 @@
           $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
         }, 1000);
         $('.js-example-basic-single').select2();
-        $('#addTrainee').on('click',function () {
+        $('.js-example-basic-single').on('change',function () {
             let selecedItem = $(".js-example-basic-single :selected").val()
             let addTrainee = $(this).attr('data-url');
             let formationId = $(this).attr('data-formationId');
-            $.ajax({
-                url: addTrainee,
-                type: 'POST',
-                data: {'selecedItem': selecedItem, 'formationId': formationId},
-                success: function(data)
-                {
-                    if(data != false) {
-                        let newData = JSON.parse(data);
-                        let deleteLink = '/courses/deleteTrainee/'+formationId+'/'+newData.id;
-                        let updateLInk = '/trainee/edit/'+newData.id+'/'+formationId;
-                        let sendMailLInk = '/courses/sendConvocation/'+formationId+'/'+newData.id;
-                        $('#trainee-table').find('tbody').append("<tr><td>"+newData.firstName+"</td><td>"+newData.lastName+"</td><td>"+newData.position+"</td>" +
-                            "<td>  <a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
-                            "<img src='/assets/img/icon/circle-delete-solid.svg'></a>" +
-                            "<a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
-                            "<img src='/assets/img/icon/pen-solid.svg'></a>" +
-                            "<a href='"+sendMailLInk+"' title='Envoyer convocation'>" +
-                            "<img src='/assets/img/icon/envelope-solid.svg'></a></td></tr>");
+            $('.add-stag-alert').html('')
+            if(parseInt(selecedItem) !== 0) {
+                $.ajax({
+                    url: addTrainee,
+                    type: 'POST',
+                    data: {'selecedItem': selecedItem, 'formationId': formationId},
+                    success: function(data)
+                    {
+                        if(data !== false) {
+                            let newData = JSON.parse(data);
+                            if(newData && newData.status == true) {
+                                let deleteLink = '/courses/deleteTrainee/'+formationId+'/'+newData.id;
+                                let updateLInk = '/trainee/edit/'+newData.id+'/'+formationId;
+                                let sendMailLInk = '/courses/sendConvocation/'+formationId+'/'+newData.id;
+                                let seePdfLink = '/courses/seeConvocation/'+formationId+'/'+newData.id;
+                                $('#trainee-table').find('tbody').append("<tr><td>"+newData.firstName+"</td><td>"+newData.lastName+"</td><td>"+newData.position+"</td>" +
+                                    "<td>  <a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
+                                    "<img src='/assets/img/icon/pen-solid.svg'></a>" +
+                                    "<a href='"+sendMailLInk+"' class='first-btn' title='Envoyer convocation'>" +
+                                    "<img src='/assets/img/icon/envelope-solid.svg'></a>"+
+                                    "<a href='"+seePdfLink+"' class='first-btn' title='Voir convocation' target='_blank'>"+
+                                    "<img src='/assets/img/icon/eye-solid.svg'></a>"+
+                                    "<a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
+                                    "<img src='/assets/img/icon/circle-delete-solid.svg'></a></td></tr>");
+                            } else {
+                                //show alert exist already
+                                $('.add-stag-alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"> ' +
+                                    newData.message+
+                                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ' +
+                                    '</div>');
+                            }
+
+                        }
                     }
-                }
-            });
+                });
+            }
+
         })
         $('.new_Btn').click(function() {
             console.log('test')

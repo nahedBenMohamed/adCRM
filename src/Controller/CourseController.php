@@ -189,13 +189,18 @@ class CourseController extends AbstractController
                 $entityManager->persist($TraineeFormation);
                 $entityManager->flush();
                 $object = new \stdClass();
+                $object->status = true;
                 $object->id = $user->getId();
                 $object->firstName = $user->getFirstName()?$user->getFirstName():'';
                 $object->lastName = $user->getLastName()?$user->getLastName(): '';
                 $object->position = $user->getPosition()?$user->getPosition(): '';
+                $object->message = '';
                 return new Response(json_encode($object));
             } else {
-                return new Response('Utilisateur existe déjà');
+                $object = new \stdClass();
+                $object->status = false;
+                $object->message = 'Utilisateur existe déjà';
+                return new Response(json_encode($object));
             }
 
         }
