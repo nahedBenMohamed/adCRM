@@ -97,7 +97,8 @@
             </ul>
                 {% if dataF.linkFormulaire is defined and dataF.linkFormulaire is not null %}
                 <b>
-                    Important : merci de compléter le formulaire de recueil des attentes avant la formation ⇒ {{ dataF.linkFormulaire.value }}
+                    Important : merci de compléter le formulaire de recueil des attentes avant la formation ⇒
+                    <a href="{{ dataF.linkFormulaire.value }}">{{ dataF.linkFormulaire.value }}</a>
                 </b>
                 {% endif %}
                 <p>Madame, Monsieur,</p>
@@ -107,7 +108,7 @@
                 {% if (dataF.lieuFormation == 'Présentiel') %}
                 <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                 {% elseif (dataF.lieuFormation == 'Distanciel')%}
-                <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
+                <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> <a href="{{ dataF.lienFormation }}"> {{ dataF.lienFormation }}</a></p>
                 <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% else %}
                     <p>📍 <b>Lieu de formation :</b> (Lieu de formation)</p>
@@ -142,7 +143,7 @@
                 <p>N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <span style="color: #4db4e8">referent-handicap@adconseil.org</span></p>
                 {% if dataF.infoTrainees is not null %}
                 <b style="text-align: left">Informations complémentaire stagiaire</b>
-                <p>{{ dataF.infoTrainees }}</p>
+                <p>{{ dataF.infoTrainees|striptags }}</p>
                 {% endif %}
 
             </td>
