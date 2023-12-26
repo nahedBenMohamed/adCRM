@@ -1,7 +1,21 @@
 {% extends 'baseAdmin.html.twig' %}
 
 {% block title %}Modification client{% endblock %}
-
+{% block stylesheets %}
+    <style>
+        .form-company {
+            display: inline-flex;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+        .form-company >div {
+            width: 90%;
+        }
+        .form-company a {
+            margin-top: 18px;
+        }
+    </style
+{% endblock %}
 {% block body %}
     <section class="section">
         <div class="row">
@@ -13,10 +27,11 @@
                         <h5 class="card-title">Modifier les informations de client </h5>
                         <!-- add user Form -->
                         {{ form_start(newCustomer) }}
-                        <div class="row mb-3">
+                        <div class="row mb-3 form-company">
                             {{ form_row(newCustomer.company,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
+                            <a href="{{path('app_add_company')}}" target="_blank">  <img src="{{asset('assets/img/icon/plus-solid.svg')}}" width="40"></a>
                         </div>
                         <div class="row mb-3">
                             {{ form_row(newCustomer.lastName,

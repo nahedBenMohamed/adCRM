@@ -236,4 +236,53 @@ class UserController extends AbstractController
         return $this->render('security/newPassword.html.twig', [
         ]);
     }
+    #[Route('/trainee/delete/{id}', name: 'app_delete_trainee')]
+    public function deleteTrainee(EntityManagerInterface $entityManager, $id): Response
+    {
+        $trainee = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
+        //find if trainee is affected to formation
+        $traineeFormation = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
+        $object = new \stdClass();
+        if ($traineeFormation) {
+            $object->status = false;
+            $object->message = "Ce stagiaire est inscrit dans une formation et il est impossible de le supprimer.";
+        } else {
+            $entityManager->remove($trainee);
+            $entityManager->flush();
+            $object->status = true;
+            $object->message = "Le stagiaire est supprimé avec succès";
+        }
+        return new Response(json_encode($object));
+    }
+    #[Route('/teacher/delete/{id}', name: 'app_delete_teacher')]
+    public function deleteTeacher(EntityManagerInterface $entityManager, $id): Response
+    {
+        $teacher = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        //find if trainee is affected to formation
+        $teacherFormation = $entityManager->getRepository(Formation::class)->findOneBy(['formateur' => $teacher]);
+        $object = new \stdClass();
+        if ($teacherFormation) {
+            $object->status = false;
+            $object->message = "Ce formateur est enregistré dans une formation et il est impossible de le supprimer.";
+        } else {
+            $entityManager->remove($teacher);
+            $entityManager->flush();
+            $object->status = true;
+            $object->message = "Le formateur est supprimé avec succès";
+        }
+        return new Response(json_encode($object));
+    }
+
+    #[Route('/user/delete/{id}', name: 'app_delete_user')]
+    public function deleteUser(EntityManagerInterface $entityManager, $id): Response
+    {
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        $object = new \stdClass();
+        $entityManager->remove($user);
+        $entityManager->flush();
+        $object->status = true;
+        $object->message = "L'utilisateur est supprimé avec succès";
+        return new Response(json_encode($object));
+    }
+
 }

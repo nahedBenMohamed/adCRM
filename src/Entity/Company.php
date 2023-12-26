@@ -16,7 +16,7 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string',nullable: true)]
     private string $infoFilename;
 
     public function getId(): ?int

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\Customer;
+use App\Entity\Trainee;
 use App\Form\CompanyFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -97,5 +99,26 @@ class CompanyController extends AbstractController
         return $this->render('company/edit.html.twig', [
             'companyForm' => $form->createView(),
         ]);
+    }
+    #[Route('/company/delete/{id}', name: 'app_delete_company')]
+    public function deleteCompany(EntityManagerInterface $entityManager, $id): Response
+    {
+        $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $id]);
+        $customerCompany = $entityManager->getRepository(Customer::class)->findOneBy(['company' => $company]);
+        $traineeCompany = $entityManager->getRepository(Trainee::class)->findOneBy(['company' => $company]);
+        $object = new \stdClass();
+        if ($customerCompany) {
+            $object->status = false;
+            $object->message = "Un client est affecté à cette entreprise, il est impossible de le supprimer.";
+        } else if($traineeCompany) {
+            $object->status = false;
+            $object->message = "Un stagiaire est affecté à cette entreprise, il est impossible de le supprimer.";
+        } else {
+            $entityManager->remove($company);
+            $entityManager->flush();
+            $object->status = true;
+            $object->message = "L'entreprise est supprimée avec succès";
+        }
+        return new Response(json_encode($object));
     }
 }

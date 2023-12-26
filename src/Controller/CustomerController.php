@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Entity\Formation;
 use App\Form\CustomerType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,5 +56,23 @@ class CustomerController extends AbstractController
         return $this->render('customer/edit.html.twig', [
             'newCustomer' => $form->createView(),
         ]);
+    }
+
+    #[Route('/customer/delete/{id}', name: 'app_delete_customer')]
+    public function deleteCustomer(EntityManagerInterface $entityManager, $id): Response
+    {
+        $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
+        $teacherFormation = $entityManager->getRepository(Formation::class)->findOneBy(['customer' => $customer]);
+        $object = new \stdClass();
+        if ($teacherFormation) {
+            $object->status = false;
+            $object->message = "Ce client est enregistré dans une formation et il est impossible de le supprimer.";
+        } else {
+            $entityManager->remove($customer);
+            $entityManager->flush();
+            $object->status = true;
+            $object->message = "Le client est supprimé avec succès";
+        }
+        return new Response(json_encode($object));
     }
 }

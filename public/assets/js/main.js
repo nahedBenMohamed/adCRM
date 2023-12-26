@@ -332,6 +332,7 @@ jQuery(document).ready(function() {
 
   $(".remove_item").click(function () {
     let removeUrl = $(this).attr('data-remove-url');
+    $('.remove-element-alert').html('');
     $.ajax({
       url: removeUrl,
       type: 'POST',
@@ -339,8 +340,25 @@ jQuery(document).ready(function() {
       contentType: 'text',
       success: function(data)
       {
-        location.reload();
-       // $('div.modal-content').html(data)
+        let newData = JSON.parse(data);
+        if(newData) {
+          if(newData.status === true) {
+            $('.remove-element-alert').append('<div class="alert alert-success alert-dismissible fade show" role="alert"> ' +
+                newData.message+
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ' +
+                '</div>');
+            setTimeout(function(){
+              location.reload();
+            }, 100);
+          } else {
+            $('.remove-element-alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"> ' +
+                newData.message+
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ' +
+                '</div>');
+          }
+          $('#confirmationModal').modal('hide');
+          $("html, body").animate({ scrollTop: 0 }, "slow");
+        }
       },
       error: function(jqXHR){
        // $('div.modal-content').html(jqXHR.responseText)
