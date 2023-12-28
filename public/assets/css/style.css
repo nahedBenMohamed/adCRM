@@ -610,7 +610,7 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  background-color: #132438;
 }
 
 @media (max-width: 1199px) {
@@ -686,9 +686,9 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #4db4e8;
+  color: #fff;
   transition: 0.3;
-  background: #f6f9ff;
+  background: #4db4e8;
   padding: 10px 15px;
   border-radius: 4px;
 }
@@ -700,8 +700,8 @@ h6 {
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
-  background: #fff;
+  color: #fff;
+  background: #132438;
 }
 
 .sidebar-nav .nav-link.collapsed i {
@@ -709,8 +709,8 @@ h6 {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #4db4e8;
-  background: #f6f9ff;
+  color: #fff;
+  background: #4db4e8;
 }
 
 .sidebar-nav .nav-link:hover i {
@@ -1246,8 +1246,7 @@ a.link-right {
   top: 1px;
 }
 .save-icon {
-  margin-left: 20px;
-  margin-top: -4px;
+  margin-left: 53px;
   border: none;
   background: none;
 }
@@ -1260,4 +1259,15 @@ a.link-right {
 }
 .table-striped>tbody>tr:nth-of-type(odd)>* {
   --bs-table-bg-type: rgb(246 249 255);
+}
+.td-action {
+  display: flex;
+  justify-content: flex-end;
+}
+.pages-links {
+  background: #132438;
+  padding: 6px;
+  margin: 0 -20px;
+  margin-bottom: -20px;
+  margin-top: 60px;
 }

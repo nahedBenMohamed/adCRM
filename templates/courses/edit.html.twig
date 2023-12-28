@@ -237,7 +237,7 @@
                                                 <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
                                             </a>
                                             <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
-                                                <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                                <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                             </a>
                                         </td>
                                     </tr>
@@ -401,7 +401,7 @@
                                     "<a href='"+seePdfLink+"' class='first-btn' title='Voir convocation' target='_blank'>"+
                                     "<img src='/assets/img/icon/eye-solid.svg'></a>"+
                                     "<a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
-                                    "<img src='/assets/img/icon/circle-delete-solid.svg'></a></td></tr>");
+                                    "<img src='/assets/img/icon/circle-delete-solid-red.svg'></a></td></tr>");
                                 $('.send-conv').removeClass('hidden');
                             } else {
                                 //show alert exist already

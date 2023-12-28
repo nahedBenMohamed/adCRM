@@ -13,7 +13,7 @@
                             <div class="col-lg-10"></div>
                             <div class="col-lg-2">
                                 <a href="{{path('app_add_trainee')}}" title="Ajouter stagiaire" class="float-end mt-4 mb-4 add-new">
-                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                                     <td>{% if user.company|length >0 %} {{user.company.name}} {% endif %}</td>
                                     <td class="text-center">
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_trainee',{ 'id': user.id })}}">
-                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                         </a>
                                         <a href="{{path('app_edit_user_trainee',{ 'id': user.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">

@@ -13,7 +13,7 @@
                             <div class="col-lg-8"></div>
                             <div class="col-lg-4">
                                 <a href="{{path('app_add_link')}}" title="Ajouter un nouveau lien" class="float-end mt-4 mb-4 add-new">
-                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                                     <td>{{link.value}}</td>
                                     <td class="text-center">
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="{{path('app_delete_link',{ 'id': link.id })}}" class="first-btn deleteBtn">
-                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                         </a>
                                         <a href="{{path('app_edit_link',{ 'id': link.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">

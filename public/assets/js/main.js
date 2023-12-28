@@ -325,6 +325,9 @@
 })();
 
 jQuery(document).ready(function() {
+  $('.datatable-table tbody tr').each(function() {
+    $(this).find('td:last-child').addClass('td-action');
+  });
   $('.deleteBtn').on('click', function () {
     let removeUrl = $(this).attr('data-remove-url');
     $('.remove_item').attr('data-remove-url', removeUrl);

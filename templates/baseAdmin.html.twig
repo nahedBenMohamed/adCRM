@@ -96,70 +96,70 @@
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_home' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_home')}}" title="Dashboard">
-          <img src="{{asset('assets/img/icon/chart-pie-solid.svg')}}" class="icon-menu">
-          <span>Dashboard</span>
+          <img src="{{asset('assets/img/icon/chart-pie-solid-white.svg')}}" class="icon-menu">
+          <span>Tableau de bord</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_courses' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_courses')}}" title="Formations">
-          <img src="{{asset('assets/img/icon/book-solid.svg')}}" class="icon-menu">
+          <img src="{{asset('assets/img/icon/book-solid-white.svg')}}" class="icon-menu">
           <span>Formations</span>
         </a>
       </li><!-- End Formations Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link {% if 'app_trainees' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_trainees')}}" title="Stagiaires">
-          <img src="{{asset('assets/img/icon/graduation-cap-solid.svg')}}" class="icon-menu">
-          <span>Stagiaires</span>
+        <a class="nav-link {% if 'app_company' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_company')}}" title="Entreprise/Organisme">
+          <img src="{{asset('assets/img/icon/building-solid-white.svg')}}" class="icon-menu">
+          <span>Entreprise/Organisme</span>
         </a>
-      </li><!-- End Stagiaire Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link {% if 'app_teachers' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_teachers')}}" title="Formateurs">
-          <img src="{{asset('assets/img/icon/chalkboard-user-solid.svg')}}" class="icon-menu">
-          <span>Formateurs</span>
-        </a>
-      </li><!-- End Stagiaire Page Nav -->
+      </li>
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_customer' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_customer')}}" title="Clients">
-          <img src="{{asset('assets/img/icon/landmark-solid.svg')}}" class="icon-menu">
+          <img src="{{asset('assets/img/icon/landmark-solid-white.svg')}}" class="icon-menu">
           <span>Contact Clients</span>
         </a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_financier' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_financier')}}" title="Financeurs">
-          <img src="{{asset('assets/img/icon/money-check-dollar-solid.svg')}}" class="icon-menu">
+          <img src="{{asset('assets/img/icon/money-check-dollar-solid-white.svg')}}" class="icon-menu">
           <span>Financeurs</span>
         </a>
       </li>
 
       <li class="nav-item">
+        <a class="nav-link {% if 'app_teachers' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_teachers')}}" title="Formateurs">
+          <img src="{{asset('assets/img/icon/chalkboard-user-solid-white.svg')}}" class="icon-menu">
+          <span>Formateurs</span>
+        </a>
+      </li><!-- End Stagiaire Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link {% if 'app_trainees' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_trainees')}}" title="Stagiaires">
+          <img src="{{asset('assets/img/icon/graduation-cap-solid-white.svg')}}" class="icon-menu">
+          <span>Stagiaires</span>
+        </a>
+      </li><!-- End Stagiaire Page Nav -->
+
+      <li class="nav-item">
         <a class="nav-link {% if 'app_link' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_link')}}" title="Liens">
-          <img src="{{asset('assets/img/icon/link-solid.svg')}}" class="icon-menu">
+          <img src="{{asset('assets/img/icon/link-solid-white.svg')}}" class="icon-menu">
           <span>Liens</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {% if 'app_company' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_company')}}" title="Entreprise/Organisme">
-          <img src="{{asset('assets/img/icon/building-solid.svg')}}" class="icon-menu">
-          <span>Entreprise/Organisme</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
         <a class="nav-link {% if 'app_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_user')}}" title="Administrateurs">
-          <img src="{{asset('assets/img/icon/gear-solid.svg')}}" class="icon-menu">
+          <img src="{{asset('assets/img/icon/gear-solid-white.svg')}}" class="icon-menu">
           <span>Administrateurs</span>
         </a>
       </li><!-- End Utilisateurs Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_edit_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_edit_user',{ 'id': app.user.id })}}" title="Compte">
-          <img src="{{asset('assets/img/icon/user-solid.svg')}}" class="icon-menu">
+          <img src="{{asset('assets/img/icon/user-solid-white.svg')}}" class="icon-menu">
           <span>Compte</span>
         </a>
       </li><!-- End Contact Page Nav -->
