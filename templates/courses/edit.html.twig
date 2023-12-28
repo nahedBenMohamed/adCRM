@@ -193,11 +193,9 @@
                                                 <input type="file" id="html_btn" class="file-type" style="display: none">
                                                 <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
                                             </div>
-                                            {% if trainees|length > 0 %}
-                                            <div class="mx-lg-2">
+                                            <div class="mx-lg-2 send-conv {% if trainees|length == 0 %} hidden {% endif %}">
                                                 <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" Envoyer convocation à tous les stagiaires> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
                                             </div>
-                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="row hidden">
@@ -239,7 +237,7 @@
                                                 <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
                                             </a>
                                             <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
-                                                <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                                <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                             </a>
                                         </td>
                                     </tr>
@@ -249,7 +247,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                      <!--  <div class="row">
                             <div class="col-auto me-auto">
                                 <button type="button" class="btn btn-primary" id="prevButton">
                                     Précédent
@@ -260,7 +258,7 @@
                                     terminer
                                 </button>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
@@ -294,7 +292,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-primary">
-                                            Suivant
+                                            Valider
                                         </button>
                                     </div>
                                 </div>
@@ -396,14 +394,15 @@
                                 let sendMailLInk = '/courses/sendConvocation/'+formationId+'/'+newData.id;
                                 let seePdfLink = '/courses/seeConvocation/'+formationId+'/'+newData.id;
                                 $('#trainee-table').find('tbody').append("<tr><td>"+newData.firstName+"</td><td>"+newData.lastName+"</td><td>"+newData.position+"</td>" +
-                                    "<td>  <a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
+                                    "<td class='td-action'>  <a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
                                     "<img src='/assets/img/icon/pen-solid.svg'></a>" +
                                     "<a href='"+sendMailLInk+"' class='first-btn' title='Envoyer convocation'>" +
                                     "<img src='/assets/img/icon/envelope-solid.svg'></a>"+
                                     "<a href='"+seePdfLink+"' class='first-btn' title='Voir convocation' target='_blank'>"+
                                     "<img src='/assets/img/icon/eye-solid.svg'></a>"+
                                     "<a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
-                                    "<img src='/assets/img/icon/circle-delete-solid.svg'></a></td></tr>");
+                                    "<img src='/assets/img/icon/circle-delete-solid-red.svg'></a></td></tr>");
+                                $('.send-conv').removeClass('hidden');
                             } else {
                                 //show alert exist already
                                 $('.add-stag-alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"> ' +

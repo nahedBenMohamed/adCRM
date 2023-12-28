@@ -66,19 +66,17 @@ class LinkController extends AbstractController
         $fomationLinkToLivretAccueil = $entityManager->getRepository(Formation::class)->findOneBy(['linkToLivretAccueil' => $link]);
         $fomationLinkGuide = $entityManager->getRepository(Formation::class)->findOneBy(['linkGuide' => $link]);
         $fomationLinkFormulaire = $entityManager->getRepository(Formation::class)->findOneBy(['linkFormulaire' => $link]);
+        $object = new \stdClass();
         if($fomationLinkToProgram || $fomationLinkToLivretAccueil || $fomationLinkGuide || $fomationLinkFormulaire) {
-            $this->addFlash(
-                'danger',
-                "Ce lien est utilisé dans des formations, vous devez supprimer les formations qu'ils utilisent avant");
+            $object->status = false;
+            $object->message = "Ce lien est utilisé dans des formations, vous devez supprimer les formations qu'ils utilisent avant";
         } else {
             $entityManager->remove($link);
             $entityManager->flush();
-            $this->addFlash(
-                'success',
-                "Ce lien est supprimé avec succes");
-
+            $object->status = true;
+            $object->message ="Ce lien est supprimé avec succes";
         }
-        return $this->redirectToRoute('app_link');
+        return new Response(json_encode($object));
     }
 
 }

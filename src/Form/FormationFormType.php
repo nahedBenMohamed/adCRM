@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Financier;
 use App\Entity\Formation;
@@ -22,39 +23,42 @@ class FormationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomFormation',   TextType::class, [
-                'label' => 'Intitulé de la formation',
-                'required' => true,
-            ])
+            ->add('nomFormation',   TextType::class,
+                ['required' => true,
+                 'label' => false,
+                 'attr' => ['placeholder' => 'Intitulé de la formation']
+                ]
+            )
             ->add('timesheet',   TextareaType::class, [
                 'label' => 'Dates et horaires',
                 'required' => false,
-                'attr' => ['class' => 'tinymce-editor']
+                'attr' => ['class' => 'tinymce-editor', 'placeholder' => 'Dates et horaires']
             ])
 
             ->add('dateDebutFormation',   DateType::class, [
-                'label' => 'Date de début',
+                'label' => false,
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'form-control js-datepicker'],
+                'attr' => ['class' => 'form-control js-datepicker', 'placeholder' => 'Date de début'],
             ])
 
             ->add('dateFinFormation',   DateType::class, [
-                'label' => 'Date de fin',
+                'label' => false,
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'form-control js-datepicker'],
+                'attr' => ['class' => 'form-control js-datepicker', 'placeholder' => 'Date de fin'],
             ])
 
             ->add('dureeFormation',   TextType::class, [
-                'label' => "Nombre total d'heures",
+                'label' => false,
                 'required' => true,
+                'attr' => ['placeholder' => "Nombre total d'heures"],
             ])
 
             ->add('lieuFormation',   ChoiceType::class, [
-                'label' => 'Modalité',
+                'label' => false,
                 'required' => true,
                 'choices'  => [
                     'Présentiel' => 'Présentiel',
@@ -63,35 +67,39 @@ class FormationFormType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'empty_data'  => null
+                'empty_data'  => null,
+                'attr' => ['placeholder' => "Modalité"]
             ])
 
             ->add('lienFormation',   TextType::class, [
-                'label' => 'Lien classe virtuelle',
+                'label' => false,
                 'required' => false,
+                'attr' => ['placeholder' => "Lien classe virtuelle"]
+
             ])
 
             ->add('linkType',   ChoiceType::class, [
-                'label' => 'Lien BBB/Lien externe',
+                'label' => false,
                 'required' => false,
                 'choices'  => [
                     'Lien BBB' => 'LienBBB',
                     'Lien externe' => 'Lienexterne'
                 ],
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
+                'attr' => ['placeholder' => "Lien BBB/Lien externe"]
             ])
 
             ->add('formationAddress',   TextareaType::class, [
-                'label' => "Lieu de formation",
+                'label' => 'Lieu de formation',
                 'required' => false,
-                'attr'=> ['class' => 'tinymce-editor hidden']
+                'attr'=> ['class' => 'tinymce-editor hidden', 'placeholder' => "Lieu de formation"]
             ])
 
             ->add('objective',   TextareaType::class, [
                 'label' => "Objectifs de l'action de formation",
                 'required' => false,
-                'attr' => ['class' => 'tinymce-editor']
+                'attr' => ['class' => 'tinymce-editor', 'placeholder' => "Objectifs de l'action de formation"]
             ])
 
             ->add('linkToProgram',   EntityType::class, [
@@ -99,9 +107,10 @@ class FormationFormType extends AbstractType
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
-                'label' => 'Lien vers le programme',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => "Lien vers le programme"
             ])
 
             ->add('linkToLivretAccueil',   EntityType::class, [
@@ -109,27 +118,30 @@ class FormationFormType extends AbstractType
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
-                'label' => "Lien vers le livret d'accueil",
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => "Lien vers le livret d'accueil"
             ])
             ->add('linkGuide',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
-                'label' => 'Guide de votre classe virtuelle',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => "Guide de votre classe virtuelle"
             ])
             ->add('linkFormulaire',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
-                'label' => 'Formulaire de recueil des attentes',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => "Formulaire de recueil des attentes"
             ])
 
             ->add('linkFormateur',   EntityType::class, [
@@ -137,9 +149,10 @@ class FormationFormType extends AbstractType
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
-                'label' => 'Lien associé au formateur',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => "Lien associé au formateur"
             ])
             
             ->add('formateur', EntityType::class, [
@@ -147,7 +160,7 @@ class FormationFormType extends AbstractType
                 'choice_label' => function($user) {
                     return $user->getFirstName() . ' ' . $user->getLastName();
                 },
-                'label' => 'Formateur',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
                 'query_builder' => function (EntityRepository $er) {
@@ -155,25 +168,28 @@ class FormationFormType extends AbstractType
                            ->andWhere('u.roles LIKE :val')
                             ->setParameter('val', '%ROLE_TEACHER%');
                 },
+                'placeholder' => "Formateur"
             ])
 
             ->add('customer', EntityType::class, [
-                'class' => Customer::class,
+                'class' => Company::class,
                 'choice_label' => function($customer) {
-                    return $customer->getFirstName() . ' ' . $customer->getLastName();
+                    return $customer->getName();
                 },
-                'label' => 'Client',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => "Client"
             ])
             ->add('financier', EntityType::class, [
                 'class' => Financier::class,
                 'choice_label' => function($customer) {
                     return $customer->getName();
                 },
-                'label' => 'Financeur',
+                'label' => false,
                 'required' => false,
                 'empty_data' => '',
+                'placeholder' => 'Financeur'
             ]);
     }
 

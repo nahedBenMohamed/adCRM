@@ -113,7 +113,7 @@ class CourseController extends AbstractController
         ]);
         $email = (new Email())
             ->from('nahedbenmohamed57@gmail.com')
-            ->text('Bonjour, voici le doc de convocation')
+            ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
             //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
@@ -138,7 +138,7 @@ class CourseController extends AbstractController
             ]);
             $email = (new Email())
                 ->from('nahedbenmohamed57@gmail.com')
-                ->text('Bonjour, voici le doc de convocation')
+                ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
                 ->to($trainee->getEmail());
                 //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
@@ -217,5 +217,26 @@ class CourseController extends AbstractController
             'dataF' => $formation,
             'dataS' => $trainee
         ]);
+    }
+    #[Route('/formation/delete/{id}', name: 'app_delete_formation')]
+    public function deleteFormation(EntityManagerInterface $entityManager, $id): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $id]);
+        $traineeFormation = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        $deleted = 0;
+        foreach ($traineeFormation as $item) {
+           $entityManager->remove($item);
+           $entityManager->flush();
+           $deleted ++;
+        }
+
+        if($deleted == count($traineeFormation)) {
+            $entityManager->remove($formation);
+            $entityManager->flush();
+        }
+        $object = new \stdClass();
+        $object->status = true;
+        $object->message = "La formation est supprimée avec succès";
+        return new Response(json_encode($object));
     }
 }

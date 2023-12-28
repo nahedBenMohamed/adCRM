@@ -6,28 +6,17 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
+                <div class="remove-element-alert mt-2"></div>
                 <div class="card">
                     <div class="card-body ps-0 pe-0">
                         <div class="row">
                             <div class="col-lg-8"></div>
                             <div class="col-lg-4">
                                 <a href="{{path('app_add_link')}}" title="Ajouter un nouveau lien" class="float-end mt-4 mb-4 add-new">
-                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
                             </div>
                         </div>
-                        {% for danger in app.flashes('danger') %}
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ danger }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                        {% for success in app.flashes('danger') %}
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ success }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
                         <!-- Table with stripped rows -->
                         <table class="table datatable table-striped">
                             <thead>
@@ -44,7 +33,7 @@
                                     <td>{{link.value}}</td>
                                     <td class="text-center">
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="{{path('app_delete_link',{ 'id': link.id })}}" class="first-btn deleteBtn">
-                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                         </a>
                                         <a href="{{path('app_edit_link',{ 'id': link.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">

@@ -6,13 +6,14 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
+                <div class="remove-element-alert mt-2"></div>
                 <div class="card">
                     <div class="card-body ps-0 pe-0">
                         <div class="row">
                             <div class="col-lg-8"></div>
                             <div class="col-lg-4">
                                 <a href="{{path('app_add_company')}}" title="Ajouter un nouveau organisme" class="float-end mt-4 mb-4 add-new">
-                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="40">
+                                    <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
                             </div>
                         </div>
@@ -29,8 +30,8 @@
                                 <tr>
                                     <td>{{company.name}}</td>
                                     <td class="text-center">
-                                        <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="" class="first-btn">
-                                            <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}">
+                                        <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" data-remove-url="{{path('app_delete_company',{ 'id': company.id })}}">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                         </a>
                                         <a href="{{path('app_edit_company',{ 'id': company.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">

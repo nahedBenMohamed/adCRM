@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Financier;
+use App\Entity\Formation;
 use App\Form\FinancierFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,5 +56,22 @@ class FinancierController extends AbstractController
         return $this->render('financier/edit.html.twig', [
             'financier' => $form->createView(),
         ]);
+    }
+    #[Route('/financier/delete/{id}', name: 'app_delete_financier')]
+    public function deleteFinancier(EntityManagerInterface $entityManager, $id): Response
+    {
+        $financier = $entityManager->getRepository(Financier::class)->findOneBy(['id' => $id]);
+        $financierFormation = $entityManager->getRepository(Formation::class)->findOneBy(['financier' => $financier]);
+        $object = new \stdClass();
+        if ($financierFormation) {
+            $object->status = false;
+            $object->message = "Ce financeur est enregistré dans une formation et il est impossible de le supprimer.";
+        } else {
+            $entityManager->remove($financier);
+            $entityManager->flush();
+            $object->status = true;
+            $object->message = "Le financeur est supprimé avec succès";
+        }
+        return new Response(json_encode($object));
     }
 }
