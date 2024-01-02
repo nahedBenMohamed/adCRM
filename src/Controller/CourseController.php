@@ -121,6 +121,7 @@ class CourseController extends AbstractController
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
         $entityManager->flush();
+        $this->addFlash('success', "La convocation a été envoyée avec succès.");
         return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
     }
 
@@ -148,7 +149,7 @@ class CourseController extends AbstractController
             $entityManager->persist($item);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', "Les convocations ont bien été envoyées.");
         return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
     }
 

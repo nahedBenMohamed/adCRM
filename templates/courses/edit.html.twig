@@ -28,6 +28,15 @@
            display: flex;
            justify-content: flex-end;
        }
+       .bloc-add {
+           display: inline-flex;
+           width: 95%;
+           flex-wrap: nowrap;
+       }
+       .bloc-add a {
+           padding-left: 0;
+           padding-top: 4px;
+       }
    </style>
 {% endblock %}
 {% block body %}
@@ -35,6 +44,16 @@
         <h3 class="card-title">
             Modfier la formation <b> {{ formation.nomFormation }}</b>
         </h3>
+        <div class="pt-4 pb-2">
+            {% for success in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ success }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            <h5 class="card-title text-center pb-0 fs-4">Saisir votre nouveau mot de passe</h5>
+        </div>
+
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="true">
@@ -59,23 +78,29 @@
                         {{ form_start(formationForm) }}
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="row mb-3">
+                                <div class="row mb-3 bloc-add">
                                     {{ form_row(formationForm.customer,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
-                                    <a href="{{path('app_customer_add')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter client</a>
+                                    <a href="{{path('app_customer_add')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 bloc-add">
                                     {{ form_row(formationForm.formateur,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
-                                    <a href="{{path('app_add_teacher')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter formateur</a>
+                                    <a href="{{path('app_add_teacher')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 bloc-add">
                                     {{ form_row(formationForm.financier,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
-                                    <a href="{{path('app_financier_add')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter financeur</a>
+                                    <a href="{{path('app_financier_add')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
                                 </div>
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.nomFormation,
