@@ -112,15 +112,15 @@ class CourseController extends AbstractController
             'dataS' => $trainee
         ]);
         $email = (new Email())
-            ->from('nahedbenmohamed57@gmail.com')
+            ->from('formation@adconseil.org')
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-            //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
         $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
         $entityManager->flush();
+        $this->addFlash('success', "La convocation a été envoyée avec succès.");
         return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
     }
 
@@ -129,26 +129,72 @@ class CourseController extends AbstractController
     {
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        $listOfTrainees = [];
         foreach ($traineesFormation as $item) {
             $trainee = $item->getTrainee();
+            $listOfTrainees[] = $trainee;
             $this->generate_pdf($formation, $trainee);
             $html = $this->renderView('emails/convocation.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $trainee
             ]);
             $email = (new Email())
-                ->from('nahedbenmohamed57@gmail.com')
+                ->from('formation@adconseil.org')
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
                 ->to($trainee->getEmail());
-                //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
-             $mailer->send($email);
+            $mailer->send($email);
 
             $item->setSendConvocation(true);
             $entityManager->persist($item);
             $entityManager->flush();
         }
+        $traineer = $formation->getFormateur();
+        if($traineer) {
+            $html2 = $this->renderView('emails/convocation.html.twig', [
+                'dataF' => $formation,
+                'dataS' => $traineesFormation[0]
+            ]);
+            //send copy stag mail to adconseil
+            $emailAdmin = (new Email())
+                ->from('formation@adconseil.org')
+                ->subject('Convocation à la formation '.$formation->getNomFormation())
+                ->html($html2)
+                ->to('formation@adconseil.org');
+            $mailer->send($emailAdmin);
+            //send specific mail to Traineer
+            $htmlRecap = $this->renderView('emails/convocation_traineer.html.twig', [
+                'dataF' => $formation,
+                'dataS' => $traineesFormation[0],
+                'traineesFormation' => $listOfTrainees
+            ]);
+            $emailTraineer = (new Email())
+                ->from('formation@adconseil.org')
+                ->subject("Récap’ formation ".$formation->getNomFormation())
+                ->html($htmlRecap)
+                ->cc('formation@adconseil.org')
+                ->to($traineer->getEmail());
+            $mailer->send($emailTraineer);
+            //send specific mail to contact client
+            $client = $formation->getCustomer();
+            if($client) {
+                $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
+                    'dataF' => $formation,
+                    'dataS' => $traineesFormation[0],
+                    'traineesFormation' => $listOfTrainees
+                ]);
+                $emailClient = (new Email())
+                    ->from('formation@adconseil.org')
+                    ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
+                    ->html($htmlClient)
+                    ->cc('nahedbenmohamed57@gmail.com')
+                    ->to($client->getEmail());
+                $mailer->send($emailClient);
+            }
+        }
 
+
+        $this->addFlash('success', "Les convocations ont bien été envoyées.");
         return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
     }
 
@@ -238,5 +284,37 @@ class CourseController extends AbstractController
         $object->status = true;
         $object->message = "La formation est supprimée avec succès";
         return new Response(json_encode($object));
+    }
+
+    #[Route('/courses/seeConvocationRecap/{idFormation}', name: 'app_trainee_see_conv_recap')]
+    public function seeConvRecap(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        $listOfTrainees = [];
+        foreach ($traineesFormation as $item) {
+            $trainee = $item->getTrainee();
+            $listOfTrainees[] = $trainee;
+        }
+        return $this->render('emails/convocation_traineer.html.twig', [
+            'dataF' => $formation,
+            'traineesFormation' => $listOfTrainees
+        ]);
+    }
+
+    #[Route('/courses/seeConvocationClient/{idFormation}', name: 'app_trainee_see_conv_client')]
+    public function seeConvClient(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        $listOfTrainees = [];
+        foreach ($traineesFormation as $item) {
+            $trainee = $item->getTrainee();
+            $listOfTrainees[] = $trainee;
+        }
+        return $this->render('emails/convocation_client.html.twig', [
+            'dataF' => $formation,
+            'traineesFormation' => $listOfTrainees
+        ]);
     }
 }

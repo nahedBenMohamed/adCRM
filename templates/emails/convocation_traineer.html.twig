@@ -79,9 +79,8 @@
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 0px; padding-bottom: 0px;" width="596">
 
-                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">CONVOCATION</h1>
+                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Récap’ formation</h1>
 
-                <p style="font-size: 15px; line-height: 24px; font-weight: 400; text-decoration: none; text-align: center">à une formation professionnelle continue</p>
                 <hr>
             </td>
         </tr>
@@ -94,63 +93,55 @@
         <tbody>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
-            <ul>
-                <li>Apprenant.e : {% if dataS.civility is defined %} {{ dataS.civility }} - {% endif %}
-                    {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %} {% if dataS.firstName is defined %} {{ dataS.firstName }} - {% endif %} {% if dataS.position is defined %}{{ dataS.position }} {% endif %}</li>
-                <li>Entreprise/Organisme : {% if dataS.company is defined and dataS.company is not null %} {{ dataS.company.name }} {% endif %}</li>
-                <li>Formateur.trice : {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %}</li>
-            </ul>
-                {% if dataF.linkFormulaire is defined and dataF.linkFormulaire is not null %}
-                <b>
-                    Important : merci de compléter le formulaire de recueil des attentes avant la formation ⇒
-                    <a href="{{ dataF.linkFormulaire.value }}">{{ dataF.linkFormulaire.value }}</a>
-                </b>
-                {% endif %}
-                <p>Madame, Monsieur,</p>
-                <p>Nous avons le plaisir de vous confirmer votre participation à la formation test qui se tiendra selon les modalités pratiques suivantes :</p>
+                <p>Bonjour {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }}, {% endif %}</p>
+
+                <p> Tu animeras bientôt la formation <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :</p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
-                <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
+                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                 {% elseif (dataF.lieuFormation == 'Distanciel')%}
-                <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> <a href="{{ dataF.lienFormation }}"> {{ dataF.lienFormation }}</a></p>
-                <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
+                    <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a></p>
+                    <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% else %}
                     <p>📍 <b>Lieu de formation :</b> (Lieu de formation)</p>
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% endif %}
-                <p>Pour suivre votre formation dans de bonnes conditions, vous aurez besoin :</p>
+                {% if dataF.customer is defined and dataF.customer is not null %}
+                <p><b>📞Coordonnées du/des commanditaire(s) :</b></p>
+                <p>{{ dataF.customer.firstName }},  {{ dataF.customer.lastname }},  {{ dataF.customer.position }}, {{ dataF.customer.email }}</p>
+                {% endif %}
+                <p><b>Liens utiles : </b></p>
                 <ul>
-                    <li>D'une connexion Internet stable</li>
-                    <li>D'un ordinateur équipé d'une sortie son, d'une webcam et d'un micro</li>
-                    <li>De vous assurer d’être au calme pendant la durée de votre formation</li>
+                    {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
+                        <li> <a href="{{ dataF.linkToProgram.value }}" target="_blank">Le programme de la formation précisant les objectifs et les prérequis</a></li>
+                    {% endif %}
+                    {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
+                        <li><a href="{{ dataF.linkGuide.value }}" target="_blank">La check-liste des formateurs.trices : merci d’en suivre les processus </a></li>
+                    {% endif %}
                 </ul>
-                <p>Vous trouverez joints à la présente convocation le programme de la formation, votre livret d’accueil et le guide d’utilisation de la classe virtuelle sous forme de liens en bas de page.</p>
-                <p>Nous vous rappelons qu’il est important :</p>
-                <ul>
-                    <li>De nous avertir dans les plus brefs délais, en cas d’absence ou de retard le jour de la formation aux coordonnées suivantes : 01 46 68 88 88 / <span style="color: #4db4e8">formation@adconseil.org</span></li>
-                    <li>D’informer votre employeur en cas d’absence à la formation</li>
-                    <li>De suivre la formation dans son intégralité</li>
-                </ul>
-                <p>Nous restons à votre disposition pour tout complément d'information et vous souhaitons un agréable temps de formation à nos côtés.</p>
-                <p><b>Documents joints à votre convocations (cliquez sur les liens pour y accéder) :</b></p>
-                {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
-                <p><a href="{{ dataF.linkToProgram.value }}"> Programme de votre formation précisant les objectifs et les prérequis</a></p>
+                <p><b>Liste des stagiaires convoqués à la formation : </b></p>
+                <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
+                    <thead>
+                    <tr>
+                        <th style="border: 1px solid #ccc; padding: 5px">Prénom</th>
+                        <th style="border: 1px solid #ccc; padding: 5px">Nom</th>
+                        <th style="border: 1px solid #ccc; padding: 5px">Fonction</th>
+                        <th style="border: 1px solid #ccc; padding: 5px">Mail</th>
+                    </tr>
+                    </thead>
+                    {% for trainee in traineesFormation %}
+                       <tr><td style="border: 1px solid #ccc; padding: 5px">{{ trainee.firstName }}</td>
+                           <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.lastName }}</td>
+                           <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.position }}</td>
+                           <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.email }}</td></tr>
+                    {% endfor %}
+                </table>
+                {% if dataF.infoFormateur is not null %}
+                    <b style="text-align: left">Informations complémentaire formateur :</b>
+                    <p>{{ dataF.infoFormateur|striptags }}</p>
                 {% endif %}
-                {% if dataF.linkToLivretAccueil is defined and dataF.linkToLivretAccueil is not null %}
-                <p><a href="{{ dataF.linkToLivretAccueil.value }}">Livret d’accueil des stagiaires incluant le règlement intérieur applicable pendant la formation</a></p>
-                {% endif %}
-                {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
-                <p><a href="{{ dataF.linkGuide.value }}">Guide pratique d’utilisation de votre classe virtuelle</a></p>
-                {% endif %}
-                <p><b>Vous êtes en situation de handicap ?</b></p>
-                <p>N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <span style="color: #4db4e8">referent-handicap@adconseil.org</span></p>
-                {% if dataF.infoTrainees is not null %}
-                <b style="text-align: left">Informations complémentaire stagiaire</b>
-                <p>{{ dataF.infoTrainees|striptags }}</p>
-                {% endif %}
-
             </td>
         </tr>
         </tbody>
