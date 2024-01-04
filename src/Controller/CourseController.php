@@ -116,7 +116,6 @@ class CourseController extends AbstractController
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-            //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
         $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
@@ -144,8 +143,7 @@ class CourseController extends AbstractController
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
                 ->to($trainee->getEmail());
-                //->attachFromPath('documents/convocations/convocation_'.$formation->getId().'_'.$trainee->getId().'.pdf');
-             $mailer->send($email);
+            $mailer->send($email);
 
             $item->setSendConvocation(true);
             $entityManager->persist($item);
@@ -189,7 +187,7 @@ class CourseController extends AbstractController
                     ->from('formation@adconseil.org')
                     ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
                     ->html($htmlClient)
-                    ->cc('formation@adconseil.org')
+                    ->cc('nahedbenmohamed57@gmail.com')
                     ->to($client->getEmail());
                 $mailer->send($emailClient);
             }

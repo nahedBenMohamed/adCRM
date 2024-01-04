@@ -172,9 +172,9 @@ class FormationFormType extends AbstractType
             ])
 
             ->add('customer', EntityType::class, [
-                'class' => Company::class,
+                'class' => Customer::class,
                 'choice_label' => function($customer) {
-                    return $customer->getName();
+                    return $customer->getFirstName().' '.$customer->getLastName();
                 },
                 'label' => false,
                 'required' => false,
