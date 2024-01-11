@@ -12,7 +12,10 @@ use App\Form\TraineeFormationFormType;
 use App\Form\TraineeFormType;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -316,5 +319,62 @@ class CourseController extends AbstractController
             'dataF' => $formation,
             'traineesFormation' => $listOfTrainees
         ]);
+    }
+
+    #[Route('/courses/uploadTraineeFromFile/{idFormation}', name: 'app_upload_trainee')]
+    public function uploadTraineeFromFile(Request $request, EntityManagerInterface $entityManager, $idFormation ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        if ($request->isMethod('POST')) {
+           // $file  = $request->request->get('trainees');
+            $file =  $request->files->get('fileTrainee');
+            if ($file->getClientOriginalExtension() =='xlsx') {
+                $fileFolder = $this->getParameter('trainee_file_directory');  //choose the folder in which the uploaded file will be stored
+                $filePathName = md5(uniqid()) . $file->getClientOriginalName();
+                // apply md5 function to generate an unique identifier for the file and concat it with the file extension
+                try {
+                    $file->move($fileFolder, $filePathName);
+                } catch (FileException $e) {
+                    dd($e);
+                }
+                $reader = new Xls();
+                $spreadsheet = IOFactory::load($fileFolder .'/'. $filePathName); // Here we are able to read from the excel file
+                $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
+                $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
+                if(count($sheetData)>0) {
+                    foreach ($sheetData as $Row)
+                    {
+
+                        $first_name = $Row['A']; // store the first_name on each iteration
+                        $last_name = $Row['B']; // store the last_name on each iteration
+                        $position = $Row['C'];   // store the position on each iteration
+                        $email= $Row['D'];     // store the email on each iteration
+
+                        $user_existant = $entityManager->getRepository(Trainee::class)->findOneBy(array('email' => $email));
+                        // make sure that the user does not already exists in your db
+                        if (!$user_existant)
+                        {
+                            $student = new Trainee();
+                            $student->setFirstName($first_name);
+                            $student->setLastName($last_name);
+                            $student->setEmail($email);
+                            $student->setPosition($position);
+                            $entityManager->persist($student);
+                            $entityManager->flush();
+                            // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
+                            //affect the user to the formation
+                            $TraineeFormation = new TraineeFormation();
+                            $TraineeFormation->setTrainee($student);
+                            $TraineeFormation->setFormation($formation);
+                            $entityManager->persist($TraineeFormation);
+                            $entityManager->flush();
+                        }
+                     }
+                }
+
+            }
+        }
+        $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
+        return $this->redirectToRoute('app_courses_edit', ['id' => $formation->getId()]);
     }
 }
