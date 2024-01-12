@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FormationRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -63,11 +65,14 @@ class Formation
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
     private ?User $formateur;
 
-    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: "formations")]
-    private ?Customer $customer;
+    #[ORM\ManyToMany(targetEntity: Customer::class, inversedBy: "formations")]
+    private ?Collection $customer;
 
     #[ORM\ManyToOne(targetEntity: Financier::class, inversedBy: "formations")]
     private ?Financier $financier;
+
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "formations")]
+    private ?Company $company;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDebutFormation = null;
@@ -77,6 +82,11 @@ class Formation
 
     #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
     private ?Link $linkformateur = null;
+
+    public function __construct()
+    {
+        $this->customer = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -304,14 +314,21 @@ class Formation
     }
 
 
-    public function getCustomer(): ?Customer
+    public function getCustomer(): Collection
     {
         return $this->customer;
     }
 
-    public function setCustomer(?Customer $customer): self
+    public function setCustomer(Collection $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function addCustomer(Collection $customer)
+    {
+        $this->customer[] = $customer;
 
         return $this;
     }
@@ -336,6 +353,18 @@ class Formation
     public function setLinkformateur(Link $linkformateur): self
     {
         $this->linkformateur = $linkformateur;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }

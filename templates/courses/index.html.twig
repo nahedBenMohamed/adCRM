@@ -31,7 +31,7 @@
                             <tbody>
                             {% for course in courses %}
                             <tr>
-                                <td>{% if course.customer is defined and course.customer is not null %} {{course.customer.firstName}} {% else %} - {% endif %}</td>
+                                <td>{% if course.company is defined and course.company is not null %} {{course.company.name}} {% else %} - {% endif %}</td>
                                 <td>{{course.nomFormation}}</td>
                                 <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
                                 <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
