@@ -15,6 +15,15 @@
         .hidden {
             display: none;
         }
+        .bloc-add {
+            display: inline-flex;
+            width: 95%;
+            flex-wrap: nowrap;
+        }
+        .bloc-add a {
+            padding-left: 0;
+            padding-top: 4px;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -43,22 +52,33 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row mb-3">
-                                    {{ form_row(formationForm.customer,
-                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    {{ form_row(formationForm.company,
+                                        {'attr': {'class': 'form-control select-company' }}
                                     ) }}
-                                    <a href="{{path('app_customer_add')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter client</a>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 bloc-add">
+                                    {{ form_row(formationForm.customer,
+                                        {'attr': {'class': 'form-control select-client' }}
+                                    ) }}
+                                    <a href="{{path('app_customer_add')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
+                                </div>
+                                <div class="row mb-3 bloc-add">
                                     {{ form_row(formationForm.formateur,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
-                                    <a href="{{path('app_add_teacher')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter formateur</a>
+                                    <a href="{{path('app_add_teacher')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
                                 </div>
-                                <div class="row mb-3">
+                                <div class="row mb-3 bloc-add">
                                     {{ form_row(formationForm.financier,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
-                                    <a href="{{path('app_financier_add')}}" target="_blank"> <i class="bi bi-person-plus"></i> Ajouter financeur</a>
+                                    <a href="{{path('app_financier_add')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
                                 </div>
 
                                 <div class="row mb-3">
@@ -196,7 +216,6 @@
     </section>
 {% endblock %}
 {% block javascripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script>
         jQuery(document).ready(function() {
             $('#formation_form_linkType label:first').addClass('hidden');
@@ -247,7 +266,8 @@
             });
             tinyMCE.init({
                 height : "300",
-                language: 'fr',
+                language: 'fr_FR',
+                language_url : '/assets/vendor/tinymce/langs/fr_FR.js',
                 menubar: false,
                 branding: false,
                 statusbar: false
@@ -262,6 +282,22 @@
             setTimeout(function(){
                 $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
             }, 1000);
+            $('.select-company').on('change',function () {
+               let selectedCompany = this.selectedOptions[0].text;
+               $('.select-client option').each(function (e){
+                   if(this.text.includes(selectedCompany)) {
+                       this.style.display = "block";
+                   } else {
+                       this.style.display = "none";
+                   }
+
+               })
+                if(selectedCompany === 'Client') {
+                    $('.select-client option').each(function (e) {
+                        this.style.display = "block";
+                    })
+                }
+            })
         });
     </script>
 {% endblock %}

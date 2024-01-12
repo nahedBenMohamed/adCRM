@@ -344,17 +344,19 @@ class CourseController extends AbstractController
                 if(count($sheetData)>0) {
                     foreach ($sheetData as $Row)
                     {
-
-                        $first_name = $Row['A']; // store the first_name on each iteration
-                        $last_name = $Row['B']; // store the last_name on each iteration
-                        $position = $Row['C'];   // store the position on each iteration
-                        $email= $Row['D'];     // store the email on each iteration
+                        $civility= $Row['A'];     // store the civility on each iteration
+                        $first_name = $Row['B']; // store the first_name on each iteration
+                        $last_name = $Row['C']; // store the last_name on each iteration
+                        $position = $Row['D'];   // store the position on each iteration
+                        $email = $Row['E'];     // store the email on each iteration
 
                         $user_existant = $entityManager->getRepository(Trainee::class)->findOneBy(array('email' => $email));
                         // make sure that the user does not already exists in your db
-                        if (!$user_existant)
+
+                        if (!$user_existant && $email != null)
                         {
                             $student = new Trainee();
+                            $student->setCivility($civility);
                             $student->setFirstName($first_name);
                             $student->setLastName($last_name);
                             $student->setEmail($email);
