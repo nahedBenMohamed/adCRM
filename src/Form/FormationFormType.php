@@ -105,7 +105,9 @@ class FormationFormType extends AbstractType
             ->add('linkToProgram',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getName();
+                if($link->getName() == 'lien statique')
+                    return $link->getValue() ;
+                    else return $link->getName();
                 },
                 'label' => false,
                 'required' => false,

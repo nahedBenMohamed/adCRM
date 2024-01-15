@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\Link;
 use App\Entity\Trainee;
 use App\Entity\TraineeFormation;
 use App\Entity\User;
@@ -46,6 +47,18 @@ class CourseController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $course = $form->getData();
+            if ($course->getLinkToProgram() == null) {
+                if($request->request->get('otherProgram') != '') {
+                    //create new link
+                    $link = new Link();
+                    $link->setName('lien statique');
+                    $link->setValue($request->request->get('otherProgram'));
+                    $entityManager->persist($link);
+                    $entityManager->flush();
+                    //affect the new link to the new course
+                    $course->setLinkToProgram($link);
+                }
+            }
             $entityManager->persist($course);
             $entityManager->flush();
             return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
@@ -62,6 +75,7 @@ class CourseController extends AbstractController
         $course =  $entityManager->getRepository(Formation::class)->find($id);
         $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
         $form->handleRequest($request);
+
         $formInfo = $this->createForm(FormationInfoFormType::class, $course, ['allow_extra_fields' =>true]);
         $formInfo->handleRequest($request);
         $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course]);
@@ -72,8 +86,22 @@ class CourseController extends AbstractController
         }
         if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
             $course = $form->getData();
-            $entityManager->persist($course);
-            $entityManager->flush();
+            if ($form->isSubmitted()) {
+                if ($course->getLinkToProgram() == null) {
+                    if($request->request->get('otherProgram') != '') {
+                        //create new link
+                        $link = new Link();
+                        $link->setName('lien statique');
+                        $link->setValue($request->request->get('otherProgram'));
+                        $entityManager->persist($link);
+                        $entityManager->flush();
+                        //affect the new link to the new course
+                        $course->setLinkToProgram($link);
+                    }
+                }
+                $entityManager->persist($course);
+                $entityManager->flush();
+            }
             if ($formInfo->isSubmitted() && $formInfo->isValid()) {
                 $course = $formInfo->getData();
                 $entityManager->persist($course);

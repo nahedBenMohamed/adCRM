@@ -136,6 +136,12 @@
                                     {{ form_row(formationForm.linkToProgram,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
+                                    <a href="#" class="bi-text-right" style="text-align: right" id="add-program">Autre</a>
+                                </div>
+                                <div class="row mb-3 hidden" id="otherProgram">
+                                    <div>
+                                        <input type="text" name="otherProgram" class="form-control" placeholder="Lien de programme">
+                                    </div>
                                 </div>
                                 <div class="row mb-3">
                                     {{ form_row(formationForm.linkToLivretAccueil,
@@ -297,6 +303,10 @@
                         this.style.display = "block";
                     })
                 }
+            })
+            $('#add-program').on('click', function (e) {
+                e.preventDefault();
+                $('#otherProgram').removeClass('hidden');
             })
         });
     </script>
