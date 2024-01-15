@@ -10,4 +10,7 @@
 /node_modules/
 /startbootstrap-sb-admin-2-gh-pages/
 /.idea/
+.env
+/public/documents/
+/public/pdf/
 ###< symfony/framework-bundle ###

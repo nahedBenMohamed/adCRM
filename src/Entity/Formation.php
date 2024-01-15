@@ -270,7 +270,7 @@ class Formation
     {
         return $this->linkToProgram;
     }
-    public function setLinkToProgram(Link $linkToProgram): self
+    public function setLinkToProgram(?Link $linkToProgram): self
     {
         $this->linkToProgram= $linkToProgram;
 
@@ -282,7 +282,7 @@ class Formation
         return $this->linkToLivretAccueil;
     }
 
-    public function setLinkToLivretAccueil(Link $linkToLivretAccueil): self
+    public function setLinkToLivretAccueil(?Link $linkToLivretAccueil): self
     {
         $this->linkToLivretAccueil = $linkToLivretAccueil;
 
@@ -294,7 +294,7 @@ class Formation
         return $this->linkGuide;
     }
 
-    public function setLinkGuide(Link $linkGuide): self
+    public function setLinkGuide(?Link $linkGuide): self
     {
         $this->linkGuide = $linkGuide;
 
@@ -306,7 +306,7 @@ class Formation
         return $this->linkFormulaire;
     }
 
-    public function setLinkFormulaire(Link $linkFormulaire): self
+    public function setLinkFormulaire(?Link $linkFormulaire): self
     {
         $this->linkFormulaire = $linkFormulaire;
 
@@ -350,7 +350,7 @@ class Formation
         return $this->linkformateur;
     }
 
-    public function setLinkformateur(Link $linkformateur): self
+    public function setLinkformateur(?Link $linkformateur): self
     {
         $this->linkformateur = $linkformateur;
 
