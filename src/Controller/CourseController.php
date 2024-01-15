@@ -165,6 +165,7 @@ class CourseController extends AbstractController
             $trainee = $item->getTrainee();
             $listOfTrainees[] = $trainee;
             $this->generate_pdf($formation, $trainee);
+            /********** send mail of convocation to all trainees ***/
             $html = $this->renderView('emails/convocation.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $trainee
@@ -175,6 +176,7 @@ class CourseController extends AbstractController
                 ->html($html)
                 ->to($trainee->getEmail());
             $mailer->send($email);
+            /************ end send mail to all trainee ***/
 
             $item->setSendConvocation(true);
             $entityManager->persist($item);
@@ -182,6 +184,7 @@ class CourseController extends AbstractController
         }
         $traineer = $formation->getFormateur();
         if($traineer) {
+            /************ send mail trainee to adconseil ********/
             $html2 = $this->renderView('emails/convocation.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $traineesFormation[0]
@@ -193,7 +196,10 @@ class CourseController extends AbstractController
                 ->html($html2)
                 ->to('formation@adconseil.org');
             $mailer->send($emailAdmin);
-            //send specific mail to Traineer
+
+            /************ end mail trainee to adconseil *******/
+
+            /************ send specific mail to Traineer and copy to adconseil ******************/
             $htmlRecap = $this->renderView('emails/convocation_traineer.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $traineesFormation[0],
@@ -206,21 +212,42 @@ class CourseController extends AbstractController
                 ->cc('formation@adconseil.org')
                 ->to($traineer->getEmail());
             $mailer->send($emailTraineer);
+            /**************end send mail to Traineer and copy to adconseil******/
             //send specific mail to contact client
             $client = $formation->getCustomer();
             if($client) {
+                /*********** Send copy of mail client to adconseil *****************/
                 $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
                     'dataF' => $formation,
                     'dataS' => $traineesFormation[0],
-                    'traineesFormation' => $listOfTrainees
+                    'traineesFormation' => $listOfTrainees,
+                    'client' => $client[0]
                 ]);
                 $emailClient = (new Email())
                     ->from('formation@adconseil.org')
                     ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
                     ->html($htmlClient)
-                    ->cc('nahedbenmohamed57@gmail.com')
-                    ->to($client->getEmail());
+                    ->to('formation@adconseil.org');
                 $mailer->send($emailClient);
+                /******* end mail to adconseil *****/
+
+                /********* send mail to all clients ******/
+                foreach ($client as $cl) {
+                    $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
+                        'dataF' => $formation,
+                        'dataS' => $traineesFormation[0],
+                        'traineesFormation' => $listOfTrainees,
+                        'client' => $cl
+                    ]);
+                    $emailClient = (new Email())
+                        ->from('formation@adconseil.org')
+                        ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
+                        ->html($htmlClient)
+                        ->to($cl->getEmail());
+                    $mailer->send($emailClient);
+                }
+                /**** fin send mail to all client ************/
+
             }
         }
 
@@ -345,7 +372,8 @@ class CourseController extends AbstractController
         }
         return $this->render('emails/convocation_client.html.twig', [
             'dataF' => $formation,
-            'traineesFormation' => $listOfTrainees
+            'traineesFormation' => $listOfTrainees,
+            'client' => $formation->getCustomer()[0]
         ]);
     }
 
@@ -397,6 +425,14 @@ class CourseController extends AbstractController
                             $TraineeFormation->setTrainee($student);
                             $TraineeFormation->setFormation($formation);
                             $entityManager->persist($TraineeFormation);
+                            $entityManager->flush();
+                        }
+                        // affect user to the current formation
+                        if($user_existant) {
+                            $existTraineeFormation = new TraineeFormation();
+                            $existTraineeFormation->setTrainee($user_existant);
+                            $existTraineeFormation->setFormation($formation);
+                            $entityManager->persist($existTraineeFormation);
                             $entityManager->flush();
                         }
                      }

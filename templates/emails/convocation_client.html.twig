@@ -93,7 +93,7 @@
         <tbody>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
-                <p>Bonjour {% if dataF.customer is defined and dataF.customer is not null%} {{ dataF.customer.firstName }}, {% endif %}</p>
+                <p>Bonjour {% if client is defined and client is not null%} {{ client.firstName }}, {% endif %}</p>
 
                 <p>Nous vous confirmons la convocation de vos stagiaires à la formation  <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :
                 </p>

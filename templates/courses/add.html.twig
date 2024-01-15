@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="row mb-3 hidden lieuFormation">
                                     {{ form_row(formationForm.formationAddress,
-                                        {'attr': {'class': 'form-control form-control-user tinymce-editor hidden' }}
+                                        {'attr': {'class': 'form-control form-control-user addr-form hidden' }}
                                     ) }}
                                 </div>
                                 <div class="row mb-3 hidden linkType">
@@ -278,6 +278,15 @@
                 branding: false,
                 statusbar: false
             });
+            tinymce.init({
+                selector: 'textarea.addr-form',
+                height : "150",
+                language: 'fr_FR',
+                language_url : '/assets/vendor/tinymce/langs/fr_FR.js',
+                menubar: false,
+                branding: false,
+                statusbar: false
+            });
             $('.js-datepicker').datepicker({
                 format: 'dd/mm/yyyy',
                 language: "fr",
@@ -285,9 +294,9 @@
                 orientation: "bottom left",
                 minDate: new Date()
             });
-            setTimeout(function(){
+            /*setTimeout(function(){
                 $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
-            }, 1000);
+            }, 1000);*/
             $('.select-company').on('change',function () {
                let selectedCompany = this.selectedOptions[0].text;
                $('.select-client option').each(function (e){

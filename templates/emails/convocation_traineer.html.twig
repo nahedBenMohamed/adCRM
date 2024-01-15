@@ -110,7 +110,15 @@
                 {% endif %}
                 {% if dataF.customer is defined and dataF.customer is not null %}
                 <p><b>📞Coordonnées du/des commanditaire(s) :</b></p>
-                <p>{{ dataF.customer.firstName }},  {{ dataF.customer.lastname }},  {{ dataF.customer.position }}, {{ dataF.customer.email }}</p>
+                <p>
+                    {% if dataF.customer|length > 0 %}
+                        {% for customer in dataF.customer %}
+                            <p>{{ customer.firstName }},  {{ customer.lastname }},  {{ customer.position }}, {{ customer.email }}</p>
+                            <hr>
+                        {% endfor %}
+                    {% endif %}
+
+                </p>
                 {% endif %}
                 <p><b>Liens utiles : </b></p>
                 <ul>

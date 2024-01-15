@@ -187,9 +187,9 @@
 
   tinymce.init({
     selector: 'textarea.tinymce-editor',
-    plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+    plugins: '',
     editimage_cors_hosts: ['picsum.photos'],
-    menubar: 'file edit view insert format tools table help',
+    menubar: false,
     toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
     toolbar_sticky: true,
     toolbar_sticky_offset: isSmallScreen ? 102 : 108,
@@ -199,23 +199,7 @@
     autosave_restore_when_empty: false,
     autosave_retention: '2m',
     image_advtab: true,
-    link_list: [{
-        title: 'My page 1',
-        value: 'https://www.tiny.cloud'
-      },
-      {
-        title: 'My page 2',
-        value: 'http://www.moxiecode.com'
-      }
-    ],
-    image_list: [{
-        title: 'My page 1',
-        value: 'https://www.tiny.cloud'
-      },
-      {
-        title: 'My page 2',
-        value: 'http://www.moxiecode.com'
-      }
+    link_list: [
     ],
     image_class_list: [{
         title: 'None',
