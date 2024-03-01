@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
@@ -17,7 +18,24 @@ class Company
     private ?string $name = null;
 
     #[ORM\Column(type: 'string',nullable: true)]
-    private string $infoFilename;
+    private ?string $infoFilename = "";
+
+    #[ORM\Column(type: 'string',nullable: true)]
+    private ?string $contactAdministratif = "";
+
+    #[ORM\Column(type: 'string',nullable: true)]
+    private ?string $emailContactAdministratif = "";
+
+    #[ORM\Column(type: 'string',nullable: true)]
+    private ?string $signatureConvention = "";
+
+    #[ORM\Column(type: Types::TEXT,nullable: true)]
+    private ?string $otherInformation= "";
+
+    public function __construct()
+    {
+        $this->infoFilename = '';
+    }
 
     public function getId(): ?int
     {
@@ -38,12 +56,48 @@ class Company
 
     public function getInfoFilename(): string
     {
-        return $this->infoFilename;
+        return $this->infoFilename ? $this->infoFilename:'';
     }
 
     public function setInfoFilename(string $infoFilename): self
     {
         $this->infoFilename = $infoFilename;
+
+        return $this;
+    }
+
+    public function getContactAdministratif(): string
+    {
+        return $this->contactAdministratif;
+    }
+
+    public function setContactAdministratif(string $contactAdministratif): self
+    {
+        $this->contactAdministratif = $contactAdministratif;
+
+        return $this;
+    }
+
+    public function getEmailContactAdministratif(): string
+    {
+        return $this->emailContactAdministratif;
+    }
+
+    public function setEmailContactAdministratif(string $emailContactAdministratif): self
+    {
+        $this->emailContactAdministratif = $emailContactAdministratif;
+
+        return $this;
+    }
+
+    public function getOtherInformation(): string
+    {
+        return $this->otherInformation;
+    }
+
+    public function setOtherInformation(string $otherInformation): self
+    {
+        $this->otherInformation = $otherInformation;
 
         return $this;
     }
