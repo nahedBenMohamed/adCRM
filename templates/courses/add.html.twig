@@ -15,6 +15,20 @@
         .hidden {
             display: none;
         }
+        .custom-file-upload {
+            cursor: pointer;
+        }
+        #trainee-table th {
+            background: #132438;
+            color: #fff;
+        }
+        .list-btn {
+            justify-content: flex-end;
+        }
+        .td-action {
+            display: flex;
+            justify-content: flex-end;
+        }
         .bloc-add {
             display: inline-flex;
             width: 95%;
@@ -28,25 +42,77 @@
 {% endblock %}
 {% block body %}
     <section class="section" style="margin-top: -75px;">
-        <h3 class="card-title">
+        <h3 class="card-title" id="companyID" data-companyID="{{ idCompany }}">
             Ajouter une nouvelle formation
         </h3>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="true">
+                <button class="nav-link   {% if idCompany == '' %} active {% endif %}" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
+                    Entreprise/Organisme
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if idCompany != '' and idFormation == "" %} active{% endif %}" id="tab-1"  {% if idCompany == '' %}disabled="false" {% endif %}data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
                     Informations générales
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-2" disabled="false" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+                <button class="nav-link {% if idCompany != '' and idFormation != "" %} active{% endif %}" id="tab-2" {% if idFormation == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-2" disabled="false" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+                <button class="nav-link" id="tab-2" {% if idFormation == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active tab1" id="details" role="tabpanel" aria-labelledby="tab-0">
+            <div class="tab-pane fade {% if idCompany == '' %} show active {% endif%} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ajouter un nouveau organisme </h5>
+                        {{ form_start(companyForm) }}
+                        <div class="row mb-3">
+                            {{ form_row(companyForm.name,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {% if idCompany != '' %}
+                                <span>Nb: l'ajout d'un nouveau fichier va supprimer l'ancien fichier</span>
+                            {% endif %}
+                            {{ form_row(companyForm.infoFilename,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(companyForm.contactAdministratif,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(companyForm.emailContactAdministratif,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row mb-3">
+                            {{ form_row(companyForm.otherInformation,
+                                {'attr': {'class': 'form-control form-control-user'}}
+                            ) }}
+                        </div>
+                        <div class="row">
+                            <div class="col-auto me-auto">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">
+                                    Suivant
+                                </button>
+                            </div>
+                        </div>
+                        {{ form_end(companyForm) }}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade {% if idCompany != '' and idFormation == "" %} show active {% endif%} tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+                <div class="card">
+                    {% if idCompany != '' %}
                     <div class="card-body">
                         {{ form_start(formationForm) }}
                         <div class="row">
@@ -106,6 +172,12 @@
                                     {{ form_row(formationForm.linkFormateur,
                                         {'attr': {'class': 'form-control form-control-user' }}
                                     ) }}
+                                    <a href="#" class="bi-text-right" style="text-align: right" id="add-linkFormateur">Autre</a>
+                                </div>
+                                <div class="row mb-3 hidden" id="otherLinkFormateur">
+                                    <div>
+                                        <input type="text" name="otherLinkFormateur" id="inputOtherLinkFormateur" class="form-control" placeholder="Lien formateur">
+                                    </div>
                                 </div>
                                 <div class="row mb-3 hidden linkVirFormation">
                                     {{ form_row(formationForm.lienFormation,
@@ -140,7 +212,7 @@
                                 </div>
                                 <div class="row mb-3 hidden" id="otherProgram">
                                     <div>
-                                        <input type="text" name="otherProgram" class="form-control" placeholder="Lien de programme">
+                                        <input type="text" name="otherProgram" class="form-control" id="staticValueProgramm" placeholder="Lien de programme" value="">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -176,45 +248,132 @@
                         </div>
                         {{ form_end(formationForm) }}
                     </div>
+                    {% endif %}
                 </div>
             </div>
-            <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
+            <div class="tab-pane fade {% if idCompany != '' and idFormation != "" %} show active {% endif%}" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                     <div class="card">
-                        <div class="card-body">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        Informations générales
-                                    </h5>
+                        {% if formation is defined %}
+                        <div class="card">
+                            <div class="card-body ps-0 pe-0">
+                                <div class="ml-2 mr-2 m-lg-3">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-6">
+                                            <select class="js-example-basic-single" name="state" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}" style="width: 100%">
+                                                <option selected="" value="0">Choisir un stagaire de la liste</option>
+                                                {% for trainee in allTrainees %}
+                                                    <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="add-stag-alert mt-2">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 offset-md-3 d-inline-flex list-btn">
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" title="Ajouter Stagiaire à la formation"> <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="40"></a>
+                                            </div>
+                                            <div class="custom-file-upload mx-lg-2">
+                                                <form id="importFile" action="{{path('app_upload_trainee',{ 'idFormation':formation.id})}}" method="post" name="trainees" enctype="multipart/form-data">
+                                                    <input type="file" id="html_btn" name= "fileTrainee" class="file-type" style="display: none">
+                                                </form>
+                                                <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
+                                            </div>
+                                            <div class="mx-lg-2 send-conv {% if trainees|length == 0 %} hidden {% endif %}">
+                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" Envoyer convocation à tous les stagiaires> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row hidden">
+                                        <div class="col-md-6"> <h5 class="card-title">
+                                                {% if trainees|length == 1 %}
+                                                    {{ trainees|length }} stagaire inscrit
+                                                {% else%}
+                                                    {{ trainees|length }} stagaires inscrits
+                                                {% endif %}
+                                            </h5>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary" id="lastButton">
-                                        terminer
-                                    </button>
-                                </div>
+
+                                <table class="table table-striped" id="trainee-table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Prénom</th>
+                                        <th scope="col">Fonction</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for trainee in trainees %}
+                                        {% if trainee is not null %}
+                                            <tr>
+                                                <td>{{ trainee.firstName }}</td>
+                                                <td>{{ trainee.lastName }}</td>
+                                                <td>{{ trainee.position }}</td>
+                                                <td class="td-action">
+                                                    <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
+                                                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
+                                                        <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
+                                                        <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
+                                                        <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </div>   
+                       {% endif %}
+                    </div>
             </div>
-            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-2">
+            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-3">
                 <div class="card">
                     <div class="card-body">
+                        {% if formInfo != '' %}
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">
-                                    Informations générales
-                                </h5>
+                                {{ form_start(formInfo) }}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row mb-3">
+                                            {{ form_row(formInfo.infoTrainees,
+                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                            ) }}
+                                        </div>
+                                        <div class="row mb-3">
+                                            {{ form_row(formInfo.infoFormateur,
+                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                            ) }}
+                                        </div>
+                                        <div class="row mb-3">
+                                            {{ form_row(formInfo.infoCustomer,
+                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                            ) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-auto me-auto">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">
+                                            Terminer
+                                        </button>
+                                    </div>
+                                </div>
+                                {{ form_end(formInfo) }}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary" id="lastButton">
-                                    terminer
-                                </button>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -297,6 +456,22 @@
             /*setTimeout(function(){
                 $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
             }, 1000);*/
+            let companyID = $("#companyID").attr("data-companyID");
+            $('.select-company option').each(function (e) {
+                if(companyID == this.value) {
+                    $('.select-company').val(companyID);
+                } else {
+                    this.style.display = "none";
+                }
+            })
+            $('.select-client option').each(function (e){
+                if(this.value === companyID) {
+                    this.style.display = "block";
+                } else {
+                    this.style.display = "none";
+                }
+
+            })
             $('.select-company').on('change',function () {
                let selectedCompany = this.selectedOptions[0].text;
                $('.select-client option').each(function (e){
@@ -313,6 +488,82 @@
                     })
                 }
             })
+            $('#add-program').on('click', function (e) {
+                e.preventDefault();
+                $('#otherProgram').removeClass('hidden');
+            })
+            var linkPr =  $('#formation_form_linkToProgram :selected').text().split('##');
+            if(linkPr.length === 2) {
+                $('#add-program').trigger('click');
+                document.getElementById("staticValueProgramm").value =linkPr[0];
+                console.log(linkPr[1])
+                document.getElementById('formation_form_linkToProgram').value = ''
+            }
+
+            var linkFormator =  $('#formation_form_linkFormateur :selected').text().split('##');
+            if(linkFormator.length === 2) {
+                $('#otherLinkFormateur').removeClass('hidden');
+                document.getElementById("inputOtherLinkFormateur").value =linkFormator[0];
+                document.getElementById('formation_form_linkFormateur').value = ''
+            }
+
+            $('#add-linkFormateur').on('click', function (e) {
+                e.preventDefault();
+                $('#otherLinkFormateur').removeClass('hidden');
+            })
+
+            $('.js-example-basic-single').select2();
+            $('.js-example-basic-single').on('change',function () {
+                let selecedItem = $(".js-example-basic-single :selected").val()
+                let addTrainee = $(this).attr('data-url');
+                let formationId = $(this).attr('data-formationId');
+                $('.add-stag-alert').html('')
+                if(parseInt(selecedItem) !== 0) {
+                    $.ajax({
+                        url: addTrainee,
+                        type: 'POST',
+                        data: {'selecedItem': selecedItem, 'formationId': formationId},
+                        success: function(data)
+                        {
+                            if(data !== false) {
+                                let newData = JSON.parse(data);
+                                if(newData && newData.status == true) {
+                                    let deleteLink = '/courses/deleteTrainee/'+formationId+'/'+newData.id;
+                                    let updateLInk = '/trainee/edit/'+newData.id+'/'+formationId;
+                                    let sendMailLInk = '/courses/sendConvocation/'+formationId+'/'+newData.id;
+                                    let seePdfLink = '/courses/seeConvocation/'+formationId+'/'+newData.id;
+                                    $('#trainee-table').find('tbody').append("<tr><td>"+newData.firstName+"</td><td>"+newData.lastName+"</td><td>"+newData.position+"</td>" +
+                                        "<td class='td-action'>  <a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
+                                        "<img src='/assets/img/icon/pen-solid.svg'></a>" +
+                                        "<a href='"+sendMailLInk+"' class='first-btn' title='Envoyer convocation'>" +
+                                        "<img src='/assets/img/icon/envelope-solid.svg'></a>"+
+                                        "<a href='"+seePdfLink+"' class='first-btn' title='Voir convocation' target='_blank'>"+
+                                        "<img src='/assets/img/icon/eye-solid.svg'></a>"+
+                                        "<a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
+                                        "<img src='/assets/img/icon/circle-delete-solid-red.svg'></a></td></tr>");
+                                    $('.send-conv').removeClass('hidden');
+                                } else {
+                                    //show alert exist already
+                                    $('.add-stag-alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"> ' +
+                                        newData.message+
+                                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ' +
+                                        '</div>');
+                                }
+
+                            }
+                        }
+                    });
+                }
+
+            })
+            $('.new_Btn').click(function() {
+                $('#html_btn').click();
+            });
+            $('#html_btn').change(function(){
+                //submit the form here
+                console.log('submit')
+                $('#importFile').submit();
+            });
             $('#add-program').on('click', function (e) {
                 e.preventDefault();
                 $('#otherProgram').removeClass('hidden');

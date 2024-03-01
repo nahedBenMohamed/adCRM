@@ -106,7 +106,7 @@ class FormationFormType extends AbstractType
                 'class' => Link::class,
                 'choice_label' => function($link) {
                 if($link->getName() == 'lien statique')
-                    return $link->getValue() ;
+                    return $link->getValue().'##'.$link->getName() ;
                     else return $link->getName();
                 },
                 'label' => false,
@@ -149,7 +149,9 @@ class FormationFormType extends AbstractType
             ->add('linkFormateur',   EntityType::class, [
                 'class' => Link::class,
                 'choice_label' => function($link) {
-                    return $link->getName();
+                    if($link->getName() == 'lien statique')
+                        return $link->getValue().'##'.$link->getName() ;
+                    else return $link->getName();
                 },
                 'label' => false,
                 'required' => false,
