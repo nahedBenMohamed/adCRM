@@ -309,6 +309,9 @@
 })();
 
 jQuery(document).ready(function() {
+  setTimeout(function(){
+    $('.datatable-empty.td-action').removeClass('td-action');
+  }, 100);
   $('.datatable-table tbody tr').each(function() {
     $(this).find('td:last-child').addClass('td-action');
   });
