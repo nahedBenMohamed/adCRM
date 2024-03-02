@@ -42,9 +42,13 @@ class CourseController extends AbstractController
 
     }
 
-    #[Route('/courses/add/{idCompany}/{idFormation}', name: 'app_courses_add')]
+    #[Route('/courses/add/{idCompany}/{idFormation}', name: 'app_courses_add', requirements: ['idCompany' => '\d+'])]
     public function addCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, $idCompany = null, $idFormation = null ): Response
     {
+        if($idCompany == 0){
+            $this->addFlash('warning', "La formation est sans organisation il y a un problème lors de la création de l'organisation");
+            return $this->redirectToRoute('app_courses');
+        }
         if ($idCompany == null && $idFormation ==  null){
             //add company info
             $company = new Company();
@@ -176,6 +180,7 @@ class CourseController extends AbstractController
                 'idFormation' =>  $course2->getId()
             ]);
         }
+
     }
 
     #[Route('/courses/edit/{id}', name: 'app_courses_edit')]
