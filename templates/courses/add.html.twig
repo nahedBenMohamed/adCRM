@@ -464,13 +464,15 @@
                     this.style.display = "none";
                 }
             })
+            let selectedCompanyName = $('.select-company :selected').text();
             $('.select-client option').each(function (e){
-                if(this.value === companyID) {
+                if(this.text.includes(selectedCompanyName)) {
+                    let newVal = this.text.split(':');
+                    $(this).text(newVal[1]);
                     this.style.display = "block";
                 } else {
                     this.style.display = "none";
                 }
-
             })
             $('.select-company').on('change',function () {
                let selectedCompany = this.selectedOptions[0].text;
@@ -480,7 +482,6 @@
                    } else {
                        this.style.display = "none";
                    }
-
                })
                 if(selectedCompany === 'Client') {
                     $('.select-client option').each(function (e) {
@@ -488,6 +489,46 @@
                     })
                 }
             })
+            //hide statique link
+            $('#formation_form_linkToProgram option').each(function (e){
+                if(this.text.includes('##')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#formation_form_linkFormateur option').each(function (e){
+                if(this.text.includes('##')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#formation_form_linkToLivretAccueil option').each(function (e){
+                if(this.text.includes('lien statique')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+            $('#formation_form_linkGuide option').each(function (e){
+                if(this.text.includes('lien statique')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#formation_form_linkFormulaire option').each(function (e){
+                if(this.text.includes('lien statique')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
             $('#add-program').on('click', function (e) {
                 e.preventDefault();
                 $('#otherProgram').removeClass('hidden');
@@ -496,7 +537,6 @@
             if(linkPr.length === 2) {
                 $('#add-program').trigger('click');
                 document.getElementById("staticValueProgramm").value =linkPr[0];
-                console.log(linkPr[1])
                 document.getElementById('formation_form_linkToProgram').value = ''
             }
 
@@ -561,7 +601,6 @@
             });
             $('#html_btn').change(function(){
                 //submit the form here
-                console.log('submit')
                 $('#importFile').submit();
             });
             $('#add-program').on('click', function (e) {

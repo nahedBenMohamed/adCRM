@@ -16,7 +16,7 @@ class LinkController extends AbstractController
     #[Route('/link', name: 'app_link')]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $links = $entityManager->getRepository(Link::class)->findBy([],['id' => 'DESC']);
+        $links = $entityManager->getRepository(Link::class)->findAllWithoutStaticLink();
         return $this->render('link/index.html.twig', [
             'links' => $links,
         ]);
