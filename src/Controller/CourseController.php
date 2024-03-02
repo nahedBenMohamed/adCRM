@@ -517,49 +517,52 @@ class CourseController extends AbstractController
                 }
                 $reader = new Xls();
                 $spreadsheet = IOFactory::load($fileFolder .'/'. $filePathName); // Here we are able to read from the excel file
-                $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
+               // $row = $spreadsheet->getActiveSheet()->removeRow(1); // I added this to be able to remove the first file line
                 $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true); // here, the read data is turned into an array
                 if(count($sheetData)>0) {
                     foreach ($sheetData as $Row)
                     {
-                        $civility= $Row['A'];     // store the civility on each iteration
-                        $first_name = $Row['B']; // store the first_name on each iteration
-                        $last_name = $Row['C']; // store the last_name on each iteration
-                        $position = $Row['D'];   // store the position on each iteration
-                        $email = $Row['E'];     // store the email on each iteration
+                        //we save only row that contain mail
+                        if ($Row['A'] !== null && str_contains($Row['D'], '@') !== false) {
+                            $first_name= $Row['A'];     // store the first_name on each iteration
+                            $last_name = $Row['B']; // store the last_name on each iteration
+                            $position = $Row['C']; // store the position on each iteration
+                            $email = $Row['D'];   // store the email on each iteration
+                            //$email = $Row['E'];     // store the email on each iteration
 
-                        $user_existant = $entityManager->getRepository(Trainee::class)->findOneBy(array('email' => $email));
-                        // make sure that the user does not already exists in your db
+                            $user_existant = $entityManager->getRepository(Trainee::class)->findOneBy(array('email' => $email));
+                            // make sure that the user does not already exists in your db
 
-                        if (!$user_existant && $email != null)
-                        {
-                            $student = new Trainee();
-                            $student->setCivility($civility);
-                            $student->setFirstName($first_name);
-                            $student->setLastName($last_name);
-                            $student->setEmail($email);
-                            $student->setPosition($position);
-                            $entityManager->persist($student);
-                            $entityManager->flush();
-                            // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
-                            //affect the user to the formation
-                            $TraineeFormation = new TraineeFormation();
-                            $TraineeFormation->setTrainee($student);
-                            $TraineeFormation->setFormation($formation);
-                            $entityManager->persist($TraineeFormation);
-                            $entityManager->flush();
+                            if (!$user_existant && $email != null)
+                            {
+                                $student = new Trainee();
+                                //$student->setCivility($civility);
+                                $student->setFirstName($first_name);
+                                $student->setLastName($last_name);
+                                $student->setEmail($email);
+                                $student->setPosition($position);
+                                $entityManager->persist($student);
+                                $entityManager->flush();
+                                // here Doctrine checks all the fields of all fetched data and make a transaction to the database.
+                                //affect the user to the formation
+                                $TraineeFormation = new TraineeFormation();
+                                $TraineeFormation->setTrainee($student);
+                                $TraineeFormation->setFormation($formation);
+                                $entityManager->persist($TraineeFormation);
+                                $entityManager->flush();
+                            }
+                            // affect user to the current formation
+                            if($user_existant) {
+                                $existTraineeFormation = new TraineeFormation();
+                                $existTraineeFormation->setTrainee($user_existant);
+                                $existTraineeFormation->setFormation($formation);
+                                $entityManager->persist($existTraineeFormation);
+                                $entityManager->flush();
+                            }
                         }
-                        // affect user to the current formation
-                        if($user_existant) {
-                            $existTraineeFormation = new TraineeFormation();
-                            $existTraineeFormation->setTrainee($user_existant);
-                            $existTraineeFormation->setFormation($formation);
-                            $entityManager->persist($existTraineeFormation);
-                            $entityManager->flush();
-                        }
-                     }
+
+                    }
                 }
-
             }
         }
         $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
