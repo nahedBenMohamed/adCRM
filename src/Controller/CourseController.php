@@ -64,6 +64,10 @@ class CourseController extends AbstractController
         if ($idCompany && !$idFormation) {
             //get company
             $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $idCompany]);
+            $formation = $entityManager->getRepository(Formation::class)->findOneBy(['company' => $company]);
+            if ($formation) {
+                return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $formation->getId()]);
+            }
             $formCompany = $this->createForm(CompanyFormType::class, $company);
             $formCompany->handleRequest($request);
             if ($formCompany->isSubmitted() && $formCompany->isValid()) {
@@ -221,7 +225,8 @@ class CourseController extends AbstractController
                 $entityManager->persist($course);
                 $entityManager->flush();
             }
-            return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
+            return $this->redirectToRoute('app_courses_add', ['id' => $course->getId()]);
+            //return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
         }
         return $this->render('courses/edit.html.twig', [
             'formationForm' => $form->createView(),
@@ -241,7 +246,8 @@ class CourseController extends AbstractController
         $traineeToDelete = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' =>$trainee]);
         $entityManager->remove($traineeToDelete);
         $entityManager->flush();
-        return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
 
     }
 
@@ -266,7 +272,8 @@ class CourseController extends AbstractController
         $entityManager->persist($traineesFormation);
         $entityManager->flush();
         $this->addFlash('success', "La convocation a été envoyée avec succès.");
-        return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
     }
 
     #[Route('/courses/sendConvocation/{idFormation}', name: 'app_allTrainees_send_conv')]
@@ -367,7 +374,8 @@ class CourseController extends AbstractController
 
 
         $this->addFlash('success', "Les convocations ont bien été envoyées.");
-        return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
+        //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
     }
 
     /**
@@ -555,7 +563,8 @@ class CourseController extends AbstractController
             }
         }
         $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
-        return $this->redirectToRoute('app_courses_edit', ['id' => $formation->getId()]);
+        //return $this->redirectToRoute('app_courses_edit', ['id' => $formation->getId()]);
+        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formation->getId()]);
     }
 
     function formCompanySave($form, $slugger,$company, $entityManager) {

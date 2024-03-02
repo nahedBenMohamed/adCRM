@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Customer;
+use App\Entity\Formation;
 use App\Entity\Trainee;
 use App\Form\CompanyFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -106,6 +107,7 @@ class CompanyController extends AbstractController
         $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $id]);
         $customerCompany = $entityManager->getRepository(Customer::class)->findOneBy(['company' => $company]);
         $traineeCompany = $entityManager->getRepository(Trainee::class)->findOneBy(['company' => $company]);
+        $formations = $entityManager->getRepository(Formation::class)->findBy(['company' => $company]);
         $object = new \stdClass();
         if ($customerCompany) {
             $object->status = false;
@@ -113,6 +115,9 @@ class CompanyController extends AbstractController
         } else if($traineeCompany) {
             $object->status = false;
             $object->message = "Un stagiaire est affecté à cette entreprise, il est impossible de le supprimer.";
+        } else if($formations) {
+            $object->status = false;
+            $object->message = "Une formation est affecté à cette entreprise, il est impossible de le supprimer.";
         } else {
             $entityManager->remove($company);
             $entityManager->flush();

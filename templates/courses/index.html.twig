@@ -39,9 +39,15 @@
                                     <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
                                         <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                     </a>
-                                    <a href="{{ path('app_courses_add', { 'idCompany':course.company.id,'idFormation': course.id }) }}" class="" title="modifier">
-                                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
-                                    </a>
+                                    {% if course.company is defined and course.company is not null %}
+                                        <a href="{{ path('app_courses_add', { 'idCompany':course.company.id,'idFormation': course.id }) }}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ path('app_courses_add', { 'idCompany':null,'idFormation': course.id }) }}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                        </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
