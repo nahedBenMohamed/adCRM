@@ -45,7 +45,7 @@ class CourseController extends AbstractController
     #[Route('/courses/add/{idCompany}/{idFormation}', name: 'app_courses_add', requirements: ['idCompany' => '\d+'])]
     public function addCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, $idCompany = null, $idFormation = null ): Response
     {
-        if($idCompany == 0){
+        if($idCompany == 0 && $idFormation !== null){
             $this->addFlash('warning', "La formation est sans organisation il y a un problème lors de la création de l'organisation");
             return $this->redirectToRoute('app_courses');
         }
@@ -275,6 +275,8 @@ class CourseController extends AbstractController
         $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
+        $formation->setStatus(1);
+        $entityManager->persist($formation);
         $entityManager->flush();
         $this->addFlash('success', "La convocation a été envoyée avec succès.");
         //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
@@ -308,6 +310,9 @@ class CourseController extends AbstractController
             $entityManager->persist($item);
             $entityManager->flush();
         }
+        $formation->setStatus(1);
+        $entityManager->persist($formation);
+        $entityManager->flush();
         $traineer = $formation->getFormateur();
         if($traineer) {
             /************ send mail trainee to adconseil ********/

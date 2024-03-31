@@ -56,6 +56,38 @@
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
                                     {% endif %}
+                                    {% set fill1 = '' %}
+                                    {% set fill2 = '' %}
+                                    {% set fill3 = '' %}
+                                    {% set fill4 = '' %}
+                                    {% if course.status == 1 %}
+                                        {% if course.dateFinFormation|date_modify("+6 month")|date("Y-m-d") <  "now"|date("Y-m-d") %}
+                                            {% set fill1 = 1 %}
+                                            {% set fill2 = 1 %}
+                                            {% set fill3 = 1 %}
+                                            {% set fill4 = 1 %}
+                                        {% endif %}
+                                        {% if(course.dateFinFormation|date("Y-m-d") <  "now"|date("Y-m-d")) %}
+                                            {% set fill1 = 1 %}
+                                            {% set fill2 = 1 %}
+                                            {% set fill3 = 1 %}
+                                        {% endif %}
+                                        {% if "now"|date("Y-m-d") > course.dateDebutFormation|date("Y-m-d") and "now"|date("Y-m-d") < course.dateFinFormation|date("Y-m-d") %}
+                                            {% set fill1 = 1 %}
+                                            {% set fill2 = 1 %}
+                                        {% endif %}
+                                        {% if "now"|date("Y-m-d") < course.dateDebutFormation|date("Y-m-d") %}
+                                            {% set fill1 = 1 %}
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <div class="course-status">
+                                        <div class="carre fill"></div>
+                                        <div class="carre  {% if course.status == 1 and fill1 %} fill {% endif %}"></div>
+                                        <div class="carre  {% if course.status == 1 and fill2 %} fill {% endif %}"></div>
+                                        <div class="carre  {% if course.status == 1 and fill3 %} fill {% endif %}"></div>
+                                        <div class="carre  {% if course.status == 1 and fill4 %} fill {% endif %}"></div>
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}

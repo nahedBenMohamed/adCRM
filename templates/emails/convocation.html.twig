@@ -108,7 +108,7 @@
                 {% endif %}
                 <p>Madame, Monsieur,</p>
                 <p>Nous avons le plaisir de vous confirmer votre participation à la formation test qui se tiendra selon les modalités pratiques suivantes :</p>
-                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags }}</p>
+                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
                 <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>

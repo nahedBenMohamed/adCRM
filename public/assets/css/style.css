@@ -1271,3 +1271,18 @@ a.link-right {
   margin-bottom: -20px;
   margin-top: 60px;
 }
+.carre {
+  height: 20px;
+  width: 20px;
+  background: transparent;
+  border-radius: 5px;
+  margin: 0 5px;
+  border: 2px solid #132438;
+}
+.carre.fill {
+  background: #132438;
+}
+.course-status {
+  display: inline-flex;
+  margin-left: 20px;
+}
