@@ -83,6 +83,9 @@ class Formation
     #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
     private ?Link $linkformateur = null;
 
+    #[ORM\Column]
+    private ?int $status = 0;
+
     public function __construct()
     {
         $this->customer = new ArrayCollection();
@@ -366,6 +369,21 @@ class Formation
     {
         $this->company = $company;
 
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     * @return $this
+     */
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
         return $this;
     }
 

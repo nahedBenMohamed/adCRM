@@ -45,15 +45,18 @@ class CompanyFormType extends AbstractType
             ])
             ->add('contactAdministratif',textType::class,[
                 'label' =>"Contact Administratif",
-                'required' => false
+                'required' => false,
+                'empty_data' => ''
             ])
             ->add('emailContactAdministratif',EmailType::class,[
                 'label' =>"Email Contact Administratif",
-                'required' => false
+                'required' => false,
+                'empty_data' => ''
             ])
             ->add('otherInformation',TextareaType::class,[
                 'label' =>"Autre Information",
-                'required' => false
+                'required' => false,
+                'empty_data' => ''
             ])
 
         ;
