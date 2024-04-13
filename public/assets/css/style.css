@@ -1286,3 +1286,6 @@ a.link-right {
   display: inline-flex;
   margin-left: 20px;
 }
+.dashboard .bloc-numbers .info-card {
+  height: 200px;
+}

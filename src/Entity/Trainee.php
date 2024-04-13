@@ -34,6 +34,9 @@ class Trainee
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "trainee")]
     private ?Company $company = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateAdd = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,6 +111,18 @@ class Trainee
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+        return $this;
+    }
+
+    public function getDateAdd(): ?\DateTimeInterface
+    {
+        return $this->dateAdd;
+    }
+
+    public function setDateAdd(?\DateTimeInterface $dateAdd): self
+    {
+        $this->dateAdd = $dateAdd;
+
         return $this;
     }
 }

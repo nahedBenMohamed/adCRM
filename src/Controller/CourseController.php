@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\Formation;
 use App\Entity\Link;
+use App\Entity\Log;
 use App\Entity\Trainee;
 use App\Entity\TraineeFormation;
 use App\Entity\User;
@@ -56,6 +57,8 @@ class CourseController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->formCompanySave($form, $slugger,$company, $entityManager);
+                //save in log that new coure was created
+                $this->saveInlog('addOrganisme',"Création d'une nouvelle Entreprise: ".$company->getName(), $entityManager);
                 return $this->redirectToRoute('app_courses_add', ['idCompany' => $company->getId()]);
             }
             return $this->render('courses/add.html.twig', [
@@ -104,6 +107,7 @@ class CourseController extends AbstractController
                 }
                 $entityManager->persist($course);
                 $entityManager->flush();
+                $this->saveInlog('addFormation',"Création d'une nouvelle Formation: ". $course->getNomFormation(), $entityManager);
                 return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $course->getId()]);
             }
             return $this->render('courses/add.html.twig', [
@@ -167,6 +171,7 @@ class CourseController extends AbstractController
                     $entityManager->persist($course2);
                     $entityManager->flush();
                 }
+                $this->saveInlog('updateFormation',"Modification de la Formation: ". $course2->getNomFormation(), $entityManager);
                 return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $course2->getId()]);
             }
             return $this->render('courses/add.html.twig', [
@@ -280,6 +285,7 @@ class CourseController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', "La convocation a été envoyée avec succès.");
         //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        $this->saveInlog('EnvoiConnvForOneStag',"Envoi d'une Convocation à la formation ".$formation->getNomFormation(), $entityManager);
         return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
     }
 
@@ -382,7 +388,7 @@ class CourseController extends AbstractController
             }
         }
 
-
+        $this->saveInlog('EnvoiConnvForAll',"Envoi d'une Convocation à la formation ".$formation->getNomFormation(), $entityManager);
         $this->addFlash('success', "Les convocations ont bien été envoyées.");
         return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
         //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
@@ -473,6 +479,7 @@ class CourseController extends AbstractController
         $object = new \stdClass();
         $object->status = true;
         $object->message = "La formation est supprimée avec succès";
+        $this->saveInlog('deleteformaion',"La formation ".$formation->getNomFormation()." est supprimée avec succès", $entityManager);
         return new Response(json_encode($object));
     }
 
@@ -576,6 +583,7 @@ class CourseController extends AbstractController
             }
         }
         $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
+        $this->saveInlog('AddTrainee',"Ajout des stagiaires à la formation: <b>".$formation->getNomFormation()."</b> à partir un fichier excel", $entityManager);
         //return $this->redirectToRoute('app_courses_edit', ['id' => $formation->getId()]);
         return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formation->getId()]);
     }
@@ -598,6 +606,26 @@ class CourseController extends AbstractController
         }
         $company = $form->getData();
         $entityManager->persist($company);
+        $entityManager->flush();
+    }
+
+    /**
+     * save action in table log
+     * @param $activity
+     * @param $description
+     * @param $entityManager
+     * @return void
+     */
+    function saveInlog($activity, $description, $entityManager)
+    {
+        $log = new Log();
+        $log->setActivityName($activity);
+        $log->setActivityDescription($description);
+        $this->getUser();
+        $log->setUserName($this->getUser()->getfirstName().' '.$this->getUser()->getLastName());
+        $date = new \DateTime();
+        $log->setDateAjout($date);
+        $entityManager->persist($log);
         $entityManager->flush();
     }
 }
