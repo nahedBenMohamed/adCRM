@@ -27,4 +27,15 @@ class TraineeFormationRepository extends ServiceEntityRepository
         return $query;
     }
 
+    public function findAllTraineeByDate()
+    {
+        $query = $this->createQueryBuilder('du')
+            ->select('du.dateConvocation, COUNT(du.id) AS total')
+            ->where('du.sendConvocation = 1')
+            ->groupBy('du.dateConvocation')
+            ->getQuery()
+            ->execute();
+        return $query;
+    }
+
 }

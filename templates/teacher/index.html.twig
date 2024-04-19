@@ -1,0 +1,99 @@
+{% extends 'baseTeacher.html.twig' %}
+
+{% block title %}Page formations!{% endblock %}
+
+{% block body %}
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="remove-element-alert mt-2"></div>
+                <div class="pt-4 pb-2">
+                </div>
+                <div class="card">
+                    <div class="card-body ps-0 pe-0">
+                        <div class="row">
+                            <div class="col-lg-9"></div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                        <!-- Table with stripped rows -->
+                        <table class="table table-striped" id="list-formations">
+                            <thead>
+                            <tr>
+                                <th scope="col">Client</th>
+                                <th scope="col">Intitulé de la formation</th>
+                                <th scope="col">Formateur</th>
+                                <th scope="col">Date de début</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for course in courses %}
+                                <tr>
+                                    <td>{% if course.company is defined and course.company is not null %} {{course.company.name}} {% else %} - {% endif %}</td>
+                                    <td>{{course.nomFormation}}</td>
+                                    <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
+                                    <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
+                                    <td>
+                                        {% if course.company is defined and course.company is not null %}
+                                            <a href="{{ path('app_trainer_course', { 'idCompany': course.company.id ,'idFormation': course.id }) }}" class="" title="modifier">
+                                                <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ path('app_trainer_course', { 'idCompany':0,'idFormation': course.id }) }}" class="" title="modifier">
+                                                <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                            </a>
+                                        {% endif %}
+                                        {% set fill1 = '' %}
+                                        {% set fill2 = '' %}
+                                        {% set fill3 = '' %}
+                                        {% set fill4 = '' %}
+                                        {% if course.status == 1 %}
+                                            {% if course.dateFinFormation|date_modify("+6 month")|date("Y-m-d") <  "now"|date("Y-m-d") %}
+                                                {% set fill1 = 1 %}
+                                                {% set fill2 = 1 %}
+                                                {% set fill3 = 1 %}
+                                                {% set fill4 = 1 %}
+                                            {% endif %}
+                                            {% if(course.dateFinFormation|date("Y-m-d") <  "now"|date("Y-m-d")) %}
+                                                {% set fill1 = 1 %}
+                                                {% set fill2 = 1 %}
+                                                {% set fill3 = 1 %}
+                                            {% endif %}
+                                            {% if "now"|date("Y-m-d") > course.dateDebutFormation|date("Y-m-d") and "now"|date("Y-m-d") < course.dateFinFormation|date("Y-m-d") %}
+                                                {% set fill1 = 1 %}
+                                                {% set fill2 = 1 %}
+                                            {% endif %}
+                                            {% if "now"|date("Y-m-d") < course.dateDebutFormation|date("Y-m-d") %}
+                                                {% set fill1 = 1 %}
+                                            {% endif %}
+                                        {% endif %}
+
+                                        <div class="course-status">
+                                            <div class="carre fill"></div>
+                                            <div class="carre  {% if course.status == 1 and fill1 %} fill {% endif %}"></div>
+                                            <div class="carre  {% if course.status == 1 and fill2 %} fill {% endif %}"></div>
+                                            <div class="carre  {% if course.status == 1 and fill3 %} fill {% endif %}"></div>
+                                            <div class="carre  {% if course.status == 1 and fill4 %} fill {% endif %}"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        const datatablesSimple = document.getElementById('list-formations');
+        new simpleDatatables.DataTable(datatablesSimple, {
+            perPage: 100
+        });
+    </script>
+{% endblock %}

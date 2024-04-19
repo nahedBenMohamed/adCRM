@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TraineeFormationRepository;
 
@@ -22,6 +23,12 @@ class TraineeFormation
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $sendConvocation = false;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateAffectationFormation = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateConvocation = null;
 
     public function getId(): ?int
     {
@@ -58,6 +65,30 @@ class TraineeFormation
     public function setSendConvocation(?string $sendConvocation): self
     {
         $this->sendConvocation = $sendConvocation;
+        return $this;
+    }
+
+    public function getDateAffectationFormation(): ?\DateTimeInterface
+    {
+        return $this->dateAffectationFormation;
+    }
+
+    public function setDateAffectationFormation(?\DateTimeInterface $dateAffectationFormation): self
+    {
+        $this->dateAffectationFormation = $dateAffectationFormation;
+
+        return $this;
+    }
+
+    public function getDateConvocation(): ?\DateTimeInterface
+    {
+        return $this->dateConvocation;
+    }
+
+    public function setDateConvocation(?\DateTimeInterface $dateConvocation): self
+    {
+        $this->dateConvocation = $dateConvocation;
+
         return $this;
     }
 }

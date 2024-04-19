@@ -1,4 +1,6 @@
-{% extends 'baseAdmin.html.twig' %}
+{% extends teacher == 'true'
+    ? 'baseTeacher.html.twig'
+    : 'baseAdmin.html.twig' %}
 
 {% block title %}Inscription{% endblock %}
 

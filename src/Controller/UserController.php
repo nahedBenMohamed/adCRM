@@ -71,15 +71,23 @@ class UserController extends AbstractController
         }
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
+        $teacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $teacher = true;
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
+            if ($teacher) {
+                return $this->redirectToRoute('app_trainer');
+            }
             return $this->redirectToRoute('app_user');
         }
         return $this->render('user/update.html.twig', [
             'setUserForm' => $form->createView(),
+            'teacher' => $teacher
         ]);
     }
     /** Trainees CRUD */
