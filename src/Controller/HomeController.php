@@ -22,6 +22,9 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            return $this->redirectToRoute('app_trainer');
+        }
         //Formation créée mais convocation pas encore envoyée
         $nbFormationsBrouillons = 0;
         //Convocation envoyée mais date < date de début de formation
