@@ -105,7 +105,7 @@
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a></p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% else %}
-                    <p>📍 <b>Lieu de formation :</b> (Lieu de formation)</p>
+                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                     <p>N. B. : Il arrive que les connexions vers nos liens de classes virtuelles soient bloquées par des pare-feux ou VPN. Merci de vérifier avec votre service informatique que le lien que nous transmettons aux stagiaires est bien accessible.</p>

@@ -81,8 +81,10 @@ class HomeController extends AbstractController
         $datesTab= [];
         $valTab = [];
         foreach ($allTraineeConvo as $key => $trainee ) {
-            array_push($datesTab, $trainee['dateConvocation']->format('Y-m-d h:i:s'));
-            array_push($valTab, $trainee['total']);
+            if ($trainee['dateConvocation'] != null) {
+                array_push($datesTab, $trainee['dateConvocation']->format('Y-m-d h:i:s'));
+                array_push($valTab, $trainee['total']);
+            }
         }
         $nbOrganisme = count($entityManager->getRepository(Company::class)->findAll());
         $nbLink = count($entityManager->getRepository(Link::class)->findAll());

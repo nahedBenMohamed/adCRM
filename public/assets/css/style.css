@@ -1285,7 +1285,19 @@ a.link-right {
 .course-status {
   display: inline-flex;
   margin-left: 20px;
+  margin-top: -15px;
 }
 .dashboard .bloc-numbers .info-card {
   height: 200px;
+}
+.course-status .prog span {
+  font-size: 10px;
+  padding-left: 5px;
+}
+.company-link {
+  text-decoration: underline;
+}
+.company-link:hover {
+  color: #132438;
+  text-decoration: underline;
 }
