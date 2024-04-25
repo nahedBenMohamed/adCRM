@@ -52,6 +52,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 70, nullable: true)]
     private ?string $functionFormateur = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $linkFormateur = null;
+
     public function __construct()
     {
         $this->formations = new ArrayCollection();
@@ -198,5 +201,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getLinkFormateur(): ?string
+    {
+        return $this->linkFormateur;
+    }
+
+    public function setLinkFormateur(?string $linkFormateur): self
+    {
+        $this->linkFormateur = $linkFormateur;
+
+        return $this;
+    }
+
 
 }

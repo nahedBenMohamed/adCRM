@@ -27,6 +27,11 @@ class UpdateUserFormType extends AbstractType
             ->add('functionFormateur',   textType::class,[
                 'label' =>'Qualité',
                 'required' => false
+            ])
+
+            ->add('linkFormateur',   textType::class,[
+                'label' =>'Lien de formateur',
+                'required' => false,
             ]);
     }
 

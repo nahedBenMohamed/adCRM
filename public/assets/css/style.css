@@ -1296,8 +1296,9 @@ a.link-right {
 }
 .company-link {
   text-decoration: underline;
+  color: #132438;
 }
 .company-link:hover {
-  color: #132438;
+  color: #4154f1;
   text-decoration: underline;
 }

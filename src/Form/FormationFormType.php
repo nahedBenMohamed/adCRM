@@ -145,24 +145,14 @@ class FormationFormType extends AbstractType
                 'empty_data' => '',
                 'placeholder' => "Formulaire de recueil des attentes"
             ])
-
-            ->add('linkFormateur',   EntityType::class, [
-                'class' => Link::class,
-                'choice_label' => function($link) {
-                    if($link->getName() == 'lien statique')
-                        return $link->getValue().'##'.$link->getName() ;
-                    else return $link->getName();
-                },
-                'label' => false,
-                'required' => false,
-                'empty_data' => '',
-                'placeholder' => "Lien associé au formateur"
-            ])
             
             ->add('formateur', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function($user) {
                     return $user->getFirstName() . ' ' . $user->getLastName();
+                },
+                'choice_attr' => function ($object) {
+                    return ['data-link' => $object->getLinkFormateur()];
                 },
                 'label' => false,
                 'required' => false,

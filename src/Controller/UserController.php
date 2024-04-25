@@ -10,9 +10,13 @@ use App\Form\RegistrationFormType;
 use App\Form\TraineeFormType;
 use App\Form\UpdateUserFormType;
 use Doctrine\DBAL\Types\TextType;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
@@ -291,6 +295,61 @@ class UserController extends AbstractController
         $object->status = true;
         $object->message = "L'utilisateur est supprimé avec succès";
         return new Response(json_encode($object));
+    }
+
+    #[Route('/downloadTrainee', name: 'app_download_trainee')]
+    public function downloadTrainee(EntityManagerInterface $entityManager): Response
+    {
+        $users = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Lise des emails de tous les stagiaires');
+        $counter = 2;
+        foreach ($users as $user) {
+            $sheet->setCellValue('A' . $counter, $user->getEmail());
+            $counter++;
+        }
+        $writer = new Xls($spreadsheet);
+        $response =  new StreamedResponse(
+            function () use ($writer) {
+                $writer->save('php://output');
+            }
+        );
+        $fileName = "ExportEmails_".date('m-d-Y_hia').".xls";
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . '"' . $fileName . '"');
+        $response->headers->set('Cache-Control','max-age=0');
+        return $response;
+        //$this->addFlash('success', "Les stagiaires sont télechargées avec succès.");
+       // return $this->redirectToRoute('app_trainees');
+    }
+
+    #[Route('/downloadTraineeByFormation/{idFormation}', name: 'app_download_trainee_by_formation')]
+    public function downloadTraineeByFormation(EntityManagerInterface $entityManager, $idFormation = null): Response
+    {
+        $course =  $entityManager->getRepository(Formation::class)->find($idFormation);
+        $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $course]);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Lise des emails des stagiaires de la formation '.$course->getNomFormation());
+        $counter = 2;
+        foreach ($formationUser as $item) {
+            $sheet->setCellValue('A' . $counter, $item->getTrainee()->getEmail());
+            $counter++;
+        }
+        $writer = new Xls($spreadsheet);
+        $response =  new StreamedResponse(
+            function () use ($writer) {
+                $writer->save('php://output');
+            }
+        );
+        $fileName = "ExportEmails_".str_replace(' ','',$course->getNomFormation())."_".date('m-d-Y_hia').".xls";
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . '"' . $fileName . '"');
+        $response->headers->set('Cache-Control','max-age=0');
+        return $response;
+        //$this->addFlash('success', "Les stagiaires sont télechargées avec succès.");
+        // return $this->redirectToRoute('app_trainees');
     }
 
 }
