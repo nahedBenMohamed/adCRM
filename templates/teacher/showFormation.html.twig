@@ -38,6 +38,13 @@
             padding-left: 0;
             padding-top: 4px;
         }
+        #link-formator {
+            border: 1px solid #ccc;
+            padding: 3px;
+            border-radius: 7px;
+            margin-left: 13px;
+            color: blue;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -160,9 +167,7 @@
                                     </div>
 
                                     <div class="row mb-3 hidden teacher">
-                                        {{ form_row(formationForm.linkFormateur,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
+                                        <span id="link-formator">Aucun lien sélectionné</span>
                                         <a href="#" class="bi-text-right" style="text-align: right" id="add-linkFormateur">Autre</a>
                                     </div>
                                     <div class="row mb-3 hidden" id="otherLinkFormateur">
@@ -558,6 +563,13 @@
                 e.preventDefault();
                 $('#otherProgram').removeClass('hidden');
             })
+            $('#formation_form_formateur option:selected').each(function (e){
+                if ($(this).attr("data-link") !== undefined && $(this).attr("data-link").length > 0 ) {
+                    $('#link-formator').text($(this).attr("data-link"));
+                } else {
+                    $('#link-formator').text('Aucun lien sélectionné');
+                }
+            });
         });
     </script>
 {% endblock %}

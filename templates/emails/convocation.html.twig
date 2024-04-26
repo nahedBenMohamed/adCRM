@@ -106,7 +106,7 @@
                     <a href="{{ dataF.linkFormulaire.value }}">{{ dataF.linkFormulaire.value }}</a>
                 </b>
                 {% endif %}
-                <p>Madame, Monsieur,</p>
+                <p>{% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}</p>
                 <p>Nous avons le plaisir de vous confirmer votre participation à la formation test qui se tiendra selon les modalités pratiques suivantes :</p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
@@ -116,7 +116,7 @@
                 <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> <a href="{{ dataF.lienFormation }}"> {{ dataF.lienFormation }}</a></p>
                 <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% else %}
-                    <p>📍 <b>Lieu de formation :</b> (Lieu de formation)</p>
+                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% endif %}

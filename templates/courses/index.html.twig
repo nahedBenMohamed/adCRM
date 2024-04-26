@@ -20,16 +20,17 @@
                         <div class="row">
                             <div class="col-lg-9"></div>
                             <div class="col-md-3">
-                               <!--- <a href="{{path('app_courses_add')}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                {% if alowAddNew %}
+                                <a href="{{path('app_courses_add',{ 'idCompany': idCompany, 'idFormation': null })}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
                                     <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
-                                </a>-->
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- Table with stripped rows -->
                         <table class="table table-striped" id="list-formations">
                             <thead>
                             <tr>
-                                <th scope="col">Client</th>
                                 <th scope="col">Intitulé de la formation</th>
                                 <th scope="col">Formateur</th>
                                 <th scope="col">Date de début</th>
@@ -39,7 +40,6 @@
                             <tbody>
                             {% for course in courses %}
                             <tr>
-                                <td>{% if course.company is defined and course.company is not null %} {{course.company.name}} {% else %} - {% endif %}</td>
                                 <td>{{course.nomFormation}}</td>
                                 <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
                                 <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
@@ -82,11 +82,11 @@
                                     {% endif %}
 
                                     <div class="course-status">
-                                        <div class="carre fill"></div>
-                                        <div class="carre  {% if course.status == 1 and fill1 %} fill {% endif %}"></div>
-                                        <div class="carre  {% if course.status == 1 and fill2 %} fill {% endif %}"></div>
-                                        <div class="carre  {% if course.status == 1 and fill3 %} fill {% endif %}"></div>
-                                        <div class="carre  {% if course.status == 1 and fill4 %} fill {% endif %}"></div>
+                                        <div class="prog"><span>BRO</span><div class="carre fill"></div></div>
+                                        <div class="prog"><span>AMT</span><div class="carre  {% if course.status == 1 and fill1 %} fill {% endif %}"></div></div>
+                                        <div class="prog"><span>EC</span><div class="carre  {% if course.status == 1 and fill2 %} fill {% endif %}"></div></div>
+                                        <div class="prog"><span>AVA</span><div class="carre  {% if course.status == 1 and fill3 %} fill {% endif %}"></div></div>
+                                        <div class="prog"><span>ARC</span><div class="carre  {% if course.status == 1 and fill4 %} fill {% endif %}"></div></div>
                                     </div>
                                 </td>
                             </tr>

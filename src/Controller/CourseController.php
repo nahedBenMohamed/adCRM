@@ -38,7 +38,9 @@ class CourseController extends AbstractController
     {
         $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
         return $this->render('courses/index.html.twig', [
-            'courses' => $courses
+            'courses' => $courses,
+            'alowAddNew' => false,
+            'idCompany' => null
         ]);
 
     }
@@ -73,7 +75,7 @@ class CourseController extends AbstractController
             $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $idCompany]);
             $formation = $entityManager->getRepository(Formation::class)->findOneBy(['company' => $company]);
             if ($formation) {
-                return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $formation->getId()]);
+               // return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $formation->getId()]);
             }
             $formCompany = $this->createForm(CompanyFormType::class, $company);
             $formCompany->handleRequest($request);
@@ -586,6 +588,23 @@ class CourseController extends AbstractController
         $this->saveInlog('AddTrainee',"Ajout des stagiaires à la formation: <b>".$formation->getNomFormation()."</b> à partir un fichier excel", $entityManager);
         //return $this->redirectToRoute('app_courses_edit', ['id' => $formation->getId()]);
         return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formation->getId()]);
+    }
+
+    #[Route('/courses/{idCompany}', name: 'app_courses_by_company')]
+    public function viewCoursesByCompany(EntityManagerInterface $entityManager,  $idCompany = null): Response
+    {
+        $courses = [];
+        if ($idCompany) {
+            $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $idCompany]);
+            $courses = $entityManager->getRepository(Formation::class)->findBy(['company' => $company]);
+        }
+
+        return $this->render('courses/index.html.twig', [
+            'courses' => $courses,
+            'alowAddNew' => true,
+            'idCompany' => $idCompany
+        ]);
+
     }
 
     function formCompanySave($form, $slugger,$company, $entityManager) {

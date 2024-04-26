@@ -10,8 +10,8 @@
                 <div class="card">
                     <div class="card-body ps-0 pe-0">
                         <div class="row">
-                            <div class="col-lg-8"></div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-8 col-md-8"></div>
+                            <div class="col-lg-4 col-md-4">
                                 <a href="{{path('app_courses_add')}}" title="Ajouter un nouveau organisme" class="float-end mt-4 mb-4 add-new">
                                     <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
@@ -28,7 +28,7 @@
                             <tbody>
                             {% for company in companies %}
                                 <tr>
-                                    <td>{{company.name}}</td>
+                                    <td> <a href="{{ path('app_courses_by_company', { 'idCompany':company.id }) }}" class="company-link" title="Liste des formations">{{company.name}}</a></td>
                                     <td class="text-center">
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" data-remove-url="{{path('app_delete_company',{ 'id': company.id })}}">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
