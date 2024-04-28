@@ -149,15 +149,20 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/addTeacher', name: 'app_add_teacher')]
-    public function addTeacher(Request $request, EntityManagerInterface $entityManager): Response
+    public function addTeacher(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            //set default password for Trainees
-            $user->setPassword('00000000');
+            //set default password for Trainees 00000000
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    '00000000'
+                )
+            );
 
             $user->setRoles(['ROLE_TEACHER']);
             $entityManager->persist($user);

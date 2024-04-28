@@ -79,8 +79,8 @@
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 0px; padding-bottom: 0px;" width="596">
 
-                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Convocation de vos stagiaires</h1>
-
+                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Rappel des informations clés</h1>
+                <p style="font-size: 15px; line-height: 24px; font-weight: 400; text-decoration: none; text-align: center">A destination du formateur / de la formatrice</p>
                 <hr>
             </td>
         </tr>
@@ -93,10 +93,9 @@
         <tbody>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
-                <p>Bonjour {% if client is defined and client is not null%} {{ client.firstName }}, {% endif %}</p>
+                <p>Bonjour {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }}, {% endif %}</p>
 
-                <p>Nous vous confirmons la convocation de vos stagiaires à la formation  <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :
-                </p>
+                <p> Tu animeras bientôt la formation <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :</p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
@@ -120,13 +119,28 @@
                         {% endif %}
                     </p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
-                    <p>N. B. : Il arrive que les connexions vers nos liens de classes virtuelles soient bloquées par des pare-feux ou VPN. Merci de vérifier avec votre service informatique que le lien que nous transmettons aux stagiaires est bien accessible.</p>
                 {% endif %}
-                {% if dataF.formateur is defined %}
-                    <p><b>📞Coordonnées du formateur / de la formatrice :</b></p>
-                    <p>{{ dataF.formateur.firstName }},  {{ dataF.formateur.lastname }},  {{ dataF.formateur.functionFormateur }}, {{ dataF.formateur.email }}</p>
-                {% endif %}
+                {% if dataF.customer is defined and dataF.customer is not null %}
+                    <p><b>📞Coordonnées du/des commanditaire(s) :</b></p>
+                    <p>
+                    {% if dataF.customer|length > 0 %}
+                        {% for customer in dataF.customer %}
+                            <p>{{ customer.firstName }},  {{ customer.lastname }},  {{ customer.position }}, {{ customer.email }}</p>
+                            <hr>
+                        {% endfor %}
+                    {% endif %}
 
+                    </p>
+                {% endif %}
+                <p><b>Liens utiles : </b></p>
+                <ul>
+                    {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
+                        <li> <a href="{{ dataF.linkToProgram.value }}" target="_blank">Le programme de la formation précisant les objectifs et les prérequis</a></li>
+                    {% endif %}
+                    {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
+                        <li><a href="{{ dataF.linkGuide.value }}" target="_blank">La check-liste des formateurs.trices : merci d’en suivre les processus </a></li>
+                    {% endif %}
+                </ul>
                 <p><b>Liste des stagiaires convoqués à la formation : </b></p>
                 <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
                     <thead>
@@ -144,21 +158,13 @@
                             <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.email }}</td></tr>
                     {% endfor %}
                 </table>
-                {% if (dataF.linkToProgram is defined and dataF.linkToProgram is not null) or (dataF.linkToLivretAccueil is defined and dataF.linkToLivretAccueil is not null) or (dataF.linkGuide is defined and dataF.linkGuide is not null) %}
-                <p> <b style="text-decoration: underline">Documents joints à la convocation de vos stagiaires (cliquez sur les liens pour y accéder) :</b></p>
-                <ul>
-                    {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
-                        <li><a href="{{ dataF.linkToProgram.value }}" target="_blank">Programme de votre formation précisant les objectifs et les prérequis</a> </li>
-                    {% endif %}
-                    {% if dataF.linkToLivretAccueil is defined and dataF.linkToLivretAccueil is not null %}
-                        <li><a href="{{ dataF.linkToLivretAccueil.value }}" target="_blank">Programme de votre formation précisant les objectifs et les prérequis</a> </li>
-                    {% endif %}
-                    {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
-                        <li><a href="{{ dataF.linkGuide.value }}" target="_blank">La check-liste des formateurs.trices : merci d’en suivre les processus</a> </li>
-                    {% endif %}
-                </ul>
+                {% if dataF.infoFormateur is not null %}
+                    <b style="text-align: left">Informations complémentaire formateur :</b>
+                    <p>{{ dataF.infoFormateur|striptags }}</p>
                 {% endif %}
-                <p>Nous nous tenons à votre disposition pour tout complément d’information et reviendrons vers vous dès la fin de la formation.</p>
+                <p>Tous les autres outils du formateur / de la formatrice sont accessible sur la page <a href="https://adconseil.ovh/index.php/formations/" target="_blank">Méthodes Formation</a> de l’Extranet (émargements électroniques, évaluation à chaud, suivi des émargements et des évaluations, etc.).</p>
+                <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans la check-list des formateurs.trices. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
+            <p>Je reste à disposition pour tout complément d’information et te souhaite une agréable formation.</p>
             </td>
         </tr>
         </tbody>
@@ -189,9 +195,20 @@
                         adconseil.org
                     </a>
                 </p>
-            </td></tr>
+            </td>
+        </tr>
         </tbody>
     </table>
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; " width="600">
+        <tbody>
+        <tr>
+            <td>
+                <a href="" class="btn btn-primary" style="text-decoration: underline">Envoyer mail au formateur</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
     <!-- End footer -->
 </div>
 
