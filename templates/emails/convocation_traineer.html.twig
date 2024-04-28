@@ -96,16 +96,28 @@
                 <p>Bonjour {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }}, {% endif %}</p>
 
                 <p> Tu animeras bientôt la formation <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :</p>
-                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags }}</p>
+                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
                     <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                 {% elseif (dataF.lieuFormation == 'Distanciel')%}
-                    <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a></p>
+                    <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
+                        {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
+                            <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank"> {{  dataF.formateur.linkFormateur }}</a>
+                        {% else %}
+                            <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a>
+                        {% endif %}
+                    </p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% else %}
                     <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
-                    <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b> {{ dataF.lienFormation }}</p>
+                    <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
+                        {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
+                            <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank"> {{  dataF.formateur.linkFormateur }}</a>
+                        {% else %}
+                            <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a>
+                        {% endif %}
+                    </p>
                     <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% endif %}
                 {% if dataF.customer is defined and dataF.customer is not null %}

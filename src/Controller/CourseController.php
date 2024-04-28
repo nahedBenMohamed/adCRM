@@ -647,4 +647,20 @@ class CourseController extends AbstractController
         $entityManager->persist($log);
         $entityManager->flush();
     }
+    #[Route('/courses/sendAlertTeacher/{idFormation}', name: 'app_teacher_send_alert')]
+    public function sendAlertTeacher(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        $listOfTrainees = [];
+        foreach ($traineesFormation as $item) {
+            $trainee = $item->getTrainee();
+            $listOfTrainees[] = $trainee;
+        }
+        return $this->render('emails/alert_teacher.html.twig', [
+            'dataF' => $formation,
+            'traineesFormation' => $listOfTrainees,
+            'client' => $formation->getCustomer()[0]
+        ]);
+    }
 }
