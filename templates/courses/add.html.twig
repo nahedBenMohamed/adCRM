@@ -45,13 +45,27 @@
             margin-left: 13px;
             color: blue;
         }
+        .custom-link {
+            float: right;
+            padding: 20px 7px 15px 0;
+            color: #012970;
+            font-size: 13px;
+            text-decoration: underline;
+        }
     </style>
 {% endblock %}
 {% block body %}
     <section class="section" style="margin-top: -75px;">
-        <h3 class="card-title" id="companyID" data-companyID="{{ idCompany }}">
-            Ajouter une nouvelle formation
-        </h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="card-title" id="companyID" data-companyID="{{ idCompany }}">
+                    Détaille de la formation
+                </h3>
+            </div>
+            <div class="col-md-6">
+                <a href="{{path('app_see_historic',{ 'formationId': formation.id })}}" class="custom-link">Historique</a>
+            </div>
+        </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link   {% if idCompany == '' %} active {% endif %}" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
