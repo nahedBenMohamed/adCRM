@@ -279,7 +279,7 @@ class CourseController extends AbstractController
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-        $mailer->send($email);
+       $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
         $formation->setStatus(1);
@@ -287,7 +287,7 @@ class CourseController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', "La convocation a été envoyée avec succès.");
         //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
-        $this->saveInlog('EnvoiConnvForOneStag',"Envoi d'une Convocation à la formation ".$formation->getNomFormation(), $entityManager);
+        $this->saveInlog('EnvoiConnvForOneStag_'.$idFormation,"Envoi d'une Convocation à la formation ".$formation->getNomFormation().'. Email de stagiaire:'.$trainee->getEmail(), $entityManager);
         return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
     }
 
@@ -334,7 +334,7 @@ class CourseController extends AbstractController
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html2)
                 ->to('formation@adconseil.org');
-            $mailer->send($emailAdmin);
+           $mailer->send($emailAdmin);
 
             /************ end mail trainee to adconseil *******/
 
@@ -383,14 +383,14 @@ class CourseController extends AbstractController
                         ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
                         ->html($htmlClient)
                         ->to($cl->getEmail());
-                    $mailer->send($emailClient);
+                   $mailer->send($emailClient);
                 }
                 /**** fin send mail to all client ************/
 
             }
         }
 
-        $this->saveInlog('EnvoiConnvForAll',"Envoi d'une Convocation à la formation ".$formation->getNomFormation(), $entityManager);
+        $this->saveInlog('EnvoiConnvForAll_'.$idFormation,"Envoi d'une Convocation à tous les stagiaires pour la formation ".$formation->getNomFormation(), $entityManager);
         $this->addFlash('success', "Les convocations ont bien été envoyées.");
         return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
         //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
@@ -657,10 +657,33 @@ class CourseController extends AbstractController
             $trainee = $item->getTrainee();
             $listOfTrainees[] = $trainee;
         }
+        if ($formation->getFormateur()) {
+            $this->saveInlog('EnvoiRappelTeacher_'.$idFormation,". Envoi de Rappel des informations clés pour la formation".$formation->getNomFormation().'. Email de formateur:'.$formation->getFormateur()->getEmail(), $entityManager);
+        }
         return $this->render('emails/alert_teacher.html.twig', [
             'dataF' => $formation,
             'traineesFormation' => $listOfTrainees,
             'client' => $formation->getCustomer()[0]
+        ]);
+    }
+
+    #[Route('/courses/seeHistoric/{formationId}', name: 'app_see_historic')]
+    public function seeHistoric(Request $request, EntityManagerInterface $entityManager, $formationId ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
+        $allLog = $entityManager->getRepository(Log::class)->findBy([],['id' => 'DESC'], 100);
+        $log = [];
+        foreach ($allLog as $item) {
+            $tabItem = explode('_', $item->getActivityName() );
+            if(sizeof($tabItem) > 1) {
+                if($tabItem[1] == $formationId) {
+                    $log[] = $item;
+                }
+            }
+        }
+        return $this->render('views/historic.html.twig', [
+            'log' => $log,
+            'formationName' => $formation->getNomFormation()
         ]);
     }
 }
