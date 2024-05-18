@@ -279,7 +279,7 @@ class CourseController extends AbstractController
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-       // $mailer->send($email);
+       $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
         $formation->setStatus(1);
@@ -311,7 +311,7 @@ class CourseController extends AbstractController
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
                 ->to($trainee->getEmail());
-            //$mailer->send($email);
+            $mailer->send($email);
             /************ end send mail to all trainee ***/
 
             $item->setSendConvocation(true);
@@ -334,7 +334,7 @@ class CourseController extends AbstractController
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html2)
                 ->to('formation@adconseil.org');
-           // $mailer->send($emailAdmin);
+           $mailer->send($emailAdmin);
 
             /************ end mail trainee to adconseil *******/
 
@@ -350,7 +350,7 @@ class CourseController extends AbstractController
                 ->html($htmlRecap)
                 ->cc('formation@adconseil.org')
                 ->to($traineer->getEmail());
-           // $mailer->send($emailTraineer);
+            $mailer->send($emailTraineer);
             /**************end send mail to Traineer and copy to adconseil******/
             //send specific mail to contact client
             $client = $formation->getCustomer();
@@ -367,7 +367,7 @@ class CourseController extends AbstractController
                     ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
                     ->html($htmlClient)
                     ->to('formation@adconseil.org');
-               // $mailer->send($emailClient);
+                $mailer->send($emailClient);
                 /******* end mail to adconseil *****/
 
                 /********* send mail to all clients ******/
@@ -383,7 +383,7 @@ class CourseController extends AbstractController
                         ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
                         ->html($htmlClient)
                         ->to($cl->getEmail());
-                   // $mailer->send($emailClient);
+                   $mailer->send($emailClient);
                 }
                 /**** fin send mail to all client ************/
 
