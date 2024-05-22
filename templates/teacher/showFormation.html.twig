@@ -249,11 +249,6 @@
                             <div class="card-body ps-0 pe-0">
                                 <div class="ml-2 mr-2 m-lg-3">
                                     <div class="row mb-3">
-                                        <div class="col-sm-3 offset-md-9 d-inline-flex list-btn">
-                                            <div class="mx-lg-2 send-conv {% if trainees|length == 0 %} hidden {% endif %}">
-                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" Envoyer convocation à tous les stagiaires> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="row hidden">
                                         <div class="col-md-6"> <h5 class="card-title">
@@ -272,7 +267,7 @@
                                     <tr>
                                         <th scope="col">Nom</th>
                                         <th scope="col">Prénom</th>
-                                        <th scope="col">Fonction</th>
+                                        <th scope="col">Fonctions</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -284,11 +279,14 @@
                                                 <td>{{ trainee.lastName }}</td>
                                                 <td>{{ trainee.position }}</td>
                                                 <td class="td-action">
-                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
-                                                        <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
+                                                    <a href="{{ path('app_trainee_add_info', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Ajouter des informations" class="" target="_blank">
+                                                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
-                                                        <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                                    <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
+                                                        Attestation
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
+                                                        Certificat
                                                     </a>
                                                 </td>
                                             </tr>

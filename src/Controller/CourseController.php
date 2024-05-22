@@ -686,4 +686,41 @@ class CourseController extends AbstractController
             'formationName' => $formation->getNomFormation()
         ]);
     }
+
+    #[Route('/courses/seeAttestationTrainee/{idFormation}/{idTrainee}', name: 'app_trainee_see_attestation')]
+    public function seeAttestationTrainee(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $this->generate_pdf($formation,$trainee);
+        return $this->render('emails/attestation.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+    }
+
+    #[Route('/courses/seeCertifTrainee/{idFormation}/{idTrainee}', name: 'app_trainee_see_certif')]
+    public function seeCertifTrainee(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $this->generate_pdf($formation,$trainee);
+        return $this->render('emails/certif.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+    }
+
+    #[Route('/courses/addTraineeInfo/{idFormation}/{idTrainee}', name: 'app_trainee_add_info')]
+    public function addTraineeInfo(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        echo "page pour ajouter des information pour le stagiaire"; exit();
+        $this->generate_pdf($formation,$trainee);
+        return $this->render('emails/certif.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+    }
 }

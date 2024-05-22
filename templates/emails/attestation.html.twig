@@ -1,0 +1,203 @@
+<!-- Free to use, HTML email template designed & built by FullSphere. Learn more about us at www.fullsphere.co.uk -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
+    <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+
+    <!-- Your title goes here -->
+    <title>Attestation individuelle de fin de formation</title>
+    <!-- End title -->
+
+    <!-- Start stylesheet -->
+    <style type="text/css">
+        body {
+            font-family:'Helvetica', Arial, sans-serif;
+        }
+        a,a[href],a:hover, a:link, a:visited {
+            /* This is the link colour */
+            text-decoration: none!important;
+            color: #4db4e8;
+        }
+        .link {
+            text-decoration: underline!important;
+        }
+        p, p:visited {
+            /* Fallback paragraph style */
+            font-size:15px;
+            line-height:24px;
+            font-family:'Helvetica', Arial, sans-serif;
+            font-weight:300;
+            text-decoration:none;
+            color: #000000;
+            text-align: left;
+        }
+        h1 {
+            /* Fallback heading style */
+            font-size:22px;
+            line-height:24px;
+            font-family:'Helvetica', Arial, sans-serif;
+            font-weight:normal;
+            text-decoration:none;
+            color: #000000;
+        }
+        .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;}
+        .ExternalClass {width: 100%;}
+        li {
+            text-align: left;
+            font-size: 15px;
+        }
+    </style>
+    <!-- End stylesheet -->
+
+</head>
+
+<!-- You can change background colour here -->
+<body style="text-align: center; margin: 0; padding-top: 10px; padding-bottom: 10px; padding-left: 0; padding-right: 0; -webkit-text-size-adjust: 100%;background-color: #f2f4f6; color: #000000" align="center">
+
+<!-- Fallback force center content -->
+<div style="text-align: center;">
+
+
+    <!-- Start single column section -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
+        <tbody>
+        <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 0px; padding-bottom: 0px;" width="596">
+
+                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Attestation individuelle de fin de formation</h1>
+                <hr>
+                <p style="text-align: center;font-size: 12px;">(Article L. 6353-1 du Code du Travail)</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- End single column section -->
+
+    <!-- Start heading for double column section -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
+        <tbody>
+        <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
+                <p style="font-size: 13px">Je soussigné(e) Anne-Lise CHABOT, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493,
+                    certifie que
+                    {% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}
+                    {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %}
+                    {% if dataS.firstName is defined %} {{ dataS.firstName }} {% endif %}
+
+
+                    , exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
+                    au sein de l'entreprise / l'organisme
+                    {% if dataS.company is defined and dataS.company is not null %} {{ dataS.company.name }} {% endif %},
+                    a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {{ dataF.dureeFormation|striptags|raw }} heures.								</p>
+                <p>
+                    <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>
+                </p>
+                <p class="objectif">
+                    {{ dataF.objective }}
+                </p>
+                <p>
+                    <b style="font-size: 14px">
+                        Nature de l'action de formation : Acquisition, entretien ou perfectionnement des connaissances.
+                    </b>
+                </p>
+                <p>
+                    <strong>RESULTAT DE L'EVALUATION DES ACQUIS</strong>
+                </p>
+                <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
+                    <thead>
+                    <tr>
+                        <th style="border: 1px solid #ccc; padding: 5px"></th>
+                        <th style="border: 1px solid #ccc; padding: 5px">Peu ou pas maîtrisé</th>
+                        <th style="border: 1px solid #ccc; padding: 5px">Maîtrisé partiellement</th>
+                        <th style="border: 1px solid #ccc; padding: 5px">Maîtrisé totalement</th>
+                        <th style="border: 1px solid #ccc; padding: 5px">N. C.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 5px">Connaissances</td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 5px">Compétences</td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                        <td style="border: 1px solid #ccc; padding: 5px"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p><b style="text-align: left">Commentaires</b></p>
+                <p></p>
+                <p>
+                    Fait le {{ "now"|date("d/m/Y") }} à Tours pour faire valoir ce que de droit.
+                </p>
+                <p style="text-align: right;padding-bottom: 10px;">Anne-Lise CHABOT</p>
+                <p></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- End heading for double column section -->
+
+    <!-- Start footer -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #4db4e8;;" width="600">
+        <tbody>
+        <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 30px;" width="596">
+                L’équipe pédagogique AD CONSEIL
+                <hr>
+                <!-- Your inverted logo is here -->
+                <img style="width: 180px; max-width: 180px; height: 85px; max-height: 85px; text-align: center; color: #ffffff;" alt="Logo" src="http://adformation.online/assets/img/logo.png" align="left" width="180" height="85">
+
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-left: 30px">
+                <p style="font-size: 13px; line-height: 24px;font-weight: 400; text-decoration: none; color: #ffffff; margin-top: 0; margin-bottom: 0;">
+                    formation@adconseil.org<br>
+                    01 46 68 88 88
+                </p>
+
+                <p style="margin-bottom: 0;margin-top: 0; font-size: 13px; line-height: 24px; font-weight: 400; text-decoration: none; color: #ffffff;">
+                    <a target="_blank" style="text-decoration: underline; color: #ffffff;" href="https://adconseil.org/">
+                        adconseil.org
+                    </a>
+                </p>
+            </td></tr>
+        </tbody>
+    </table>
+
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; " width="600">
+        <tbody>
+        <tr>
+            <td>
+                <a href="" class="btn btn-primary" style="text-decoration: underline">Envoyer mail au stagiaire: {{ dataS.email }}</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- End footer -->
+</div>
+
+</body>
+
+</html>
