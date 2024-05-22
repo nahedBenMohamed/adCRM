@@ -62,9 +62,11 @@
                     Détaille de la formation
                 </h3>
             </div>
+            {% if formation is defined %}
             <div class="col-md-6">
                 <a href="{{path('app_see_historic',{ 'formationId': formation.id })}}" class="custom-link">Historique</a>
             </div>
+            {% endif %}
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
