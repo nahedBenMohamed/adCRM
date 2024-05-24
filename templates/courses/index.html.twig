@@ -24,6 +24,10 @@
                                 <a href="{{path('app_courses_add',{ 'idCompany': idCompany, 'idFormation': null })}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
                                     <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
+                                {% else %}
+                                    <a href="{{path('app_courses_add')}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                        <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
+                                    </a>
                                 {% endif %}
                             </div>
                         </div>

@@ -305,6 +305,11 @@
                                             <div class="mx-lg-2">
                                                 <a href="{{path('app_teacher_send_alert',{ 'idFormation': formation.id })}}" title="Rappel des informations clés"> <img src="{{asset('assets/img/icon/reply-all-solid.svg')}}" width="40"></a>
                                             </div>
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_download_trainee_by_formation',{'idFormation': formation.id })}}" title="Télecharger stagiaires" class="float-end mt-4 mb-4" style="display: contents">
+                                                    <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="25" class="float-end">
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row hidden">
@@ -326,9 +331,6 @@
                                         <th scope="col">Prénom</th>
                                         <th scope="col">Fonction</th>
                                         <th>
-                                            <a href="{{path('app_download_trainee_by_formation',{'idFormation': formation.id })}}" title="Télecharger stagiaires" class="float-end mt-4 mb-4" style="display: contents">
-                                                <img src="{{asset('assets/img/icon/file-arrow-down-solid-bleu.svg')}}" width="25" class="float-end">
-                                            </a>
                                         </th>
                                     </tr>
                                     </thead>
