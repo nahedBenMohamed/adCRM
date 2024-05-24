@@ -20,7 +20,7 @@
     <!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
 
     <!-- Your title goes here -->
-    <title>CONVOCATION</title>
+    <title>Rappel des informations clés</title>
     <!-- End title -->
 
     <!-- Start stylesheet -->
@@ -60,6 +60,11 @@
         li {
             text-align: left;
             font-size: 15px;
+        }
+        .bleu-link {
+            color: #0B5CFF !important;
+            font-weight: 600;
+            text-decoration: underline !important;
         }
     </style>
     <!-- End stylesheet -->
@@ -103,22 +108,20 @@
                 {% elseif (dataF.lieuFormation == 'Distanciel')%}
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
                         {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
-                            <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank"> {{  dataF.formateur.linkFormateur }}</a>
+                            <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank" class="bleu-link "> {{  dataF.formateur.linkFormateur }}</a>
                         {% else %}
-                            <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a>
+                            <a href="{{ dataF.lienFormation }}" target="_blank"  class="bleu-link "> {{ dataF.lienFormation }}</a>
                         {% endif %}
                     </p>
-                    <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
-                {% else %}
+                    {% else %}
                     <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
                         {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
-                            <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank"> {{  dataF.formateur.linkFormateur }}</a>
+                            <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank"  class="bleu-link "> {{  dataF.formateur.linkFormateur }}</a>
                         {% else %}
-                            <a href="{{ dataF.lienFormation }}" target="_blank"> {{ dataF.lienFormation }}</a>
+                            <a href="{{ dataF.lienFormation }}" target="_blank"  class="bleu-link "> {{ dataF.lienFormation }}</a>
                         {% endif %}
                     </p>
-                    <p>N. B. : Les liens sont actifs 15 mn avant le démarrage des classes virtuelles</p>
                 {% endif %}
                 {% if dataF.customer is defined and dataF.customer is not null %}
                     <p><b>📞Coordonnées du/des commanditaire(s) :</b></p>
@@ -135,10 +138,10 @@
                 <p><b>Liens utiles : </b></p>
                 <ul>
                     {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
-                        <li> <a href="{{ dataF.linkToProgram.value }}" target="_blank">Le programme de la formation précisant les objectifs et les prérequis</a></li>
+                        <li> <a href="{{ dataF.linkToProgram.value }}" target="_blank"  class="bleu-link ">Le programme de la formation précisant les objectifs et les prérequis</a></li>
                     {% endif %}
                     {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
-                        <li><a href="{{ dataF.linkGuide.value }}" target="_blank">La check-liste des formateurs.trices : merci d’en suivre les processus </a></li>
+                        <li><a href="{{ dataF.linkGuide.value }}" target="_blank" class="bleu-link ">La check-liste des formateurs.trices : merci d’en suivre les processus </a></li>
                     {% endif %}
                 </ul>
                 <p><b>Liste des stagiaires convoqués à la formation : </b></p>
@@ -162,7 +165,7 @@
                     <b style="text-align: left">Informations complémentaire formateur :</b>
                     <p>{{ dataF.infoFormateur|striptags }}</p>
                 {% endif %}
-                <p>Tous les autres outils du formateur / de la formatrice sont accessible sur la page <a href="https://adconseil.ovh/index.php/formations/" target="_blank">Méthodes Formation</a> de l’Extranet (émargements électroniques, évaluation à chaud, suivi des émargements et des évaluations, etc.).</p>
+                <p>Tous les autres outils du formateur / de la formatrice sont accessible sur la page <a href="https://adconseil.ovh/index.php/formations/" target="_blank"  class="bleu-link ">Méthodes Formation</a> de l’Extranet (émargements électroniques, évaluation à chaud, suivi des émargements et des évaluations, etc.).</p>
                 <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans la check-list des formateurs.trices. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
             <p>Je reste à disposition pour tout complément d’information et te souhaite une agréable formation.</p>
             </td>
@@ -172,38 +175,24 @@
     <!-- End heading for double column section -->
 
     <!-- Start footer -->
-    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #4db4e8;;" width="600">
+    <!-- Start footer -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #fff;;" width="600">
         <tbody>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 30px;" width="596">
-                L’équipe pédagogique AD CONSEIL
-                <hr>
                 <!-- Your inverted logo is here -->
-                <img style="width: 180px; max-width: 180px; height: 85px; max-height: 85px; text-align: center; color: #ffffff;" alt="Logo" src="http://adformation.online/assets/img/logo.png" align="left" width="180" height="85">
-
-            </td>
-        </tr>
-        <tr>
-            <td style="padding-left: 30px">
-                <p style="font-size: 13px; line-height: 24px;font-weight: 400; text-decoration: none; color: #ffffff; margin-top: 0; margin-bottom: 0;">
-                    formation@adconseil.org<br>
-                    01 46 68 88 88
-                </p>
-
-                <p style="margin-bottom: 0;margin-top: 0; font-size: 13px; line-height: 24px; font-weight: 400; text-decoration: none; color: #ffffff;">
-                    <a target="_blank" style="text-decoration: underline; color: #ffffff;" href="https://adconseil.org/">
-                        adconseil.org
-                    </a>
-                </p>
+                <img style="width:1.5625in;height:.5069in;text-align: center; color: #ffffff;" alt="Logo" src="https://adformation.online/assets/img/logo.png" align="left" width="150" height="49">
             </td>
         </tr>
         </tbody>
+    </table>
+    <!-- End footer -->
     </table>
     <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; " width="600">
         <tbody>
         <tr>
             <td>
-                <a href="" class="btn btn-primary" style="text-decoration: underline">Envoyer mail au formateur</a>
+                <a href="" class="btn btn-primary"  class="bleu-link ">Envoyer mail au formateur</a>
             </td>
         </tr>
         </tbody>
