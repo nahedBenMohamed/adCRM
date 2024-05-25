@@ -112,7 +112,7 @@
                             <a href="{{ dataF.lienFormation }}" target="_blank"  class="bleu-link "> {{ dataF.lienFormation }}</a>
                         {% endif %}
                     </p>
-                    {% else %}
+                {% else %}
                     <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
                         {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
@@ -166,14 +166,13 @@
                 {% endif %}
                 <p>Tous les autres outils du formateur / de la formatrice sont accessible sur la page <a href="https://adconseil.ovh/index.php/formations/" target="_blank"  class="bleu-link ">Méthodes Formation</a> de l’Extranet (émargements électroniques, évaluation à chaud, suivi des émargements et des évaluations, etc.).</p>
                 <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans la check-list des formateurs.trices. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
-            <p>Je reste à disposition pour tout complément d’information et te souhaite une agréable formation.</p>
+                <p>Je reste à disposition pour tout complément d’information et te souhaite une agréable formation.</p>
             </td>
         </tr>
         </tbody>
     </table>
     <!-- End heading for double column section -->
 
-    <!-- Start footer -->
     <!-- Start footer -->
     <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #fff;;" width="600">
         <tbody>
@@ -185,16 +184,6 @@
         </tr>
         </tbody>
     </table>
-    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; " width="600">
-        <tbody>
-        <tr>
-            <td>
-                <a href="{{ path('app_teacher_send_email_alert', {'idFormation':dataF.id }) }}" class="btn btn-primary"  class="bleu-link ">Envoyer un e-mail au formateur</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
     <!-- End footer -->
 </div>
 

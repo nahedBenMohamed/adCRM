@@ -308,10 +308,16 @@ class UserController extends AbstractController
         $users = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Lise des emails de tous les stagiaires');
+        $sheet->setCellValue('A1', 'Nom');
+        $sheet->setCellValue('B1', 'Prénom');
+        $sheet->setCellValue('C1', 'Fonction');
+        $sheet->setCellValue('D1', 'Email');
         $counter = 2;
         foreach ($users as $user) {
-            $sheet->setCellValue('A' . $counter, $user->getEmail());
+            $sheet->setCellValue('A' . $counter, $user->getFirstName());
+            $sheet->setCellValue('B' . $counter, $user->getLastName());
+            $sheet->setCellValue('C' . $counter, $user->getPosition());
+            $sheet->setCellValue('D' . $counter, $user->getEmail());
             $counter++;
         }
         $writer = new Xls($spreadsheet);
@@ -336,10 +342,16 @@ class UserController extends AbstractController
         $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $course]);
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Lise des emails des stagiaires de la formation '.$course->getNomFormation());
+        $sheet->setCellValue('A1', 'Nom');
+        $sheet->setCellValue('B1', 'Prénom');
+        $sheet->setCellValue('C1', 'Fonction');
+        $sheet->setCellValue('D1', 'Email');
         $counter = 2;
         foreach ($formationUser as $item) {
-            $sheet->setCellValue('A' . $counter, $item->getTrainee()->getEmail());
+            $sheet->setCellValue('A' . $counter, $item->getTrainee()->getFirstName());
+            $sheet->setCellValue('B' . $counter, $item->getTrainee()->getLastName());
+            $sheet->setCellValue('C' . $counter, $item->getTrainee()->getPosition());
+            $sheet->setCellValue('D' . $counter, $item->getTrainee()->getEmail());
             $counter++;
         }
         $writer = new Xls($spreadsheet);
