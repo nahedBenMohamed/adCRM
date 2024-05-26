@@ -205,9 +205,10 @@ class UserController extends AbstractController
                     //send mail to user with token
                     $link = 'https://adformation.online'.$this->generateUrl('app_update_user_password',['email'=>$email]);
                     $emailToSend = (new Email())
-                        ->from('adconseil@gmail.com')
+                        ->from('formation@adconseil.org')
+                        ->subject('Modification de mot de passe')
                         ->html('<p>Bonjour, cliquer sur le lien pour modifier votre mot de passe:<br><a href="'.$link.'">'.$link.'</a></p>')
-                        ->to($email);
+                        ->to($user->getEmail());
                     $mailer->send($emailToSend);
                     $this->addFlash('success', "Un email est envoyé à votre compte.");
                     return $this->redirectToRoute('app_update_password');
