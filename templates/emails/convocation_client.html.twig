@@ -104,7 +104,7 @@
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
-                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
+                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags|raw }}</p>
                 {% elseif (dataF.lieuFormation == 'Distanciel')%}
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
                         {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
@@ -114,7 +114,7 @@
                         {% endif %}
                     </p>
                 {% else %}
-                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags }}</p>
+                    <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags|raw }}</p>
                     <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
                         {% if (dataF.formateur is defined and dataF.formateur.linkFormateur) %}
                             <a href="{{  dataF.formateur.linkFormateur  }}" target="_blank"  class="bleu-link "> {{  dataF.formateur.linkFormateur }}</a>
