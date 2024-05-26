@@ -657,14 +657,39 @@ class CourseController extends AbstractController
             $trainee = $item->getTrainee();
             $listOfTrainees[] = $trainee;
         }
-        if ($formation->getFormateur()) {
-            $this->saveInlog('EnvoiRappelTeacher_'.$idFormation,". Envoi de Rappel des informations clés pour la formation".$formation->getNomFormation().'. Email de formateur:'.$formation->getFormateur()->getEmail(), $entityManager);
-        }
         return $this->render('emails/alert_teacher.html.twig', [
             'dataF' => $formation,
             'traineesFormation' => $listOfTrainees,
             'client' => $formation->getCustomer()[0]
         ]);
+    }
+
+    #[Route('/courses/sendEmailAlertTeacher/{idFormation}', name: 'app_teacher_send_email_alert')]
+    public function sendEmailAlertTeacher(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+        $listOfTrainees = [];
+        foreach ($traineesFormation as $item) {
+            $trainee = $item->getTrainee();
+            $listOfTrainees[] = $trainee;
+        }
+        if ($formation->getFormateur()) {
+            $this->saveInlog('EnvoiRappelTeacher_'.$idFormation,". Envoi de Rappel des informations clés pour la formation".$formation->getNomFormation().'. Email de formateur:'.$formation->getFormateur()->getEmail(), $entityManager);
+        }
+        $html = $this->renderView('emails/mail_alert_teacher.html.twig', [
+            'dataF' => $formation,
+            'traineesFormation' => $listOfTrainees,
+            'client' => $formation->getCustomer()[0]
+        ]);
+        $email = (new Email())
+            ->from('formation@adconseil.org')
+            ->subject('Convocation à la formation '.$formation->getNomFormation())
+            ->html($html)
+            ->to($formation->getFormateur()->getEmail());
+        $mailer->send($email);
+        $this->addFlash('success', "Le rappel des informations clés a été envoyée au formateur avec succès.");
+        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
     }
 
     #[Route('/courses/seeHistoric/{formationId}', name: 'app_see_historic')]
