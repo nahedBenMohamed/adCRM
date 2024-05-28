@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -748,4 +750,56 @@ class CourseController extends AbstractController
             'dataS' => $trainee
         ]);
     }
+
+    #[Route('/courses/sendCertifAttestationToTrainee/{idFormation}/{idTrainee}', name: 'app_trainee_send_certif_attestaion')]
+    public function sendCertifAttestationToTrainee(Request $request, EntityManagerInterface $entityManager,MailerInterface $mailer, $idFormation, $idTrainee ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee   =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
+        $certif = $this->generate_pdf_certif_attestation($formation,$trainee);
+        $email = (new Email())
+            ->from('formation@adconseil.org')
+            ->subject('Certificat et Attestation à la formation '.$formation->getNomFormation())
+            ->html("<p>Bonjour, vous trouverez ci joint l'attestation et le certificat à la formation ".$formation->getNomFormation()."</p>")
+            ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/certif_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
+            ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/attestation_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
+            ->to($trainee->getEmail());
+        $mailer->send($email);
+       /* $traineesFormation->setSendConvocation(true);
+        $entityManager->persist($traineesFormation);
+        $formation->setStatus(1);
+        $entityManager->persist($formation);
+        $entityManager->flush();*/
+        $this->addFlash('success', "Le certificat et l'attestation ont a été envoyée avec succès.");
+        $this->saveInlog('EnvoiCertifAttestationForOneStag_'.$idFormation,"Envoi de certificat et l'attestation à la formation ".$formation->getNomFormation().'. Email de stagiaire:'.$trainee->getEmail(), $entityManager);
+        return $this->redirectToRoute('app_trainer_course', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
+    }
+
+    public function generate_pdf_certif_attestation($formation, $trainee){
+
+        $options = new Options();
+        $options->set('defaultFont', 'Roboto');
+        //create certif
+        $dompdf = new Dompdf($options);
+        $html = $this->renderView('emails/certif.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $output = $dompdf->output();
+        file_put_contents('documents/convocations/certif_'.$formation->getId().'_'.$trainee->getId().'.pdf', $output);
+        //create attestation
+        $dompdf2 = new Dompdf($options);
+        $html2 = $this->renderView('emails/attestation.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
+        $dompdf2->loadHtml($html2);
+        $dompdf2->render();
+        $output2 = $dompdf2->output();
+        file_put_contents('documents/convocations/attestation_'.$formation->getId().'_'.$trainee->getId().'.pdf', $output2);
+    }
+
 }

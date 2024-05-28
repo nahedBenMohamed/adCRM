@@ -6,6 +6,7 @@
 parameters:
     company_file_directory:  'documents/companyFiles'
     trainee_file_directory:  'documents/trainee'
+    certif_file_directory:  'documents/convocations'
 
 services:
     # default configuration for services in *this* file

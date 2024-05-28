@@ -32,6 +32,10 @@ class UpdateUserFormType extends AbstractType
             ->add('linkFormateur',   textType::class,[
                 'label' =>'Lien de formateur',
                 'required' => false,
+            ])
+            ->add('signature',   textType::class,[
+                'label' =>'Signature',
+                'required' => false,
             ]);
     }
 
