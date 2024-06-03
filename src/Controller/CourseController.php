@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Form\CompanyFormType;
 use App\Form\FormationFormType;
 use App\Form\FormationInfoFormType;
+use App\Form\TraineeFormationEvalType;
 use App\Form\TraineeFormationFormType;
 use App\Form\TraineeFormType;
 use Dompdf\Dompdf;
@@ -719,10 +720,12 @@ class CourseController extends AbstractController
     {
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
         $this->generate_pdf($formation,$trainee);
         return $this->render('emails/attestation.html.twig', [
             'dataF' => $formation,
-            'dataS' => $trainee
+            'dataS' => $trainee,
+            'evalTrainee' => $evalTrainee
         ]);
     }
 
@@ -743,11 +746,19 @@ class CourseController extends AbstractController
     {
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
-        echo "page pour ajouter des information pour le stagiaire"; exit();
+        $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
+        $form = $this->createForm(TraineeFormationEvalType::class, $evalTrainee);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $evalTrainee = $form->getData();
+            $entityManager->persist($evalTrainee);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_trainer_course', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formation->getId()]);
+        }
         $this->generate_pdf($formation,$trainee);
-        return $this->render('emails/certif.html.twig', [
-            'dataF' => $formation,
-            'dataS' => $trainee
+        return $this->render('trainees/evalutaion.html.twig', [
+            'evaluation' => $form->createView(),
+            'trainee' => $trainee
         ]);
     }
 
@@ -757,7 +768,7 @@ class CourseController extends AbstractController
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $trainee   =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
         $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
-        $certif = $this->generate_pdf_certif_attestation($formation,$trainee);
+        $certif = $this->generate_pdf_certif_attestation($formation,$trainee, $entityManager);
         $email = (new Email())
             ->from('formation@adconseil.org')
             ->subject('Certificat et Attestation à la formation '.$formation->getNomFormation())
@@ -776,8 +787,10 @@ class CourseController extends AbstractController
         return $this->redirectToRoute('app_trainer_course', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
     }
 
-    public function generate_pdf_certif_attestation($formation, $trainee){
+    public function generate_pdf_certif_attestation($formation, $trainee, $entityManager)
+    {
 
+        $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
         $options = new Options();
         $options->set('defaultFont', 'Roboto');
         //create certif
@@ -794,7 +807,8 @@ class CourseController extends AbstractController
         $dompdf2 = new Dompdf($options);
         $html2 = $this->renderView('emails/attestation.html.twig', [
             'dataF' => $formation,
-            'dataS' => $trainee
+            'dataS' => $trainee,
+            'evalTrainee' => $evalTrainee
         ]);
         $dompdf2->loadHtml($html2);
         $dompdf2->render();

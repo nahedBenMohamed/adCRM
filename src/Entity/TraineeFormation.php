@@ -30,6 +30,15 @@ class TraineeFormation
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateConvocation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $knowledge = '';
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $skills = '';
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $comments = '';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +97,38 @@ class TraineeFormation
     public function setDateConvocation(?\DateTimeInterface $dateConvocation): self
     {
         $this->dateConvocation = $dateConvocation;
+
+        return $this;
+    }
+
+    public function getKnowledge(): ?string
+    {
+        return $this->knowledge;
+    }
+    public function setKnowledge(string $knowledge): self
+    {
+        $this->knowledge = $knowledge;
+
+        return $this;
+    }
+
+    public function getSkills(): ?string
+    {
+        return $this->skills;
+    }
+    public function setSkills(string $skills): self
+    {
+        $this->skills = $skills;
+
+        return $this;
+    }
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+    public function setComments(string $comments): self
+    {
+        $this->comments = $comments;
 
         return $this;
     }
