@@ -779,7 +779,7 @@ class CourseController extends AbstractController
             ->html($htmlContent)
             ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/certif_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
             ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/attestation_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
-            ->to($trainee->getEmail());
+            ->to('nahedbenmohamed57@gmail.com');
         $mailer->send($email);
        /* $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);

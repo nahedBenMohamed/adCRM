@@ -1,11 +1,18 @@
 <p>Bonjour,</p>
 <p>Vous venez de suivre la formation « {{ dataF.nomFormation }} » du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}.</p>
 <p>Veuillez trouver ci joint votre attestation et votre certification de réalisation.<br>
-    Je vous transmets pour rappel, le lien de la mallette pédagogique de la formation : <a href="{{ dataF.linkToProgram }}" target="_blank" style="color: #0a58ca">{{ dataF.linkToProgram }}</a>
-Je vous informe également que vous recevrez un nouveau questionnaire d’évaluation à froid sous 6 mois, n’hésitez pas à le remplir.
+    {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
+        Je vous transmets pour rappel, le lien de la mallette pédagogique de la formation :
+        <a href="{{ dataF.linkToProgram.value }}" target="_blank" style="color: #0a58ca">{{ dataF.linkToProgram.value }}</a>
+    {% endif %}
+</p>
+<br>
+<br>
+<p>Je vous informe également que vous recevrez un nouveau questionnaire d’évaluation à froid sous 6 mois, n’hésitez pas à le remplir.
+<br>Vous bénéficiez également d’un accompagnement pendant cette période, je serai disponible pour répondre
+    à vos questions et/ou remarques.</p>
 
-Vous bénéficiez également d’un accompagnement pendant cette période, je serai disponible pour répondre à vos questions et/ou remarques.
-    <p>Enfin, je vous joins le lien du blog d’AD Conseil si vous souhaitez le consulter.</p>
+<p>Enfin, je vous joins le lien du blog d’AD Conseil si vous souhaitez le consulter.</p>
 
 
 
