@@ -769,13 +769,17 @@ class CourseController extends AbstractController
         $trainee   =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
         $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $certif = $this->generate_pdf_certif_attestation($formation,$trainee, $entityManager);
+        $htmlContent = $this->renderView('emails/contentCertifAttestation.html.twig', [
+            'dataF' => $formation,
+            'dataS' => $trainee
+        ]);
         $email = (new Email())
             ->from('formation@adconseil.org')
-            ->subject('Certificat et Attestation à la formation '.$formation->getNomFormation())
-            ->html("<p>Bonjour, vous trouverez ci joint l'attestation et le certificat à la formation ".$formation->getNomFormation()."</p>")
+            ->subject('Formation : '.$formation->getNomFormation())
+            ->html($htmlContent)
             ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/certif_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
             ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/attestation_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
-            ->to($trainee->getEmail());
+            ->to('nahedbenmohamed57@gmail.com');
         $mailer->send($email);
        /* $traineesFormation->setSendConvocation(true);
         $entityManager->persist($traineesFormation);
