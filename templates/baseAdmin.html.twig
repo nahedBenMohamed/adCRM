@@ -130,7 +130,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {% if 'app_teachers' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_teachers')}}" title="Formateurs">
+        <a class="nav-link {% if 'app_teachers' not in app.request.attributes.get('_route') and 'app_add_teacher' not in app.request.attributes.get('_route') and 'app_edit_formateur' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_teachers')}}" title="Formateurs">
           <img src="{{asset('assets/img/icon/chalkboard-user-solid-white.svg')}}" class="icon-menu">
           <span>Formateurs</span>
         </a>
@@ -151,7 +151,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {% if 'app_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_user')}}" title="Administrateurs">
+        <a class="nav-link {% if 'app_user' not in app.request.attributes.get('_route') and 'app_add_user' not in app.request.attributes.get('_route') and 'app_edit_admin' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_user')}}" title="Administrateurs">
           <img src="{{asset('assets/img/icon/gear-solid-white.svg')}}" class="icon-menu">
           <span>Administrateurs</span>
         </a>

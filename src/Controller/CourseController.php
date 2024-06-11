@@ -367,7 +367,7 @@ class CourseController extends AbstractController
                 ]);
                 $emailClient = (new Email())
                     ->from('formation@adconseil.org')
-                    ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
+                    ->subject('Convocation de vos apprenant.es à la formation '.$formation->getNomFormation())
                     ->html($htmlClient)
                     ->to('formation@adconseil.org');
                 $mailer->send($emailClient);
@@ -383,7 +383,7 @@ class CourseController extends AbstractController
                     ]);
                     $emailClient = (new Email())
                         ->from('formation@adconseil.org')
-                        ->subject('Convocationde vos apprenant.es à la formation '.$formation->getNomFormation())
+                        ->subject('Convocation de vos apprenant.es à la formation '.$formation->getNomFormation())
                         ->html($htmlClient)
                         ->to($cl->getEmail());
                    $mailer->send($emailClient);
@@ -769,10 +769,15 @@ class CourseController extends AbstractController
         $trainee   =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
         $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $certif = $this->generate_pdf_certif_attestation($formation,$trainee, $entityManager);
-        $htmlContent = $this->renderView('emails/contentCertifAttestation.html.twig', [
-            'dataF' => $formation,
-            'dataS' => $trainee
-        ]);
+        if($formation->getMailFormateurText()) {
+            $htmlContent = $formation->getMailFormateurText();
+        } else {
+            $htmlContent = $this->renderView('emails/contentCertifAttestation.html.twig', [
+                'dataF' => $formation,
+                'dataS' => $trainee
+            ]);
+        }
+
         $email = (new Email())
             ->from('formation@adconseil.org')
             ->subject('Formation : '.$formation->getNomFormation())
@@ -781,11 +786,10 @@ class CourseController extends AbstractController
             ->addPart(new DataPart(new File($this->getParameter('certif_file_directory').'/attestation_'.$formation->getId().'_'.$trainee->getId().'.pdf')))
             ->to( $trainee->getEmail());
         $mailer->send($email);
-       /* $traineesFormation->setSendConvocation(true);
+        //certif et attestation envoyé
+        $traineesFormation->setSendCertif(1);
         $entityManager->persist($traineesFormation);
-        $formation->setStatus(1);
-        $entityManager->persist($formation);
-        $entityManager->flush();*/
+        $entityManager->flush();
         $this->addFlash('success', "Le certificat et l'attestation ont a été envoyée avec succès.");
         $this->saveInlog('EnvoiCertifAttestationForOneStag_'.$idFormation,"Envoi de certificat et l'attestation à la formation ".$formation->getNomFormation().'. Email de stagiaire:'.$trainee->getEmail(), $entityManager);
         return $this->redirectToRoute('app_trainer_course', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);

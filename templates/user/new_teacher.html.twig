@@ -39,21 +39,21 @@
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
+                        <div class="hidden">
+                            {{ form_row(registrationForm.signature,
+                                {'attr': {'class': 'form-control form-control-user hidden'}}
+                            ) }}
+                        </div>
                         <div class="row pages-links">
                             <div class="col-md-4">
                                 <a href="{{path('app_teachers')}}">
                                     <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="30">
                                 </a>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 offset-md-4 text-right">
                                 <button type="submit" class="save-icon">
                                     <img src="{{asset('assets/img/icon/save-disk-solid.svg')}}" width="30">
                                 </button>
-                            </div>
-                            <div class="col-md-4">
-                                <a href="{{path('app_add_teacher')}}" class="float-end" >
-                                    <img src="{{asset('assets/img/icon/circle-plus-solid.svg')}}" width="30">
-                                </a>
                             </div>
                         </div>
                         {{ form_end(registrationForm) }} <!-- End add user form -->

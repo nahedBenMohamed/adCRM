@@ -12,6 +12,7 @@ use App\Form\FormationFormType;
 use App\Form\FormationInfoFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,6 +50,27 @@ class TeacherController extends AbstractController
             foreach ($formationUser as $item) {
                 array_push($trainees, $item->getTrainee() );
             }
+            $defaultData = ['mailFormateurText' => $course2->getMailFormateurText()];
+            $formMail = $this->createFormBuilder($defaultData)
+                ->add('mailFormateurText', TextareaType::class,[
+                    'label' =>"Contenu de l'email",
+                    'required' => false
+                ])
+                ->getForm();
+
+            $formMail->handleRequest($request);
+            if ($formMail->isSubmitted() && $formMail->isValid()) {
+                $data = $formMail->getData();
+                if($data['mailFormateurText'] !== null) {
+                    $course2->setMailFormateurText($data['mailFormateurText']);
+                } else {
+                    $course2->setMailFormateurText('');
+                }
+
+                $entityManager->persist($course2);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_trainer_course', ['idCompany' => $course2->getCompany()->getId(), 'idFormation' => $idFormation]);
+            }
             return $this->render('teacher/showFormation.html.twig', [
                 'formationForm' => $form->createView(),
                 'companyForm' => $formCompany->createView(),
@@ -57,7 +79,8 @@ class TeacherController extends AbstractController
                 'formInfo' => $formInfo->createView(),
                 'allTrainees' => $AllTrainees,
                 'idCompany' => $idCompany,
-                'idFormation' =>  $course2->getId()
+                'idFormation' =>  $course2->getId(),
+                'formMail' => $formMail->createView()
             ]);
         }
 

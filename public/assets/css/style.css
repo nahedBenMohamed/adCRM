@@ -1302,3 +1302,6 @@ a.link-right {
   color: #4154f1;
   text-decoration: underline;
 }
+.text-right {
+  text-align: right;
+}

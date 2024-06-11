@@ -86,6 +86,9 @@ class Formation
     #[ORM\Column]
     private ?int $status = 0;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $mailFormateurText = '';
+
     public function __construct()
     {
         $this->customer = new ArrayCollection();
@@ -384,6 +387,17 @@ class Formation
     public function setStatus(int $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getMailFormateurText(): ?string
+    {
+        return $this->mailFormateurText;
+    }
+    public function setMailFormateurText(string $mailFormateurText): self
+    {
+        $this->mailFormateurText = $mailFormateurText;
+
         return $this;
     }
 
