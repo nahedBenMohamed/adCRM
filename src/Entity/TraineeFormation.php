@@ -24,6 +24,9 @@ class TraineeFormation
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $sendConvocation = false;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $sendCertif = false;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateAffectationFormation = null;
 
@@ -130,6 +133,17 @@ class TraineeFormation
     {
         $this->comments = $comments;
 
+        return $this;
+    }
+
+    public function getsendCertif(): ?string
+    {
+        return $this->sendCertif;
+    }
+
+    public function setSendCertif(?string $sendCertif): self
+    {
+        $this->sendCertif = $sendCertif;
         return $this;
     }
 }

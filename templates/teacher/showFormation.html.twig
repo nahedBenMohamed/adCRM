@@ -68,7 +68,7 @@
                 <button class="nav-link" id="tab-2" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+                <button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Contenu de l'email</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -306,35 +306,24 @@
             <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-3">
                 <div class="card">
                     <div class="card-body">
-                        {% if formInfo != '' %}
                             <div class="card">
                                 <div class="card-body">
-                                    {{ form_start(formInfo) }}
-                                    <fieldset disabled="disabled">
+                                    {{ form_start(formMail) }}
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="row mb-3">
-                                                {{ form_row(formInfo.infoTrainees,
-                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                                ) }}
-                                            </div>
-                                            <div class="row mb-3">
-                                                {{ form_row(formInfo.infoFormateur,
-                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                                ) }}
-                                            </div>
-                                            <div class="row mb-3">
-                                                {{ form_row(formInfo.infoCustomer,
+                                                {{ form_row(formMail.mailFormateurText,
                                                     {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
                                                 ) }}
                                             </div>
                                         </div>
                                     </div>
-                                    </fieldset>
-                                    {{ form_end(formInfo) }}
+                                    <button type="submit" class="btn btn-primary float-end">
+                                        Enregistrer
+                                    </button>
+                                    {{ form_end(formMail) }}
                                 </div>
                             </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>

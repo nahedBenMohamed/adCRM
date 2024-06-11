@@ -155,7 +155,7 @@ class FormationFormType extends AbstractType
                     return ['data-link' => $object->getLinkFormateur()];
                 },
                 'label' => false,
-                'required' => false,
+                'required' => true,
                 'empty_data' => '',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
