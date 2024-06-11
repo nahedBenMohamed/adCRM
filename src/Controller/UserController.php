@@ -371,4 +371,64 @@ class UserController extends AbstractController
         // return $this->redirectToRoute('app_trainees');
     }
 
+    #[Route('/user/profileAdmin/{id}', name: 'app_edit_admin')]
+    public function updateAdminProfile(Request $request, EntityManagerInterface $entityManager, $id): Response
+    {
+        if($id) {
+            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        } else {
+            $user = $this->getUser();
+        }
+        $form = $this->createForm(UpdateUserFormType::class, $user);
+        $form->handleRequest($request);
+        $teacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $teacher = true;
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            // do anything else you need here, like send an email
+            if ($teacher) {
+                return $this->redirectToRoute('app_trainer');
+            }
+            return $this->redirectToRoute('app_user');
+        }
+        return $this->render('user/update.html.twig', [
+            'setUserForm' => $form->createView(),
+            'teacher' => $teacher
+        ]);
+    }
+
+    #[Route('/user/profileFormateur/{id}', name: 'app_edit_formateur')]
+    public function updateFormateurProfile(Request $request, EntityManagerInterface $entityManager, $id): Response
+    {
+        if($id) {
+            $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        } else {
+            $user = $this->getUser();
+        }
+        $form = $this->createForm(UpdateUserFormType::class, $user);
+        $form->handleRequest($request);
+        $teacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $teacher = true;
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $entityManager->persist($user);
+            $entityManager->flush();
+            // do anything else you need here, like send an email
+            if ($teacher) {
+                return $this->redirectToRoute('app_trainer');
+            }
+            return $this->redirectToRoute('app_user');
+        }
+        return $this->render('user/update.html.twig', [
+            'setUserForm' => $form->createView(),
+            'teacher' => $teacher
+        ]);
+    }
+
 }
