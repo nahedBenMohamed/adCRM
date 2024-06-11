@@ -128,7 +128,8 @@ class UserController extends AbstractController
             }
 
             if ($formationId) {
-                return $this->redirectToRoute('app_add_trainee', ['formationId' => $formationId]);
+                //redirect to formation
+                return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formationId]);
             } else {
                 return $this->redirectToRoute('app_trainees');
             }

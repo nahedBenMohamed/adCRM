@@ -64,20 +64,11 @@
                                 </a>
                             {% endif %}
                             </div>
-                            <div class="col-md-4 {% if formation.id is null %} offset-md-4 text-right{% endif %}">
+                            <div class="col-md-4 offset-md-4 text-right">
                                 <button type="submit" class="save-icon">
                                     <img src="{{asset('assets/img/icon/save-disk-solid.svg')}}" width="30">
                                 </button>
                             </div>
-
-                                {% if formation|length > 0 and formation.id is not null %}
-                            <div class="col-md-4 text-right">
-                                    <a href="{{path('app_add_trainee',{ 'id': formation.id })}}" class="">
-                                        <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="30">
-                                    </a>
-                            </div>
-                                {% endif %}
-
                         </div>
                         {{ form_end(registrationForm) }} <!-- End add user form -->
                     </div>
