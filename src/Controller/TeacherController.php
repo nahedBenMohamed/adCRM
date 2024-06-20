@@ -45,11 +45,7 @@ class TeacherController extends AbstractController
             $formInfo = $this->createForm(FormationInfoFormType::class, $course2, ['allow_extra_fields' =>true]);
             $formInfo->handleRequest($request);
             $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course2]);
-            $trainees = [];
             $AllTrainees = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
-            foreach ($formationUser as $item) {
-                array_push($trainees, $item->getTrainee() );
-            }
             $defaultData = ['mailFormateurText' => $course2->getMailFormateurText()];
             $formMail = $this->createFormBuilder($defaultData)
                 ->add('mailFormateurText', TextareaType::class,[
@@ -75,7 +71,7 @@ class TeacherController extends AbstractController
                 'formationForm' => $form->createView(),
                 'companyForm' => $formCompany->createView(),
                 'formation' => $course2,
-                'trainees' => $trainees,
+                'trainees' => $formationUser,
                 'formInfo' => $formInfo->createView(),
                 'allTrainees' => $AllTrainees,
                 'idCompany' => $idCompany,

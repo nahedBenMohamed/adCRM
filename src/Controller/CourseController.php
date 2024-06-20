@@ -140,11 +140,7 @@ class CourseController extends AbstractController
             $formInfo = $this->createForm(FormationInfoFormType::class, $course2, ['allow_extra_fields' =>true]);
             $formInfo->handleRequest($request);
             $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course2]);
-            $trainees = [];
             $AllTrainees = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
-            foreach ($formationUser as $item) {
-                array_push($trainees, $item->getTrainee() );
-            }
 
             if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
                 $course2 = $form->getData();
@@ -183,7 +179,7 @@ class CourseController extends AbstractController
                 'formationForm' => $form->createView(),
                 'companyForm' => $formCompany->createView(),
                 'formation' => $course2,
-                'trainees' => $trainees,
+                'trainees' => $formationUser,
                 'formInfo' => $formInfo->createView(),
                 'allTrainees' => $AllTrainees,
                 'idCompany' => $idCompany,
@@ -326,7 +322,7 @@ class CourseController extends AbstractController
         $entityManager->flush();
         $traineer = $formation->getFormateur();
         if($traineer) {
-            /************ send mail trainee to adconseil ********/
+            /************ send copy of convocation to adconseil admin ********/
             $html2 = $this->renderView('emails/convocation.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $traineesFormation[0]
@@ -339,9 +335,7 @@ class CourseController extends AbstractController
                 ->to('formation@adconseil.org');
            $mailer->send($emailAdmin);
 
-            /************ end mail trainee to adconseil *******/
-
-            /************ send specific mail to Traineer and copy to adconseil ******************/
+            /************ send specific recap mail to formateur and copy to adconseil ******************/
             $htmlRecap = $this->renderView('emails/convocation_traineer.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $traineesFormation[0],
@@ -388,6 +382,23 @@ class CourseController extends AbstractController
                         ->to($cl->getEmail());
                    $mailer->send($emailClient);
                 }
+                /**** send mail to contact administrative ***/
+                $contactAdmin = $formation->getCompany()->getContactAdministratif();
+                if($contactAdmin) {
+                    $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
+                        'dataF' => $formation,
+                        'dataS' => $traineesFormation[0],
+                        'traineesFormation' => $listOfTrainees,
+                        'client' => $cl
+                    ]);
+                    $emailClient = (new Email())
+                        ->from('formation@adconseil.org')
+                        ->subject('Convocation de vos apprenant.es à la formation '.$formation->getNomFormation())
+                        ->html($htmlClient)
+                        ->to($cl->getEmail());
+                    $mailer->send($contactAdmin);
+                }
+
                 /**** fin send mail to all client ************/
 
             }

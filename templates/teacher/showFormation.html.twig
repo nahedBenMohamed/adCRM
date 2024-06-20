@@ -55,12 +55,7 @@
     <section class="section" style="margin-top: -75px;">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active " id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
-                    Entreprise/Organisme
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
+                <button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
                     Informations générales
                 </button>
             </li>
@@ -72,46 +67,7 @@
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade  show active tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Ajouter un nouveau organisme </h5>
-                        {{ form_start(companyForm) }}
-                        <fieldset disabled="disabled">
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.name,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {% if idCompany != '' %}
-                                <span>Nb: l'ajout d'un nouveau fichier va supprimer l'ancien fichier</span>
-                            {% endif %}
-                            {{ form_row(companyForm.infoFilename,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.contactAdministratif,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.emailContactAdministratif,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.otherInformation,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        </fieldset>
-                        {{ form_end(companyForm) }}
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+            <div class="tab-pane fade show active tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
                 <div class="card">
                     {% if idCompany != '' %}
                         <div class="card-body">
@@ -273,23 +229,23 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for trainee in trainees %}
-                                        {% if trainee is not null %}
-                                            <tr>
-                                                <td>{{ trainee.firstName }}</td>
-                                                <td>{{ trainee.lastName }}</td>
-                                                <td>{{ trainee.position }}</td>
+                                    {% for stg in trainees %}
+                                        {% if stg is not null %}
+                                            <tr {% if stg.sendCertif == '1' %} class="success-send-mail" {% endif %}>
+                                                <td>{{ stg.trainee.firstName }}</td>
+                                                <td>{{ stg.trainee.lastName }}</td>
+                                                <td>{{ stg.trainee.position }}</td>
                                                 <td class="td-action">
-                                                    <a href="{{ path('app_trainee_add_info', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Ajouter des informations" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_add_info', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Ajouter des informations" class="" target="_blank">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
                                                         Attestation
                                                     </a>
-                                                    <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
                                                         Certificat
                                                     </a>
-                                                    <a href="{{ path('app_trainee_send_certif_attestaion', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
+                                                    <a href="{{ path('app_trainee_send_certif_attestaion', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
                                                         <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                                     </a>
                                                 </td>

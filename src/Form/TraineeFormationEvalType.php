@@ -48,6 +48,7 @@ class TraineeFormationEvalType extends AbstractType
                 ->add('comments',   TextareaType::class, [
                     'label' => 'Commentaires',
                     'required' => false,
+                    'empty_data'  => ''
                 ]);
         ;
     }

@@ -120,10 +120,10 @@
                     <thead>
                     <tr>
                         <th style="border: 1px solid #ccc; padding: 5px"></th>
-                        <th style="border: 1px solid #ccc; padding: 5px;font-size: 13px;font-weight: bolder;">Peu ou pas maîtrisé</th>
-                        <th style="border: 1px solid #ccc; padding: 5px;font-size: 13px;font-weight: bolder;">Maîtrisé partiellement</th>
-                        <th style="border: 1px solid #ccc; padding: 5px;font-size: 13px;font-weight: bolder;">Maîtrisé totalement</th>
-                        <th style="border: 1px solid #ccc; padding: 5px;font-size: 13px;font-weight: bolder;">N. C.</th>
+                        <th style="border: 1px solid #ccc; padding: 5px 0px;font-size: 12px;font-weight: bolder;">Peu ou pas maîtrisé</th>
+                        <th style="border: 1px solid #ccc; padding: 5px 0px;font-size: 12px;font-weight: bolder;">Maîtrisé partiellement</th>
+                        <th style="border: 1px solid #ccc; padding: 5px 0px;font-size: 12px;font-weight: bolder;">Maîtrisé totalement</th>
+                        <th style="border: 1px solid #ccc; padding: 5px 0px;font-size: 12px;font-weight: bolder;">N.C.</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -143,7 +143,7 @@
                     </tr>
                     </tbody>
                 </table>
-                {% if  evalTrainee.comments|length|length >0 %}
+                {% if  evalTrainee.comments|length >0 %}
                 <p><b style="text-align: left">Commentaires</b></p>
                 <p>{{ evalTrainee.comments }}</p>
                 {% endif %}
