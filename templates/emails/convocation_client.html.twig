@@ -83,7 +83,7 @@
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 0px; padding-bottom: 0px;" width="596">
 
-                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Convocation de vos stagiaires</h1>
+                <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Copie de convocation de votre stagiaire</h1>
 
                 <hr>
             </td>
@@ -99,7 +99,7 @@
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
                 <p>Bonjour {% if client is defined and client is not null%} {{ client.firstName }}, {% endif %}</p>
 
-                <p>Nous vous confirmons la convocation de vos stagiaires à la formation  <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :
+                <p>ous vous confirmons la convocation de votre stagiaire à la formation  <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :
                 </p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
@@ -129,23 +129,6 @@
                     <p>{{ dataF.formateur.firstName }},  {{ dataF.formateur.lastname }},  {{ dataF.formateur.functionFormateur }}, {{ dataF.formateur.email }}</p>
                 {% endif %}
 
-                <p><b>Liste des stagiaires convoqués à la formation : </b></p>
-                <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
-                    <thead>
-                    <tr>
-                        <th style="border: 1px solid #ccc; padding: 5px">Prénom</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Nom</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Fonction</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Mail</th>
-                    </tr>
-                    </thead>
-                    {% for trainee in traineesFormation %}
-                        <tr><td style="border: 1px solid #ccc; padding: 5px">{{ trainee.firstName }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.lastName }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.position }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.email }}</td></tr>
-                    {% endfor %}
-                </table>
                 {% if (dataF.linkToProgram is defined and dataF.linkToProgram is not null) or (dataF.linkToLivretAccueil is defined and dataF.linkToLivretAccueil is not null) or (dataF.linkGuide is defined and dataF.linkGuide is not null) %}
                 <p> <b style="text-decoration: underline">Documents joints à la convocation de vos stagiaires (cliquez sur les liens pour y accéder) :</b></p>
                 <ul>

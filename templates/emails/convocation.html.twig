@@ -111,7 +111,7 @@
                     <a href="{{ dataF.linkFormulaire.value }}" class="bleu-link">{{ dataF.linkFormulaire.value }}</a>
                 </b>
                 {% endif %}
-                <p>{% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}</p>
+                <p>{% if dataS.civility is defined %} {{ dataS.civility }}, {% endif %}</p>
                 <p>Nous avons le plaisir de vous confirmer votre participation à la formation <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :</p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation|striptags|raw }}</p>
