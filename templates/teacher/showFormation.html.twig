@@ -229,23 +229,23 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for trainee in trainees %}
-                                        {% if trainee is not null %}
-                                            <tr>
-                                                <td>{{ trainee.firstName }}</td>
-                                                <td>{{ trainee.lastName }}</td>
-                                                <td>{{ trainee.position }}</td>
+                                    {% for stg in trainees %}
+                                        {% if stg is not null %}
+                                            <tr {% if stg.sendCertif == '1' %} class="success-send-mail" {% endif %}>
+                                                <td>{{ stg.trainee.firstName }}</td>
+                                                <td>{{ stg.trainee.lastName }}</td>
+                                                <td>{{ stg.trainee.position }}</td>
                                                 <td class="td-action">
-                                                    <a href="{{ path('app_trainee_add_info', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Ajouter des informations" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_add_info', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Ajouter des informations" class="" target="_blank">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
                                                         Attestation
                                                     </a>
-                                                    <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
                                                         Certificat
                                                     </a>
-                                                    <a href="{{ path('app_trainee_send_certif_attestaion', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
+                                                    <a href="{{ path('app_trainee_send_certif_attestaion', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
                                                         <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                                     </a>
                                                 </td>

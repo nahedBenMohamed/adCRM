@@ -339,23 +339,23 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for trainee in trainees %}
-                                        {% if trainee is not null %}
-                                            <tr>
-                                                <td>{{ trainee.firstName }}</td>
-                                                <td>{{ trainee.lastName }}</td>
-                                                <td>{{ trainee.position }}</td>
+                                    {% for stg in trainees %}
+                                        {% if stg is not null %}
+                                            <tr {% if stg.sendConvocation == '1' %} class="success-send-mail" {% endif %}>
+                                                <td>{{ stg.trainee.firstName }}</td>
+                                                <td>{{ stg.trainee.lastName }}</td>
+                                                <td>{{ stg.trainee.position }}</td>
                                                 <td class="td-action">
-                                                    <a href="{{ path('app_edit_user_trainee', { 'id':trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
+                                                    <a href="{{ path('app_edit_user_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
+                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
                                                         <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
+                                                    <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
                                                         <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': trainee.id }) }}" class="first-btn" title="supprimer">
+                                                    <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="supprimer">
                                                         <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                                     </a>
                                                 </td>

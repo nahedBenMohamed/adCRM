@@ -140,11 +140,7 @@ class CourseController extends AbstractController
             $formInfo = $this->createForm(FormationInfoFormType::class, $course2, ['allow_extra_fields' =>true]);
             $formInfo->handleRequest($request);
             $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course2]);
-            $trainees = [];
             $AllTrainees = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
-            foreach ($formationUser as $item) {
-                array_push($trainees, $item->getTrainee() );
-            }
 
             if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
                 $course2 = $form->getData();
@@ -183,7 +179,7 @@ class CourseController extends AbstractController
                 'formationForm' => $form->createView(),
                 'companyForm' => $formCompany->createView(),
                 'formation' => $course2,
-                'trainees' => $trainees,
+                'trainees' => $formationUser,
                 'formInfo' => $formInfo->createView(),
                 'allTrainees' => $AllTrainees,
                 'idCompany' => $idCompany,

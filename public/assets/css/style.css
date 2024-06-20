@@ -1305,3 +1305,6 @@ a.link-right {
 .text-right {
   text-align: right;
 }
+tr.success-send-mail td {
+  --bs-table-bg-type: rgb(58 145 37 / 69%) !important;
+}
