@@ -21,11 +21,11 @@
                             <div class="col-lg-9"></div>
                             <div class="col-md-3">
                                 {% if alowAddNew %}
-                                <a href="{{path('app_courses_add',{ 'idCompany': idCompany, 'idFormation': null })}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                <a href="{{path('app_courses_manage',{ 'type':"intra", 'idFormation': null })}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
                                     <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                 </a>
                                 {% else %}
-                                    <a href="{{path('app_courses_add')}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                    <a href="{{path('app_courses_manage', {'type':"inter"})}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
                                         <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
                                     </a>
                                 {% endif %}
@@ -42,6 +42,11 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if 'intra' in app.request.pathinfo %}
+                                {% set type = "intra" %}
+                            {% else %}
+                                {% set type = "inter" %}
+                            {% endif %}
                             {% for course in courses %}
                             <tr>
                                 <td>{{course.nomFormation}}</td>
@@ -51,15 +56,9 @@
                                     <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
                                         <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                     </a>
-                                    {% if course.company is defined and course.company is not null %}
-                                        <a href="{{ path('app_courses_add', { 'idCompany': course.company.id ,'idFormation': course.id }) }}" class="" title="modifier">
-                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ path('app_courses_add', { 'idCompany':0,'idFormation': course.id }) }}" class="" title="modifier">
-                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
-                                        </a>
-                                    {% endif %}
+                                    <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="" title="modifier">
+                                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                    </a>
                                     {% set fill1 = '' %}
                                     {% set fill2 = '' %}
                                     {% set fill3 = '' %}

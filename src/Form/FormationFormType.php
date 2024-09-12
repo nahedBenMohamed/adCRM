@@ -164,32 +164,6 @@ class FormationFormType extends AbstractType
                 },
                 'placeholder' => "Formateur"
             ])
-
-            ->add('company', EntityType::class, [
-                'class' => Company::class,
-                'choice_label' => function($company) {
-                    return $company->getName();
-                },
-                'label' => false,
-                'required' => false,
-                'empty_data' => '',
-                'placeholder' => "Client"
-            ])
-
-            ->add('customer', EntityType::class, [
-                'class' => Customer::class,
-                'choice_label' => function($customer) {
-                    if($customer->getCompany() !== null) {
-                        return $customer->getCompany()->getName().': '.$customer->getFirstName().' '.$customer->getLastName();
-                    } else {
-                        return $customer->getFirstName().' '.$customer->getLastName();
-                    }
-                },
-                'label' => false,
-                'required' => false,
-                'multiple' => true,
-                'placeholder' => "Contact Client"
-            ])
             ->add('financier', EntityType::class, [
                 'class' => Financier::class,
                 'choice_label' => function($customer) {

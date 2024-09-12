@@ -742,6 +742,12 @@ h6 {
   padding: 10px 0 10px 40px;
   transition: 0.3s;
 }
+.sidebar-nav #components-nav.nav-content a {
+  color: #fff;
+}
+.sidebar-nav #components-nav.nav-content a:hover, .sidebar-nav #components-nav.nav-content a.active{
+  color: #4db4e8;
+}
 
 .sidebar-nav .nav-content a i {
   font-size: 6px;

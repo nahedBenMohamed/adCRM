@@ -109,13 +109,13 @@ class CompanyController extends AbstractController
         $traineeCompany = $entityManager->getRepository(Trainee::class)->findOneBy(['company' => $company]);
         $formations = $entityManager->getRepository(Formation::class)->findBy(['company' => $company]);
         $object = new \stdClass();
-        if ($customerCompany) {
+        /*if ($customerCompany) {
             $object->status = false;
             $object->message = "Un client est affecté à cette entreprise, il est impossible de le supprimer.";
         } else if($traineeCompany) {
             $object->status = false;
             $object->message = "Un stagiaire est affecté à cette entreprise, il est impossible de le supprimer.";
-        } else if($formations) {
+        } else*/ if($formations) {
             $object->status = false;
             $object->message = "Une formation est affecté à cette entreprise, il est impossible de le supprimer.";
         } else {

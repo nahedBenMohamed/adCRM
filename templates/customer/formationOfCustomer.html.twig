@@ -1,4 +1,4 @@
-{% extends 'baseTeacher.html.twig' %}
+{% extends 'baseAdmin.html.twig' %}
 
 {% block title %}Page formations!{% endblock %}
 
@@ -8,12 +8,27 @@
             <div class="col-lg-12">
                 <div class="remove-element-alert mt-2"></div>
                 <div class="pt-4 pb-2">
+                    {% for success in app.flashes('warning') %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ success }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
                 </div>
                 <div class="card">
                     <div class="card-body ps-0 pe-0">
                         <div class="row">
                             <div class="col-lg-9"></div>
                             <div class="col-md-3">
+                                {% if alowAddNew %}
+                                    <a href="{{path('app_courses_manage',{ 'type':"intra", 'idFormation': null })}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                        <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
+                                    </a>
+                                {% else %}
+                                    <a href="{{path('app_courses_manage', {'type':"inter"})}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
+                                        <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- Table with stripped rows -->
@@ -27,14 +42,23 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% if 'intra' in app.request.pathinfo %}
+                                {% set type = "intra" %}
+                            {% else %}
+                                {% set type = "intra" %}
+                            {% endif %}
                             {% for course in courses %}
                                 <tr>
                                     <td>{{course.nomFormation}}</td>
                                     <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
                                     <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
                                     <td>
-                                        <a href="{{ path('app_trainer_course', { 'idCompany':0,'idFormation': course.id }) }}" class="" title="modifier">
-                                            <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                        <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
+                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
+                                        </a>
+
+                                        <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
                                         {% set fill1 = '' %}
                                         {% set fill2 = '' %}

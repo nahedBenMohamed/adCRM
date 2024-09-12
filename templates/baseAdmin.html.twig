@@ -93,30 +93,33 @@
   <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
+      {% if is_granted('ROLE_ADMIN') %}
       <li class="nav-item">
         <a class="nav-link {% if 'app_home' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_home')}}" title="Dashboard">
           <img src="{{asset('assets/img/icon/chart-pie-solid-white.svg')}}" class="icon-menu">
           <span>Tableau de bord</span>
         </a>
       </li><!-- End Dashboard Nav -->
-
       <li class="nav-item">
-        <a class="nav-link {% if 'app_company' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_company')}}" title="Entreprise/Organisme">
-          <img src="{{asset('assets/img/icon/building-solid-white.svg')}}" class="icon-menu">
-          <span>Entreprise/Organisme</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link {% if 'app_courses' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_courses')}}" title="Formations">
+        <a class="nav-link {% if 'app_courses_inter' not in app.request.attributes.get('_route') and 'app_customer_formation' not in app.request.attributes.get('_route') %} collapsed {% endif %}" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false" title="Formations">
           <img src="{{asset('assets/img/icon/book-solid-white.svg')}}" class="icon-menu">
-          <span>Formations</span>
+          <span>Formations</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-      </li><!-- End Formations Page Nav -->
-
+        <ul id="components-nav" class="nav-content collapse {% if 'app_courses' in app.request.attributes.get('_route')  or 'app_customer_course' in app.request.attributes.get('_route') or 'app_customer_formation' in app.request.attributes.get('_route') or 'intra' in app.request.pathinfo %} show {% endif %}" data-bs-parent="#sidebar-nav" style="">
+          <li>
+            <a  href="{{path('app_customer_course')}}" class="{% if 'app_customer_course' in app.request.attributes.get('_route') or 'app_customer_formation' in app.request.attributes.get('_route') or 'intra' in app.request.pathinfo %} active {% endif %}">
+              <i class="bi bi-circle"></i><span>Intra</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{path('app_courses_inter')}}" class="{% if 'app_courses_inter' in app.request.attributes.get('_route') or 'inter' in app.request.pathinfo %} active {% endif %}">
+              <i class="bi bi-circle"></i><span>Inter</span>
+            </a>
+          </li>
+        </ul>
+      </li>
       <li class="nav-item">
-        <a class="nav-link {% if 'app_customer' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_customer')}}" title="Clients">
+        <a class="nav-link {% if ('app_customer' not in app.request.attributes.get('_route')  or 'app_customer_formation' in app.request.attributes.get('_route')) %} collapsed {% endif %}" href="{{path('app_customer')}}" title="Clients">
           <img src="{{asset('assets/img/icon/landmark-solid-white.svg')}}" class="icon-menu">
           <span>Contact Clients</span>
         </a>
@@ -156,7 +159,7 @@
           <span>Administrateurs</span>
         </a>
       </li><!-- End Utilisateurs Page Nav -->
-
+{% endif %}
       <li class="nav-item">
         <a class="nav-link {% if 'app_edit_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_edit_user',{ 'id': app.user.id })}}" title="Compte">
           <img src="{{asset('assets/img/icon/user-solid-white.svg')}}" class="icon-menu">

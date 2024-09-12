@@ -16,10 +16,10 @@ class Formation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nomFormation = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $dureeFormation = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -65,14 +65,11 @@ class Formation
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "formations")]
     private ?User $formateur;
 
-    #[ORM\ManyToMany(targetEntity: Customer::class, inversedBy: "formations")]
-    private ?Collection $customer;
+    #[ORM\ManyToMany(targetEntity: Customer::class, inversedBy: "formations",cascade: ['persist', 'remove'])]
+    private ?Collection $customers;
 
     #[ORM\ManyToOne(targetEntity: Financier::class, inversedBy: "formations")]
     private ?Financier $financier;
-
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "formations")]
-    private ?Company $company;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateDebutFormation = null;
@@ -86,12 +83,15 @@ class Formation
     #[ORM\Column]
     private ?int $status = 0;
 
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $type = "";
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $mailFormateurText = '';
 
     public function __construct()
     {
-        $this->customer = new ArrayCollection();
+        $this->customers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -320,22 +320,23 @@ class Formation
     }
 
 
-    public function getCustomer(): Collection
+    public function getCustomers(): Collection
     {
-        return $this->customer;
+        return $this->customers;
     }
 
-    public function setCustomer(Collection $customer): self
+    public function addCustomer(Customer $customer): self
     {
-        $this->customer = $customer;
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+        }
 
         return $this;
     }
 
-    public function addCustomer(Collection $customer)
+    public function removeCustomer(Customer $customer): self
     {
-        $this->customer[] = $customer;
-
+        $this->customers->removeElement($customer);
         return $this;
     }
 
@@ -363,18 +364,6 @@ class Formation
         return $this;
     }
 
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(Company $company): self
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
     public function getStatus(): ?int
     {
         return $this->status;
@@ -397,6 +386,17 @@ class Formation
     public function setMailFormateurText(string $mailFormateurText): self
     {
         $this->mailFormateurText = $mailFormateurText;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

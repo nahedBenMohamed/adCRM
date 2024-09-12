@@ -44,15 +44,6 @@ class TraineeFormType extends AbstractType
             ->add('position',   textType::class,[
                 'label' =>'Fonction',
                 'required' => false,
-            ])
-            ->add('company',   EntityType::class, [
-                'class' => Company::class,
-                'choice_label' => function($company) {
-                    return $company->getName();
-                },
-                'label' => 'Entreprise/Organisme',
-                'required' => false,
-                'empty_data' => ''
             ]);
 
     }

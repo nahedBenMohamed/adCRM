@@ -10,13 +10,7 @@
 
                 <div class="card">
                     <div class="card-body">
-
-                        {% if formation|length > 0 and formation.id is not null %}
-                            <h5 class="card-title">Ajouter des stagiaire pour la formation <b>{{ formation.nomFormation }}</b> </h5>
-                        {% else %}
-                            <h5 class="card-title">Ajouter un nouveau stagiaire </h5>
-                        {% endif %}
-
+                        <h5 class="card-title">Ajouter un nouveau stagiaire </h5>
                         <!-- add user Form -->
                         {{ form_start(registrationForm) }}
                         <div class="row mb-3">
@@ -40,22 +34,17 @@
                             ) }}
                         </div>
                         <div class="row mb-3">
-                            {{ form_row(registrationForm.company,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
                             {{ form_row(registrationForm.email,
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
-                        {% if formation|length > 0 %}
-                            <input type="hidden" name="formation_id" value="{{ formation.id }}">
+                        {% if formationId is defined %}
+                            <input type="hidden" name="formation_id" value="{{ formationId }}">
                         {% endif %}
                         <div class="row pages-links">
                             <div class="col-md-4">
-                            {% if formation|length > 0 and formation.id is not null %}
-                                <a href="{{path('app_courses_edit',{ 'id': formation.id })}}" class="">
+                            {% if formationId is defined %}
+                                <a href="" class="">
                                     <img src="{{asset('assets/img/icon/circle-delete-solid.svg')}}" width="30">
                                 </a>
                             {% else %}

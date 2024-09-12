@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CustomerController extends AbstractController
 {
@@ -23,12 +24,35 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/add', name: 'app_customer_add')]
-    public function add(EntityManagerInterface $entityManager, Request $request): Response
+    public function add(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger): Response
     {
         $customer = new Customer();
         $form = $this->createForm(CustomerType::class,$customer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $infoFile = $form->get('infoFilename')->getData();
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($infoFile) {
+                $originalFilename = pathinfo($infoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$infoFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $infoFile->move(
+                        $this->getParameter('company_file_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $customer->setInfoFilename($newFilename);
+            }
             $customer = $form->getData();
             $entityManager->persist($customer);
             $entityManager->flush();
@@ -41,12 +65,32 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/edit/{id}', name: 'app_customer_edit')]
-    public function edit(EntityManagerInterface $entityManager, Request $request, $id): Response
+    public function edit(EntityManagerInterface $entityManager, Request $request,SluggerInterface $slugger, $id): Response
     {
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
         $form = $this->createForm(CustomerType::class,$customer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $infoFile = $form->get('infoFilename')->getData();
+            if ($infoFile) {
+                $originalFilename = pathinfo($infoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$infoFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $infoFile->move(
+                        $this->getParameter('company_file_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $customer->setInfoFilename($newFilename);
+            }
             $customer = $form->getData();
             $entityManager->persist($customer);
             $entityManager->flush();
@@ -74,5 +118,48 @@ class CustomerController extends AbstractController
             $object->message = "Le client est supprimé avec succès";
         }
         return new Response(json_encode($object));
+    }
+
+    #[Route('/customerCourse', name: 'app_customer_course')]
+    public function customerForFormation(EntityManagerInterface $entityManager): Response
+    {
+        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
+        $customerWithCourses = [];
+        foreach ($courses as $formation) {
+            if($formation->getType() == 'intra') {
+                $customers = $formation->getCustomers();
+                if($customers[0]) {
+                    $customers[0]->formationId = $formation->getId();
+                    if(!in_array($customerWithCourses, array($customers[0]))) {
+                        $customerWithCourses[] = $customers[0];
+                    }
+                }
+            }
+
+        }
+        return $this->render('customer/customerWithFormation.html.twig', [
+            'customers' => $customerWithCourses,
+        ]);
+    }
+
+    #[Route('/customerFormation/{customerId}', name: 'app_customer_formation')]
+    public function customerFormations(EntityManagerInterface $entityManager, $customerId): Response
+    {
+        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
+        $customerCourses = [];
+        foreach ($courses as $formation) {
+            if($formation->getType() == "intra") {
+                $customers = $formation->getCustomers();
+                if($customers[0]) {
+                    if($customers[0]->getId() == $customerId) {
+                        $customerCourses[] = $formation;
+                    }
+                }
+            }
+        }
+        return $this->render('customer/formationOfCustomer.html.twig', [
+            'courses' => $customerCourses,
+            'alowAddNew' => true
+        ]);
     }
 }

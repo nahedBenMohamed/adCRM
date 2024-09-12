@@ -20,20 +20,18 @@
                         <table class="table datatable table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">Nom</th>
-                                <th scope="col">Prénom</th>
+                                <th scope="col">Nom de client</th>
+                                <th scope="col">Contact Administratif</th>
                                 <th scope="col">Email</th>
-                                <th>Entreprise / Organisme</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for customer in customers %}
                                 <tr>
-                                    <td>{{customer.lastName}}</td>
-                                    <td>{{customer.firstName}}</td>
+                                    <td>{{customer.name}}</td>
+                                    <td>{{customer.contactAdministrative}}</td>
                                     <td>{{customer.email}}</td>
-                                    <td>{% if customer.company|length >0 %} {{customer.company.name}} {% endif %}</td>
                                     <td>
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_customer',{ 'id': customer.id })}}">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
@@ -41,6 +39,11 @@
                                         <a href="{{ path('app_customer_edit', { 'id':customer.id }) }}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
+                                        {% if customer.infoFilename != '' %}
+                                            <a href="/documents/companyFiles/{{ customer.infoFilename }}" class="" title="Voir fichier" target="_blank" style="margin-left: 10px">
+                                                <img src="{{asset('assets/img/icon/file-solid.svg')}}">
+                                            </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
