@@ -1,0 +1,718 @@
+{% extends 'baseAdmin.html.twig' %}
+{% block title %}
+    Ajouter une formation
+{% endblock %}
+{% block stylesheets %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
+    <style>
+        body {padding-top: 60px;}
+        #formation_form_lieuFormation label, #formation_form_linkType label {
+            padding: 10px
+        }
+        .tox-tinymce {
+            height: 350px;
+        }
+        .hidden {
+            display: none;
+        }
+        .custom-file-upload {
+            cursor: pointer;
+        }
+        #trainee-table th {
+            background: #132438;
+            color: #fff;
+        }
+        .list-btn {
+            justify-content: flex-end;
+        }
+        .td-action {
+            display: flex;
+            justify-content: flex-end;
+        }
+        #tableClient .td-action {
+            display: table-cell;
+        }
+        .bloc-add {
+            display: inline-flex;
+            width: 95%;
+            flex-wrap: nowrap;
+        }
+        .bloc-add a {
+            padding-left: 0;
+            padding-top: 4px;
+        }
+        #link-formator {
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            color: blue;
+            display: block;
+            width: 100%;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0px;
+        }
+        .custom-link {
+            float: right;
+            padding: 20px 7px 15px 0;
+            color: #012970;
+            font-size: 13px;
+            text-decoration: underline;
+        }
+        .datatable-pagination-list button {
+            color: #012970;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <section class="section" style="margin-top: -75px;">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="card-title" id="companyID" data-companyID="{{ idCompany }}">
+                    Détaille de la formation
+                </h3>
+            </div>
+            {% if formation is defined %}
+            <div class="col-md-6">
+                <a href="{{path('app_see_historic',{ 'formationId': formation.id })}}" class="custom-link">Historique</a>
+            </div>
+            {% endif %}
+        </div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link   {% if idCompany == '' %} active {% endif %}" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
+                    Entreprise/Organisme
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if idCompany != '' and idFormation == "" %} active{% endif %}" id="tab-1"  {% if idCompany == '' %}disabled="false" {% endif %}data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
+                    Informations générales
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if idCompany != '' and idFormation != "" %} active{% endif %}" id="tab-2" {% if idFormation == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-2" {% if idFormation == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade {% if idCompany == '' %} show active {% endif%} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
+                <div class="card">
+                    <div class="card-body">
+                        {% if type =="inter" %}
+                        {% if clients|length > 0 %}
+                            <label for="selectTrainee">Choisissez la liste des clients de cette formation</label>
+                            <!-- Table of clients-->
+                            <table class="table table-striped" id="tableClient">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th scope="col">Nom de client</th>
+                                    <th scope="col">Email</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for client in clients %}
+                                    <tr>
+                                        <td><input type="checkbox" name="selectedClient"></td>
+                                        <td>{{ client.name }}</td>
+                                        <td>
+                                           {{ client.email }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <!-- End Table of clients -->
+                            <div class="row">
+                                <div class="col-auto me-auto">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary" id="create-formation-interne" data-url="{{path('app_add_customers')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
+                                        Suivant
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% else %}
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <h3 class="card-title">Choisir le client de la formation</h3>
+                                    <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
+                                        <option selected="" value="0">Choisir un client de la liste</option>
+                                        {% for client in clients %}
+                                            <option value="{{ client.id }}">{{ client.name }} / {{ client.email }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto me-auto">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
+                                        Suivant
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
+                        <div class="row">
+                            <div class="col-auto">
+                                <a href="{{ path('app_customer_add') }}" class="btn btn-primary" target="_blank">
+                                    Ajouter client
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade {% if idCompany != '' and idFormation == "" %} show active {% endif%} tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+                <div class="card">
+                    {% if idCompany != '' %}
+                    <div class="card-body">
+                        {{ form_start(formationForm) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.nomFormation,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3 bloc-add">
+                                    {{ form_row(formationForm.formateur,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                    <a href="{{path('app_add_teacher')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
+                                </div>
+                                <div class="row mb-3 bloc-add">
+                                    {{ form_row(formationForm.financier,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                    <a href="{{path('app_financier_add')}}" target="_blank">
+                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                    </a>
+                                </div>
+                                <div class="row mb-3 checkboxLieu">
+                                    {{ form_row(formationForm.lieuFormation,
+                                        {'attr': {'class': '' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3 hidden lieuFormation">
+                                    {{ form_row(formationForm.formationAddress,
+                                        {'attr': {'class': 'form-control form-control-user addr-form hidden' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3 hidden linkType">
+                                    {{ form_row(formationForm.linkType,
+                                        {'attr': {'class': '' }}
+                                    ) }}
+                                </div>
+
+                                <div class="row mb-3 hidden teacher">
+                                    <span id="link-formator">Aucun lien sélectionné</span>
+                                    <a href="#" class="bi-text-right" style="text-align: right" id="add-linkFormateur">Autre</a>
+                                </div>
+                                <div class="row mb-3 hidden" id="otherLinkFormateur">
+                                    <div>
+                                        <input type="text" name="otherLinkFormateur" id="inputOtherLinkFormateur" class="form-control" placeholder="Lien formateur">
+                                    </div>
+                                </div>
+                                <div class="row mb-3 hidden linkVirFormation">
+                                    {{ form_row(formationForm.lienFormation,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.timesheet,
+                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                    ) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.dateDebutFormation
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.dateFinFormation
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.dureeFormation,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkToProgram,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                    <a href="#" class="bi-text-right" style="text-align: right" id="add-program">Autre</a>
+                                </div>
+                                <div class="row mb-3 hidden" id="otherProgram">
+                                    <div>
+                                        <input type="text" name="otherProgram" class="form-control" id="staticValueProgramm" placeholder="Lien de programme" value="">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkToLivretAccueil,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkGuide,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.linkFormulaire,
+                                        {'attr': {'class': 'form-control form-control-user' }}
+                                    ) }}
+                                </div>
+                                <div class="row mb-3">
+                                    {{ form_row(formationForm.objective,
+                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                    ) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto me-auto">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">
+                                    Suivant
+                                </button>
+                            </div>
+                        </div>
+                        {{ form_end(formationForm) }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tab-pane fade {% if idCompany != '' and idFormation != "" %} show active {% endif%}" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
+                    <div class="card">
+                        {% if formation is defined %}
+                        <div class="card">
+                            <div class="card-body ps-0 pe-0">
+                                <div class="ml-2 mr-2 m-lg-3">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-6">
+                                            <select class="js-example-basic-single" name="selectTrainee" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}" style="width: 100%">
+                                                <option selected="" value="0">Choisir un stagaire de la liste</option>
+                                                {% for trainee in allTrainees %}
+                                                    <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="add-stag-alert mt-2">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 offset-md-3 d-inline-flex list-btn">
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" title="Ajouter Stagiaire à la formation"> <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="40"></a>
+                                            </div>
+                                            <div class="custom-file-upload mx-lg-2">
+                                                <form id="importFile" action="{{path('app_upload_trainee',{ 'idFormation':formation.id})}}" method="post" name="trainees" enctype="multipart/form-data">
+                                                    <input type="file" id="html_btn" name= "fileTrainee" class="file-type" style="display: none">
+                                                </form>
+                                                <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
+                                            </div>
+                                            <div class="mx-lg-2 send-conv {% if trainees|length == 0 %} hidden {% endif %}">
+                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" Envoyer convocation à tous les stagiaires> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
+                                            </div>
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_teacher_send_alert',{ 'idFormation': formation.id })}}" title="Rappel des informations clés"> <img src="{{asset('assets/img/icon/reply-all-solid.svg')}}" width="40"></a>
+                                            </div>
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_download_trainee_by_formation',{'idFormation': formation.id })}}" title="Télecharger stagiaires" class="float-end mt-4 mb-4" style="display: contents">
+                                                    <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="25" class="float-end">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row hidden">
+                                        <div class="col-md-6"> <h5 class="card-title">
+                                                {% if trainees|length == 1 %}
+                                                    {{ trainees|length }} stagaire inscrit
+                                                {% else%}
+                                                    {{ trainees|length }} stagaires inscrits
+                                                {% endif %}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table class="table table-striped" id="trainee-table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Nom</th>
+                                        <th scope="col">Prénom</th>
+                                        <th scope="col">Fonction</th>
+                                        <th>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for stg in trainees %}
+                                        {% if stg is not null %}
+                                            <tr {% if stg.sendConvocation == '1' %} class="success-send-mail" {% endif %}>
+                                                <td>{{ stg.trainee.firstName }}</td>
+                                                <td>{{ stg.trainee.lastName }}</td>
+                                                <td>{{ stg.trainee.position }}</td>
+                                                <td class="td-action">
+                                                    <a href="{{ path('app_edit_user_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
+                                                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
+                                                        <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
+                                                        <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_formation_delete', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="supprimer">
+                                                        <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                       {% endif %}
+                    </div>
+            </div>
+            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-3">
+                <div class="card">
+                    <div class="card-body">
+                        {% if formInfo != '' %}
+                        <div class="card">
+                            <div class="card-body">
+                                {{ form_start(formInfo) }}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row mb-3">
+                                            {{ form_row(formInfo.infoTrainees,
+                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                            ) }}
+                                        </div>
+                                        <div class="row mb-3">
+                                            {{ form_row(formInfo.infoFormateur,
+                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                            ) }}
+                                        </div>
+                                        <div class="row mb-3">
+                                            {{ form_row(formInfo.infoCustomer,
+                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                            ) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-auto me-auto">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">
+                                            Terminer
+                                        </button>
+                                    </div>
+                                </div>
+                                {{ form_end(formInfo) }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        jQuery(document).ready(function() {
+            $('#formation_form_linkType label:first').addClass('hidden');
+            $('#formation_form_linkType input:first').addClass('hidden');
+            $('.checkboxLieu input[type="radio"]:checked').each(function (e){
+                if(this.value == 'Distanciel') {
+                    $('.lieuFormation').addClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                } else if(this.value == 'Présentiel') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').addClass('hidden');
+                    $('.teacher').addClass('hidden');
+                    $('.linkVirFormation').addClass('hidden');
+                }else if(this.value == 'Mixte') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                }
+            });
+            $('.linkType input[type="radio"]:checked').each(function (e){
+                if(this.value == "LienBBB") {
+                    $('.teacher').removeClass('hidden');
+                    $('.linkVirFormation').addClass('hidden');
+                } else if (this.value == "Lienexterne") {
+                    $('.teacher').addClass('hidden');
+                    $('.linkVirFormation').removeClass('hidden');
+                }
+            });
+            $('input[type="radio"]').on('change', function(e) {
+                if(this.value == 'Distanciel') {
+                    $('.lieuFormation').addClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                } else if(this.value == 'Présentiel') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').addClass('hidden');
+                }else if(this.value == 'Mixte') {
+                    $('.lieuFormation').removeClass('hidden');
+                    $('.linkType').removeClass('hidden');
+                }
+
+                if(this.value == 'LienBBB') {
+                    $('.teacher').removeClass('hidden');
+                    $('.linkVirFormation').addClass('hidden');
+                }
+                if(this.value == 'Lienexterne') {
+                    $('.teacher').addClass('hidden');
+                    $('.linkVirFormation').removeClass('hidden');
+                }
+            });
+            tinyMCE.init({
+                height : "300",
+                language: 'fr_FR',
+                language_url : '/assets/vendor/tinymce/langs/fr_FR.js',
+                menubar: false,
+                branding: false,
+                statusbar: false
+            });
+            tinymce.init({
+                selector: 'textarea.addr-form',
+                height : "150",
+                language: 'fr_FR',
+                language_url : '/assets/vendor/tinymce/langs/fr_FR.js',
+                menubar: false,
+                branding: false,
+                statusbar: false
+            });
+            $('.js-datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                language: "fr",
+                autoclose: true,
+                orientation: "bottom left",
+                minDate: new Date()
+            });
+            /*setTimeout(function(){
+                $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
+            }, 1000);*/
+            let companyID = $("#companyID").attr("data-companyID");
+            $('.select-company option').each(function (e) {
+                if(companyID == this.value) {
+                    $('.select-company').val(companyID);
+                } else {
+                    this.style.display = "none";
+                }
+            })
+            let selectedCompanyName = $('.select-company :selected').text();
+            $('.select-client option').each(function (e){
+                if(this.text.includes(selectedCompanyName)) {
+                    let newVal = this.text.split(':');
+                    $(this).text(newVal[1]);
+                    this.style.display = "block";
+                } else {
+                    this.style.display = "none";
+                }
+            })
+            $('.select-company').on('change',function () {
+               let selectedCompany = this.selectedOptions[0].text;
+               $('.select-client option').each(function (e){
+                   if(this.text.includes(selectedCompany)) {
+                       this.style.display = "block";
+                   } else {
+                       this.style.display = "none";
+                   }
+               })
+                if(selectedCompany === 'Client') {
+                    $('.select-client option').each(function (e) {
+                        this.style.display = "block";
+                    })
+                }
+            })
+            //hide statique link
+            $('#formation_form_linkToProgram option').each(function (e){
+                if(this.text.includes('##')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#formation_form_linkFormateur option').each(function (e){
+                if(this.text.includes('##')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#formation_form_linkToLivretAccueil option').each(function (e){
+                if(this.text.includes('lien statique')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+            $('#formation_form_linkGuide option').each(function (e){
+                if(this.text.includes('lien statique')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#formation_form_linkFormulaire option').each(function (e){
+                if(this.text.includes('lien statique')) {
+                    this.style.display = "none";
+                } else {
+                    this.style.display = "block";
+                }
+            });
+
+            $('#add-program').on('click', function (e) {
+                e.preventDefault();
+                $('#otherProgram').removeClass('hidden');
+            })
+            var linkPr =  $('#formation_form_linkToProgram :selected').text().split('##');
+            if(linkPr.length === 2) {
+                $('#add-program').trigger('click');
+                document.getElementById("staticValueProgramm").value =linkPr[0];
+                document.getElementById('formation_form_linkToProgram').value = ''
+            }
+
+            var linkFormator =  $('#formation_form_linkFormateur :selected').text().split('##');
+            if(linkFormator.length === 2) {
+                $('#otherLinkFormateur').removeClass('hidden');
+                document.getElementById("inputOtherLinkFormateur").value =linkFormator[0];
+                document.getElementById('formation_form_linkFormateur').value = ''
+            }
+
+            $('#add-linkFormateur').on('click', function (e) {
+                e.preventDefault();
+                $('#otherLinkFormateur').removeClass('hidden');
+            })
+
+            $('.js-example-basic-single').select2();
+            $('.selectTrainee').on('change',function () {
+                let selecedItem = $(".selectTrainee :selected").val()
+                let addTrainee = $(this).attr('data-url');
+                let formationId = $(this).attr('data-formationId');
+                $('.add-stag-alert').html('')
+                if(parseInt(selecedItem) !== 0) {
+                    $.ajax({
+                        url: addTrainee,
+                        type: 'POST',
+                        data: {'selecedItem': selecedItem, 'formationId': formationId},
+                        success: function(data)
+                        {
+                            if(data !== false) {
+                                let newData = JSON.parse(data);
+                                if(newData && newData.status == true) {
+                                    let deleteLink = '/courses/deleteTrainee/'+formationId+'/'+newData.id;
+                                    let updateLInk = '/trainee/edit/'+newData.id+'/'+formationId;
+                                    let sendMailLInk = '/courses/sendConvocation/'+formationId+'/'+newData.id;
+                                    let seePdfLink = '/courses/seeConvocation/'+formationId+'/'+newData.id;
+                                    $('#trainee-table').find('tbody').append("<tr><td>"+newData.firstName+"</td><td>"+newData.lastName+"</td><td>"+newData.position+"</td>" +
+                                        "<td class='td-action'>  <a href='"+updateLInk+"' class='first-btn' title='modifier'>" +
+                                        "<img src='/assets/img/icon/pen-solid.svg'></a>" +
+                                        "<a href='"+sendMailLInk+"' class='first-btn' title='Envoyer convocation'>" +
+                                        "<img src='/assets/img/icon/envelope-solid.svg'></a>"+
+                                        "<a href='"+seePdfLink+"' class='first-btn' title='Voir convocation' target='_blank'>"+
+                                        "<img src='/assets/img/icon/eye-solid.svg'></a>"+
+                                        "<a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
+                                        "<img src='/assets/img/icon/circle-delete-solid-red.svg'></a></td></tr>");
+                                    $('.send-conv').removeClass('hidden');
+                                } else {
+                                    //show alert exist already
+                                    $('.add-stag-alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"> ' +
+                                        newData.message+
+                                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ' +
+                                        '</div>');
+                                }
+
+                            }
+                        }
+                    });
+                }
+
+            })
+            $('.new_Btn').click(function() {
+                $('#html_btn').click();
+            });
+            $('#html_btn').change(function(){
+                //submit the form here
+                $('#importFile').submit();
+            });
+            $('#add-program').on('click', function (e) {
+                e.preventDefault();
+                $('#otherProgram').removeClass('hidden');
+            })
+
+            $('#formation_form_formateur option:selected').each(function (e){
+                if ($(this).attr("data-link") !== undefined && $(this).attr("data-link").length > 0 ) {
+                    $('#link-formator').text($(this).attr("data-link"));
+                } else {
+                    $('#link-formator').text('Aucun lien sélectionné');
+                }
+            });
+            $('#formation_form_formateur').on('change',function (event) {
+                var select = event.target;
+                var selectedOption = select.options[select.selectedIndex];
+                var name = selectedOption.getAttribute('data-link');
+                if(name !== '') {
+                    $('#link-formator').text(name);
+                } else {
+                    $('#link-formator').text('Aucun lien sélectionné');
+                }
+
+            });
+            let tabClient = [];
+            $('.selectClient').on('change',function () {
+                let selecedItem = $(".selectClient :selected").val();
+                console.log(selecedItem)
+                //let addTrainee = $(this).attr('data-url');
+                if(parseInt(selecedItem) !== 0) {
+                    tabClient[0] = selecedItem;
+                   // tabClient.push(parseInt(selecedItem))
+                   // $('#selectedClientItem').append('<li>'+ $(".selectClient :selected").text()+'</li>');
+                }
+            });
+            $('#create-formation-interne').on('click', function () {
+                //save client for the new formations
+                let addCustomer = $(this).attr('data-url');
+                let formationId = $(this).attr('data-formationId');
+                console.log(JSON.stringify(tabClient));
+                console.log(addCustomer);
+                console.log(formationId);
+                $.ajax({
+                    url: addCustomer,
+                    type: 'POST',
+                    data: {'selectedItems': JSON.stringify(tabClient), 'formationId': formationId},
+                    success: function(data)
+                    {
+                        if(data !== 'false') {
+                            window.location.href = '/courses/add/intra/'+data;
+                        }
+                    }
+                });
+            })
+        });
+        /*const datatable = document.getElementById('tableClient');
+        new simpleDatatables.DataTable(datatable, {
+            perPage: 5,
+            sDom: 'Rfrtlip',
+            dom: '<"top"f>rt<"bottom"ilp><"clear">'
+        });*/
+    </script>
+{% endblock %}

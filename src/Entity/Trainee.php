@@ -31,9 +31,6 @@ class Trainee
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $position= null;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "trainee")]
-    private ?Company $company = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateAdd = null;
 
@@ -100,17 +97,6 @@ class Trainee
     public function setPosition(?string $position): self
     {
         $this->position = $position;
-        return $this;
-    }
-
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(?Company $company): self
-    {
-        $this->company = $company;
         return $this;
     }
 

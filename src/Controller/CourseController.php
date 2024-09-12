@@ -3,18 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\Customer;
 use App\Entity\Formation;
 use App\Entity\Link;
 use App\Entity\Log;
 use App\Entity\Trainee;
 use App\Entity\TraineeFormation;
-use App\Entity\User;
 use App\Form\CompanyFormType;
 use App\Form\FormationFormType;
 use App\Form\FormationInfoFormType;
 use App\Form\TraineeFormationEvalType;
-use App\Form\TraineeFormationFormType;
-use App\Form\TraineeFormType;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -48,167 +46,80 @@ class CourseController extends AbstractController
 
     }
 
-    #[Route('/courses/add/{idCompany}/{idFormation}', name: 'app_courses_add', requirements: ['idCompany' => '\d+'])]
-    public function addCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, $idCompany = null, $idFormation = null ): Response
+    #[Route('/coursesInter', name: 'app_courses_inter')]
+    public function viewCoursesInter(EntityManagerInterface $entityManager): Response
     {
-        if($idCompany == 0 && $idFormation !== null){
-            $this->addFlash('warning', "La formation est sans organisation il y a un problème lors de la création de l'organisation");
-            return $this->redirectToRoute('app_courses');
+        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
+        $interCourses = [];
+        foreach ($courses as $course) {
+            if( count($course->getCustomers()) > 1) {
+                $interCourses[] = $course;
+            }
         }
-        if ($idCompany == null && $idFormation ==  null){
+        return $this->render('courses/index.html.twig', [
+            'courses' => $interCourses,
+            'alowAddNew' => false,
+            'idCompany' => null
+        ]);
+
+    }
+    #[Route('/courses/courseManagement/{type}/{idFormation}', name: 'app_courses_manage')]
+    public function manageCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger,$type = null, $idCompany = null, $idFormation = null ): Response
+    {
+        $clients = $entityManager->getRepository(Customer::class)->findAll();
+        if ($idFormation ==  null){
             //add company info
-            $company = new Company();
-            $form = $this->createForm(CompanyFormType::class, $company);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->formCompanySave($form, $slugger,$company, $entityManager);
-                //save in log that new coure was created
-                $this->saveInlog('addOrganisme',"Création d'une nouvelle Entreprise: ".$company->getName(), $entityManager);
-                return $this->redirectToRoute('app_courses_add', ['idCompany' => $company->getId()]);
-            }
-            return $this->render('courses/add.html.twig', [
-                'companyForm' => $form->createView(),
-                'idCompany' => $idCompany,
+            return $this->render('courses/formationManagement.html.twig', [
                 'idFormation' => '',
-                'formInfo' => ''
+                'formInfo' => '',
+                'clients' => $clients,
+                'type' => $type,
+                'courseName' => '',
+                'selectedClient' => []
             ]);
-        }
-        if ($idCompany && !$idFormation) {
-            //get company
-            $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $idCompany]);
-            $formation = $entityManager->getRepository(Formation::class)->findOneBy(['company' => $company]);
-            if ($formation) {
-               // return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $formation->getId()]);
-            }
-            $formCompany = $this->createForm(CompanyFormType::class, $company);
-            $formCompany->handleRequest($request);
-            if ($formCompany->isSubmitted() && $formCompany->isValid()) {
-                $this->formCompanySave($formCompany, $slugger,$company, $entityManager);
-            }
-            //add course info
-            $course = new Formation();
-            $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' => true]);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $course = $form->getData();
-                if ($request->request->get('otherProgram') != '') {
-                    //create new link
-                    $link = new Link();
-                    $link->setName('lien statique');
-                    $link->setValue($request->request->get('otherProgram'));
-                    $entityManager->persist($link);
-                    $entityManager->flush();
-                    //affect the new link to the new course
-                    $course->setLinkToProgram($link);
+        } else {
+            $course =  $entityManager->getRepository(Formation::class)->find($idFormation);
+            $formationClient = $course->getCustomers();
+            $selectedClient = [];
+            if($formationClient) {
+                if ($type == 'intra') {
+                    $selectedClient[] = $formationClient[0]->getId();
+                } else {
+                    foreach ($formationClient as $client) {
+                        $selectedClient[] = $client->getId();
+                    }
                 }
-                if($request->request->get('otherLinkFormateur') != '') {
-                    $link = new Link();
-                    $link->setName('lien statique');
-                    $link->setValue($request->request->get('otherLinkFormateur'));
-                    $entityManager->persist($link);
-                    $entityManager->flush();
-                    //affect the new link to the new course
-                    $course->setLinkformateur ($link);
-                }
-                $entityManager->persist($course);
-                $entityManager->flush();
-                $this->saveInlog('addFormation',"Création d'une nouvelle Formation: ". $course->getNomFormation(), $entityManager);
-                return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $course->getId()]);
+            } else{
+                return $this->render('courses/formationManagement.html.twig', [
+                    'idFormation' => $idFormation,
+                    'formInfo' => '',
+                    'clients' => $clients,
+                    'type' => $type,
+                    'courseName' => '',
+                    'selectedClient' => []
+                ]);
             }
-            return $this->render('courses/add.html.twig', [
-                'formationForm' => $form->createView(),
-                'companyForm' => $formCompany->createView(),
-                'idCompany' => $idCompany,
-                'idFormation' =>  $course->getId(),
-                'formInfo' => ''
-            ]);
-        }
-        //add trainer
-        if ($idCompany && $idFormation) {
-            //get company
-            $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $idCompany]);
-            $formCompany = $this->createForm(CompanyFormType::class, $company);
-            $formCompany->handleRequest($request);
-            if ($formCompany->isSubmitted() && $formCompany->isValid()) {
-                $this->formCompanySave($formCompany, $slugger,$company, $entityManager);
+            $courseStatus = 'new';
+            if($course->getNomFormation()) {
+                $courseStatus = 'old';
             }
-
-            $course2 =  $entityManager->getRepository(Formation::class)->find($idFormation);
-            $form = $this->createForm(FormationFormType::class, $course2, ['allow_extra_fields' =>true]);
+            $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
             $form->handleRequest($request);
 
-            $formInfo = $this->createForm(FormationInfoFormType::class, $course2, ['allow_extra_fields' =>true]);
+            $formInfo = $this->createForm(FormationInfoFormType::class, $course, ['allow_extra_fields' =>true]);
             $formInfo->handleRequest($request);
-            $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course2]);
+            $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course]);
             $AllTrainees = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
 
             if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
-                $course2 = $form->getData();
+                $course = $form->getData();
                 if ($form->isSubmitted()) {
+                    if($courseStatus == 'new') {
+                        $this->saveInlog('addFormation',"Création d'une nouvelle Formation: ". $course->getNomFormation(), $entityManager);
+                    } else {
+                        $this->saveInlog('updateFormation',"Modification de la Formation: ". $course->getNomFormation(), $entityManager);
+                    }
                     if ($request->request->get('otherProgram') != '') {
-                        //create new link
-                        $link = new Link();
-                        $link->setName('lien statique');
-                        $link->setValue($request->request->get('otherProgram'));
-                        $entityManager->persist($link);
-                        $entityManager->flush();
-                        //affect the new link to the new course
-                        $course2->setLinkToProgram($link);
-                    }
-                    if($request->request->get('otherLinkFormateur') != '') {
-                        $link = new Link();
-                        $link->setName('lien statique');
-                        $link->setValue($request->request->get('otherLinkFormateur'));
-                        $entityManager->persist($link);
-                        $entityManager->flush();
-                        //affect the new link to the new course
-                        $course2->setLinkformateur($link);
-                    }
-                    $entityManager->persist($course2);
-                    $entityManager->flush();
-                }
-                if ($formInfo->isSubmitted() && $formInfo->isValid()) {
-                    $course2 = $formInfo->getData();
-                    $entityManager->persist($course2);
-                    $entityManager->flush();
-                }
-                $this->saveInlog('updateFormation',"Modification de la Formation: ". $course2->getNomFormation(), $entityManager);
-                return $this->redirectToRoute('app_courses_add', ['idCompany' => $idCompany, 'idFormation' => $course2->getId()]);
-            }
-            return $this->render('courses/add.html.twig', [
-                'formationForm' => $form->createView(),
-                'companyForm' => $formCompany->createView(),
-                'formation' => $course2,
-                'trainees' => $formationUser,
-                'formInfo' => $formInfo->createView(),
-                'allTrainees' => $AllTrainees,
-                'idCompany' => $idCompany,
-                'idFormation' =>  $course2->getId()
-            ]);
-        }
-
-    }
-
-    #[Route('/courses/edit/{id}', name: 'app_courses_edit')]
-    public function updateCourse(Request $request, EntityManagerInterface $entityManager, $id): Response
-    {
-        $course =  $entityManager->getRepository(Formation::class)->find($id);
-        $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
-        $form->handleRequest($request);
-
-        $formInfo = $this->createForm(FormationInfoFormType::class, $course, ['allow_extra_fields' =>true]);
-        $formInfo->handleRequest($request);
-        $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation'=>$course]);
-        $trainees = [];
-        $AllTrainees = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
-        foreach ($formationUser as $item) {
-            array_push($trainees, $item->getTrainee() );
-        }
-        if (($form->isSubmitted() && $form->isValid()) || ($formInfo->isSubmitted() && $formInfo->isValid())) {
-            $course = $form->getData();
-            if ($form->isSubmitted()) {
-                if ($course->getLinkToProgram() == null) {
-                    if($request->request->get('otherProgram') != '') {
                         //create new link
                         $link = new Link();
                         $link->setName('lien statique');
@@ -225,28 +136,35 @@ class CourseController extends AbstractController
                         $entityManager->persist($link);
                         $entityManager->flush();
                         //affect the new link to the new course
-                        $course->setLinkformateur ($link);
+                        $course->setLinkformateur($link);
                     }
+                    $course->setType($type);
+                    $entityManager->persist($course);
+                    $entityManager->flush();
                 }
-                $entityManager->persist($course);
-                $entityManager->flush();
+                if ($formInfo->isSubmitted() && $formInfo->isValid()) {
+                    $course = $formInfo->getData();
+                    $entityManager->persist($course);
+                    $entityManager->flush();
+                }
+                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => $course->getId()]);
             }
-            if ($formInfo->isSubmitted() && $formInfo->isValid()) {
-                $course = $formInfo->getData();
-                $entityManager->persist($course);
-                $entityManager->flush();
-            }
-            return $this->redirectToRoute('app_courses_add', ['id' => $course->getId()]);
-            //return $this->redirectToRoute('app_courses_edit', ['id' => $course->getId()]);
+            return $this->render('courses/formationManagement.html.twig', [
+                'formationForm' => $form->createView(),
+                'formation' => $course,
+                'trainees' => $formationUser,
+                'formInfo' => $formInfo->createView(),
+                'allTrainees' => $AllTrainees,
+                'idCompany' => $idCompany,
+                'idFormation' =>  $course->getId(),
+                'clients' => $clients,
+                'type' => $type,
+                'courseName' => $course->getNomFormation(),
+                'selectedClient' => $selectedClient
+            ]);
         }
-        return $this->render('courses/edit.html.twig', [
-            'formationForm' => $form->createView(),
-            'formation' => $course,
-            'trainees' => $trainees,
-            'formInfo' => $formInfo->createView(),
-            'allTrainees' => $AllTrainees
+        return 'true';
 
-        ]);
     }
 
     #[Route('/courses/deleteTrainee/{idFormation}/{idTrainee}', name: 'app_trainee_formation_delete')]
@@ -257,8 +175,7 @@ class CourseController extends AbstractController
         $traineeToDelete = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' =>$trainee]);
         $entityManager->remove($traineeToDelete);
         $entityManager->flush();
-        //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
-        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
 
     }
 
@@ -285,9 +202,8 @@ class CourseController extends AbstractController
         $entityManager->persist($formation);
         $entityManager->flush();
         $this->addFlash('success', "La convocation a été envoyée avec succès.");
-        //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
         $this->saveInlog('EnvoiConnvForOneStag_'.$idFormation,"Envoi d'une Convocation à la formation ".$formation->getNomFormation().'. Email de stagiaire:'.$trainee->getEmail(), $entityManager);
-        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
     }
 
     #[Route('/courses/sendConvocation/{idFormation}', name: 'app_allTrainees_send_conv')]
@@ -406,8 +322,7 @@ class CourseController extends AbstractController
 
         $this->saveInlog('EnvoiConnvForAll_'.$idFormation,"Envoi d'une Convocation à tous les stagiaires pour la formation ".$formation->getNomFormation(), $entityManager);
         $this->addFlash('success', "Les convocations ont bien été envoyées.");
-        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
-        //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
     }
 
     /**
@@ -600,48 +515,38 @@ class CourseController extends AbstractController
         }
         $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
         $this->saveInlog('AddTrainee',"Ajout des stagiaires à la formation: <b>".$formation->getNomFormation()."</b> à partir un fichier excel", $entityManager);
-        //return $this->redirectToRoute('app_courses_edit', ['id' => $formation->getId()]);
-        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formation->getId()]);
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $formation->getId()]);
     }
-
-    #[Route('/courses/{idCompany}', name: 'app_courses_by_company')]
-    public function viewCoursesByCompany(EntityManagerInterface $entityManager,  $idCompany = null): Response
+    #[Route('/courses/customerToformation', name: 'app_add_customers')]
+    public function customerToformation(Request $request,  EntityManagerInterface $entityManager): Response
     {
-        $courses = [];
-        if ($idCompany) {
-            $company = $entityManager->getRepository(Company::class)->findOneBy(['id' => $idCompany]);
-            $courses = $entityManager->getRepository(Formation::class)->findBy(['company' => $company]);
+
+        $itemIds =  json_decode($request->request->get('selectedItems'), true);
+        $formationId = $request->request->get('formationId');
+        if($formationId) {
+            $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
+        } else {
+            // create new formation and affect selected clients
+            $formation = new Formation();
+        }
+        //remove all customer
+        if ($formation->getCustomers()) {
+            foreach($formation->getCustomers() as $client) {
+                $formation->removeCustomer($client);
+            }
         }
 
-        return $this->render('courses/index.html.twig', [
-            'courses' => $courses,
-            'alowAddNew' => true,
-            'idCompany' => $idCompany
-        ]);
-
-    }
-
-    function formCompanySave($form, $slugger,$company, $entityManager) {
-        $infoFile = $form->get('infoFilename')->getData();
-        // this condition is needed because the 'brochure' field is not required
-        // so the PDF file must be processed only when a file is uploaded
-        if ($infoFile) {
-            $originalFilename = pathinfo($infoFile->getClientOriginalName(), PATHINFO_FILENAME);
-            // this is needed to safely include the file name as part of the URL
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$infoFile->guessExtension();
-            // Move the file to the directory where brochures are stored
-            $infoFile->move(
-                $this->getParameter('company_file_directory'),
-                $newFilename
-            );
-            $company->setInfoFilename($newFilename);
+        if ($itemIds > 0) {
+            foreach ($itemIds as $item) {
+                $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id'=> $item]);
+                $formation->addCustomer($customer);
+                $entityManager->persist($formation);
+            }
+            $entityManager->flush();
+            return new Response($formation->getId());
         }
-        $company = $form->getData();
-        $entityManager->persist($company);
-        $entityManager->flush();
+        return new Response('false');
     }
-
     /**
      * save action in table log
      * @param $activity
@@ -703,7 +608,7 @@ class CourseController extends AbstractController
             ->to($formation->getFormateur()->getEmail());
         $mailer->send($email);
         $this->addFlash('success', "Le rappel des informations clés a été envoyée au formateur avec succès.");
-        return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
     }
 
     #[Route('/courses/seeHistoric/{formationId}', name: 'app_see_historic')]

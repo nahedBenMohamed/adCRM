@@ -29,6 +29,9 @@
             display: flex;
             justify-content: flex-end;
         }
+        #tableClient .td-action {
+            display: table-cell;
+        }
         .bloc-add {
             display: inline-flex;
             width: 95%;
@@ -56,235 +59,249 @@
             font-size: 13px;
             text-decoration: underline;
         }
+        .datatable-pagination-list button {
+            color: #012970;
+        }
     </style>
 {% endblock %}
 {% block body %}
     <section class="section" style="margin-top: -75px;">
         <div class="row">
             <div class="col-md-6">
-                <h3 class="card-title" id="companyID" data-companyID="{{ idCompany }}">
-                    Détaille de la formation
+                <h3 class="card-title">
+                    Détaille de la formation {{ courseName }}
                 </h3>
             </div>
             {% if formation is defined %}
-            <div class="col-md-6">
-                <a href="{{path('app_see_historic',{ 'formationId': formation.id })}}" class="custom-link">Historique</a>
-            </div>
+                <div class="col-md-6">
+                    <a href="{{path('app_see_historic',{ 'formationId': formation.id })}}" class="custom-link">Historique</a>
+                </div>
             {% endif %}
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link   {% if idCompany == '' %} active {% endif %}" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
+                <button class="nav-link   {% if selectedClient|length == 0  %} active {% endif %}" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
                     Entreprise/Organisme
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link {% if idCompany != '' and idFormation == "" %} active{% endif %}" id="tab-1"  {% if idCompany == '' %}disabled="false" {% endif %}data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
+                <button class="nav-link {% if selectedClient|length > 0 and courseName == "" %} active {% endif %}" id="tab-1"  {% if selectedClient|length == 0 %}disabled="false" {% endif %}data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
                     Informations générales
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link {% if idCompany != '' and idFormation != "" %} active{% endif %}" id="tab-2" {% if idFormation == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+                <button class="nav-link {% if courseName != "" %} active {% endif %}" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-2" {% if idFormation == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+                <button class="nav-link" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade {% if idCompany == '' %} show active {% endif%} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
+            <div class="tab-pane fade {% if selectedClient|length == 0  %} show active {% endif%} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Ajouter un nouveau organisme </h5>
-                        {{ form_start(companyForm) }}
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.name,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {% if idCompany != '' %}
-                                <span>Nb: l'ajout d'un nouveau fichier va supprimer l'ancien fichier</span>
+                        {% if type == "inter" %}
+                            {% if clients|length > 0 %}
+                                <label for="selectClient">Choisissez la liste des clients de cette formation</label>
+                                <!-- Table of clients-->
+                                <table class="table table-striped" id="tableClient">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th scope="col">Nom de client</th>
+                                        <th scope="col">Email</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for client in clients %}
+                                        <tr>
+                                            <td><input type="checkbox" class="item-checkbox" value="{{ client.id  }}" {% if client.id in selectedClient %} checked {% endif %}></td>
+                                            <td>{{ client.name }}</td>
+                                            <td>
+                                                {{ client.email }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <!-- End Table of clients -->
+                                <div class="row">
+                                    <div class="col-auto me-auto">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary" id="create-formation-interne" data-url="{{path('app_add_customers')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
+                                            Suivant
+                                        </button>
+                                    </div>
+                                </div>
                             {% endif %}
-                            {{ form_row(companyForm.infoFilename,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.contactAdministratif,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.emailContactAdministratif,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
-                        <div class="row mb-3">
-                            {{ form_row(companyForm.otherInformation,
-                                {'attr': {'class': 'form-control form-control-user'}}
-                            ) }}
-                        </div>
+                        {% else %}
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <h3 class="card-title">Choisir le client de la formation</h3>
+                                    <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
+                                        <option selected="" value="0">Choisir un client de la liste</option>
+                                        {% for client in clients %}
+                                            <option value="{{ client.id }}" {% if client.id in selectedClient %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto me-auto">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
+                                        Suivant
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
                         <div class="row">
-                            <div class="col-auto me-auto">
-                            </div>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">
-                                    Suivant
-                                </button>
+                                <a href="{{ path('app_customer_add') }}" class="btn btn-primary" target="_blank">
+                                    Ajouter client
+                                </a>
                             </div>
                         </div>
-                        {{ form_end(companyForm) }}
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade {% if idCompany != '' and idFormation == "" %} show active {% endif%} tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+            <div class="tab-pane fade {% if selectedClient|length > 0 and courseName|length == 0 %} show active {% endif%} tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
                 <div class="card">
-                    {% if idCompany != '' %}
+                    {% if selectedClient|length > 0 %}
                     <div class="card-body">
-                        {{ form_start(formationForm) }}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.company,
-                                        {'attr': {'class': 'form-control select-company' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3 bloc-add">
-                                    {{ form_row(formationForm.customer,
-                                        {'attr': {'class': 'form-control select-client' }}
-                                    ) }}
-                                    <a href="{{path('app_customer_add')}}" target="_blank">
-                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
-                                    </a>
-                                </div>
-                                <div class="row mb-3 bloc-add">
-                                    {{ form_row(formationForm.formateur,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                    <a href="{{path('app_add_teacher')}}" target="_blank">
-                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
-                                    </a>
-                                </div>
-                                <div class="row mb-3 bloc-add">
-                                    {{ form_row(formationForm.financier,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                    <a href="{{path('app_financier_add')}}" target="_blank">
-                                        <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
-                                    </a>
-                                </div>
+                            {{ form_start(formationForm) }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.nomFormation,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3 bloc-add">
+                                        {{ form_row(formationForm.formateur,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                        <a href="{{path('app_add_teacher')}}" target="_blank">
+                                            <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                        </a>
+                                    </div>
+                                    <div class="row mb-3 bloc-add">
+                                        {{ form_row(formationForm.financier,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                        <a href="{{path('app_financier_add')}}" target="_blank">
+                                            <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
+                                        </a>
+                                    </div>
+                                    <div class="row mb-3 checkboxLieu">
+                                        {{ form_row(formationForm.lieuFormation,
+                                            {'attr': {'class': '' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3 hidden lieuFormation">
+                                        {{ form_row(formationForm.formationAddress,
+                                            {'attr': {'class': 'form-control form-control-user addr-form hidden' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3 hidden linkType">
+                                        {{ form_row(formationForm.linkType,
+                                            {'attr': {'class': '' }}
+                                        ) }}
+                                    </div>
 
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.nomFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3 checkboxLieu">
-                                    {{ form_row(formationForm.lieuFormation,
-                                        {'attr': {'class': '' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3 hidden lieuFormation">
-                                    {{ form_row(formationForm.formationAddress,
-                                        {'attr': {'class': 'form-control form-control-user addr-form hidden' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3 hidden linkType">
-                                    {{ form_row(formationForm.linkType,
-                                        {'attr': {'class': '' }}
-                                    ) }}
-                                </div>
-
-                                <div class="row mb-3 hidden teacher">
-                                    <span id="link-formator">Aucun lien sélectionné</span>
-                                    <a href="#" class="bi-text-right" style="text-align: right" id="add-linkFormateur">Autre</a>
-                                </div>
-                                <div class="row mb-3 hidden" id="otherLinkFormateur">
-                                    <div>
-                                        <input type="text" name="otherLinkFormateur" id="inputOtherLinkFormateur" class="form-control" placeholder="Lien formateur">
+                                    <div class="row mb-3 hidden teacher">
+                                        <span id="link-formator">Aucun lien sélectionné</span>
+                                        <a href="#" class="bi-text-right" style="text-align: right" id="add-linkFormateur">Autre</a>
+                                    </div>
+                                    <div class="row mb-3 hidden" id="otherLinkFormateur">
+                                        <div>
+                                            <input type="text" name="otherLinkFormateur" id="inputOtherLinkFormateur" class="form-control" placeholder="Lien formateur">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 hidden linkVirFormation">
+                                        {{ form_row(formationForm.lienFormation,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.timesheet,
+                                            {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                        ) }}
                                     </div>
                                 </div>
-                                <div class="row mb-3 hidden linkVirFormation">
-                                    {{ form_row(formationForm.lienFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.timesheet,
-                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                    ) }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.dateDebutFormation
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.dateFinFormation
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.dureeFormation,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.linkToProgram,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                    <a href="#" class="bi-text-right" style="text-align: right" id="add-program">Autre</a>
-                                </div>
-                                <div class="row mb-3 hidden" id="otherProgram">
-                                    <div>
-                                        <input type="text" name="otherProgram" class="form-control" id="staticValueProgramm" placeholder="Lien de programme" value="">
+                                <div class="col-md-6">
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.dateDebutFormation
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.dateFinFormation
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.dureeFormation,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.linkToProgram,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                        <a href="#" class="bi-text-right" style="text-align: right" id="add-program">Autre</a>
+                                    </div>
+                                    <div class="row mb-3 hidden" id="otherProgram">
+                                        <div>
+                                            <input type="text" name="otherProgram" class="form-control" id="staticValueProgramm" placeholder="Lien de programme" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.linkToLivretAccueil,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.linkGuide,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.linkFormulaire,
+                                            {'attr': {'class': 'form-control form-control-user' }}
+                                        ) }}
+                                    </div>
+                                    <div class="row mb-3">
+                                        {{ form_row(formationForm.objective,
+                                            {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                        ) }}
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.linkToLivretAccueil,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
+                            </div>
+                            <div class="row">
+                                <div class="col-auto me-auto">
                                 </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.linkGuide,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.linkFormulaire,
-                                        {'attr': {'class': 'form-control form-control-user' }}
-                                    ) }}
-                                </div>
-                                <div class="row mb-3">
-                                    {{ form_row(formationForm.objective,
-                                        {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                    ) }}
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        Suivant
+                                    </button>
                                 </div>
                             </div>
+                            {{ form_end(formationForm) }}
                         </div>
-                        <div class="row">
-                            <div class="col-auto me-auto">
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">
-                                    Suivant
-                                </button>
-                            </div>
-                        </div>
-                        {{ form_end(formationForm) }}
-                    </div>
                     {% endif %}
                 </div>
             </div>
-            <div class="tab-pane fade {% if idCompany != '' and idFormation != "" %} show active {% endif%}" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
-                    <div class="card">
-                        {% if formation is defined %}
+            <div class="tab-pane fade {% if courseName != '' %} show active {% endif%}" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
+                <div class="card">
+                    {% if formation is defined %}
                         <div class="card">
                             <div class="card-body ps-0 pe-0">
                                 <div class="ml-2 mr-2 m-lg-3">
                                     <div class="row mb-3">
                                         <div class="col-sm-6">
-                                            <select class="js-example-basic-single" name="state" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}" style="width: 100%">
+                                            <select class="js-example-basic-single selectTrainee" name="selectTrainee" data-formationId="{{ formation.id }}" data-url="{{path('app_affect_trainee')}}" style="width: 100%">
                                                 <option selected="" value="0">Choisir un stagaire de la liste</option>
                                                 {% for trainee in allTrainees %}
                                                     <option value="{{ trainee.id }}">{{ trainee.firstName }} {{ trainee.lastName }} / {{ trainee.email }}</option>
@@ -366,47 +383,47 @@
                                 </table>
                             </div>
                         </div>
-                       {% endif %}
-                    </div>
+                    {% endif %}
+                </div>
             </div>
             <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-3">
                 <div class="card">
                     <div class="card-body">
                         {% if formInfo != '' %}
-                        <div class="card">
-                            <div class="card-body">
-                                {{ form_start(formInfo) }}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row mb-3">
-                                            {{ form_row(formInfo.infoTrainees,
-                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                            ) }}
-                                        </div>
-                                        <div class="row mb-3">
-                                            {{ form_row(formInfo.infoFormateur,
-                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                            ) }}
-                                        </div>
-                                        <div class="row mb-3">
-                                            {{ form_row(formInfo.infoCustomer,
-                                                {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                            ) }}
+                            <div class="card">
+                                <div class="card-body">
+                                    {{ form_start(formInfo) }}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row mb-3">
+                                                {{ form_row(formInfo.infoTrainees,
+                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                                ) }}
+                                            </div>
+                                            <div class="row mb-3">
+                                                {{ form_row(formInfo.infoFormateur,
+                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                                ) }}
+                                            </div>
+                                            <div class="row mb-3">
+                                                {{ form_row(formInfo.infoCustomer,
+                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
+                                                ) }}
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-auto me-auto">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-primary">
+                                                Terminer
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {{ form_end(formInfo) }}
                                 </div>
-                                <div class="row">
-                                    <div class="col-auto me-auto">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary">
-                                            Terminer
-                                        </button>
-                                    </div>
-                                </div>
-                                {{ form_end(formInfo) }}
                             </div>
-                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -490,39 +507,7 @@
             /*setTimeout(function(){
                 $('.tox-menubar, .tox-promotion, .tox-statusbar').css('display','none');
             }, 1000);*/
-            let companyID = $("#companyID").attr("data-companyID");
-            $('.select-company option').each(function (e) {
-                if(companyID == this.value) {
-                    $('.select-company').val(companyID);
-                } else {
-                    this.style.display = "none";
-                }
-            })
-            let selectedCompanyName = $('.select-company :selected').text();
-            $('.select-client option').each(function (e){
-                if(this.text.includes(selectedCompanyName)) {
-                    let newVal = this.text.split(':');
-                    $(this).text(newVal[1]);
-                    this.style.display = "block";
-                } else {
-                    this.style.display = "none";
-                }
-            })
-            $('.select-company').on('change',function () {
-               let selectedCompany = this.selectedOptions[0].text;
-               $('.select-client option').each(function (e){
-                   if(this.text.includes(selectedCompany)) {
-                       this.style.display = "block";
-                   } else {
-                       this.style.display = "none";
-                   }
-               })
-                if(selectedCompany === 'Client') {
-                    $('.select-client option').each(function (e) {
-                        this.style.display = "block";
-                    })
-                }
-            })
+
             //hide statique link
             $('#formation_form_linkToProgram option').each(function (e){
                 if(this.text.includes('##')) {
@@ -587,8 +572,8 @@
             })
 
             $('.js-example-basic-single').select2();
-            $('.js-example-basic-single').on('change',function () {
-                let selecedItem = $(".js-example-basic-single :selected").val()
+            $('.selectTrainee').on('change',function () {
+                let selecedItem = $(".selectTrainee :selected").val()
                 let addTrainee = $(this).attr('data-url');
                 let formationId = $(this).attr('data-formationId');
                 $('.add-stag-alert').html('')
@@ -642,7 +627,6 @@
                 $('#otherProgram').removeClass('hidden');
             })
 
-
             $('#formation_form_formateur option:selected').each(function (e){
                 if ($(this).attr("data-link") !== undefined && $(this).attr("data-link").length > 0 ) {
                     $('#link-formator').text($(this).attr("data-link"));
@@ -661,6 +645,56 @@
                 }
 
             });
+            let tabClient = [];
+            $('.selectClient').on('change',function () {
+                let selecedItem = $(".selectClient :selected").val();
+                console.log(selecedItem)
+                //let addTrainee = $(this).attr('data-url');
+                if(parseInt(selecedItem) !== 0) {
+                    tabClient[0] = selecedItem;
+                    // tabClient.push(parseInt(selecedItem))
+                    // $('#selectedClientItem').append('<li>'+ $(".selectClient :selected").text()+'</li>');
+                }
+            });
+            $('#create-formation-interne').on('click', function () {
+                //save client for the new formations
+                let addCustomer = $(this).attr('data-url');
+                let formationId = $(this).attr('data-formationId');
+                console.log(tabClient.length)
+                console.log(JSON.stringify(tabClient));
+                console.log(addCustomer);
+                console.log(formationId);
+                var tabClientParam = [];
+                let typeFormation = "intra";
+                if(tabClient.length === 0) {
+                    const checkboxes = document.querySelectorAll('.item-checkbox');
+
+                    // Récupérer uniquement celles qui sont cochées
+                    const checkedItems = Array.from(checkboxes)
+                        .filter(checkbox => checkbox.checked)
+                        .map(checkbox => checkbox.value); // Vous pouvez récupérer une autre propriété comme 'id' ou 'name'
+                    tabClient = checkedItems;
+                    typeFormation = "inter";
+                }
+
+               $.ajax({
+                    url: addCustomer,
+                    type: 'POST',
+                    data: {'selectedItems': JSON.stringify(tabClient), 'formationId': formationId},
+                    success: function(data)
+                    {
+                        if(data !== 'false') {
+                            window.location.href = '/courses/courseManagement/'+typeFormation+'/'+data;
+                        }
+                    }
+                });
+            })
         });
+        /*const datatable = document.getElementById('tableClient');
+        new simpleDatatables.DataTable(datatable, {
+            perPage: 5,
+            sDom: 'Rfrtlip',
+            dom: '<"top"f>rt<"bottom"ilp><"clear">'
+        });*/
     </script>
 {% endblock %}

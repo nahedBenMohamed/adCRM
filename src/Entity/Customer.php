@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -16,45 +17,45 @@ class Customer
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $firstName = null;
+    private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $lastName = null;
+    private ?string $contactAdministrative = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $position= null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $otherInfo= null;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: "trainee")]
-    private ?Company $company = null;
+    #[ORM\Column(type: 'string',nullable: true)]
+    private ?string $infoFilename = "";
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getName(): ?string
     {
-        return $this->firstName;
+        return $this->name;
     }
 
-    public function setFirstName(?string $firstName): static
+    public function setName(?string $name): static
     {
-        $this->firstName = $firstName;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getContactAdministrative(): ?string
     {
-        return $this->lastName;
+        return $this->contactAdministrative;
     }
 
-    public function setLastName(?string $lastName): static
+    public function setContactAdministrative(?string $contactAdministrative): static
     {
-        $this->lastName = $lastName;
+        $this->contactAdministrative = $contactAdministrative;
 
         return $this;
     }
@@ -71,25 +72,26 @@ class Customer
         return $this;
     }
 
-    public function getPosition(): ?string
+    public function getOtherInfo(): ?string
     {
-        return $this->position;
+        return $this->otherInfo;
     }
 
-    public function setPosition(?string $position): self
+    public function setOtherInfo(?string $otherInfo): self
     {
-        $this->position = $position;
+        $this->otherInfo = $otherInfo;
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public function getInfoFilename(): string
     {
-        return $this->company;
+        return $this->infoFilename ? $this->infoFilename:'';
     }
 
-    public function setCompany(?Company $company): self
+    public function setInfoFilename(string $infoFilename): self
     {
-        $this->company = $company;
+        $this->infoFilename = $infoFilename;
+
         return $this;
     }
 }

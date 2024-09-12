@@ -107,11 +107,6 @@ class UserController extends AbstractController
     #[Route('/user/addTrainee/{formationId}', name: 'app_add_trainee')]
     public function addTrainees(Request $request, EntityManagerInterface $entityManager, $formationId = null): Response
     {
-        if($formationId) {
-            $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
-        } else {
-            $formation = new Formation();
-        }
         $user = new Trainee();
         $form = $this->createForm(TraineeFormType::class, $user);
         $form->handleRequest($request);
@@ -119,24 +114,21 @@ class UserController extends AbstractController
             $user = $form->getData();
             $entityManager->persist($user);
             $entityManager->flush();
-           if ($request->request->get('formation_id')) {
+            if($formationId) {
+                $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
                 $TraineeFormation = new TraineeFormation();
                 $TraineeFormation->setTrainee($user);
                 $TraineeFormation->setFormation($formation);
                 $entityManager->persist($TraineeFormation);
                 $entityManager->flush();
-            }
-
-            if ($formationId) {
-                //redirect to formation
-                return $this->redirectToRoute('app_courses_add', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formationId]);
+                return $this->redirectToRoute('app_courses_manage', ['idFormation' => $formationId, 'type' => $formation->getType()]);
             } else {
                 return $this->redirectToRoute('app_trainees');
             }
         }
         return $this->render('trainees/new_trainee.html.twig', [
             'registrationForm' => $form->createView(),
-            'formation' => $formation
+            'formationId' => $formationId
         ]);
     }
     /** Teacher CRUD */
@@ -186,7 +178,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             if ($idFormation !== null) {
-                return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+                //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
             }
             return $this->redirectToRoute('app_trainees');
         }
