@@ -140,7 +140,7 @@
       </li><!-- End Stagiaire Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link {% if 'app_trainees' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_trainees')}}" title="Stagiaires">
+        <a class="nav-link {% if 'app_trainees' not in app.request.attributes.get('_route') and 'app_edit_user_trainee' not in app.request.attributes.get('_route') and 'app_add_trainee' not in app.request.attributes.get('_route')  %} collapsed {% endif %}" href="{{path('app_trainees')}}" title="Stagiaires">
           <img src="{{asset('assets/img/icon/graduation-cap-solid-white.svg')}}" class="icon-menu">
           <span>Stagiaires</span>
         </a>
@@ -161,7 +161,7 @@
       </li><!-- End Utilisateurs Page Nav -->
 {% endif %}
       <li class="nav-item">
-        <a class="nav-link {% if 'app_edit_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_edit_user',{ 'id': app.user.id })}}" title="Compte">
+        <a class="nav-link {% if 'app_edit_user' not in app.request.attributes.get('_route') or 'app_edit_user_trainee' in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_edit_user',{ 'id': app.user.id })}}" title="Compte">
           <img src="{{asset('assets/img/icon/user-solid-white.svg')}}" class="icon-menu">
           <span>Compte</span>
         </a>
