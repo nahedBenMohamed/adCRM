@@ -119,7 +119,7 @@
         </ul>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if ('app_customer' not in app.request.attributes.get('_route')  or 'app_customer_formation' in app.request.attributes.get('_route')) %} collapsed {% endif %}" href="{{path('app_customer')}}" title="Clients">
+        <a class="nav-link {% if ('app_customer' not in app.request.attributes.get('_route')  or 'app_customer_formation' in app.request.attributes.get('_route')  or 'app_customer_course' in app.request.attributes.get('_route')) %} collapsed {% endif %}" href="{{path('app_customer')}}" title="Clients">
           <img src="{{asset('assets/img/icon/landmark-solid-white.svg')}}" class="icon-menu">
           <span>Contact Clients</span>
         </a>

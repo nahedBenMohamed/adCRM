@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         <!-- Table with stripped rows -->
-                        <table class="table datatable table-striped">
+                        <table class="table datatable table-striped" id="customerFormation">
                             <thead>
                             <tr>
                                 <th scope="col">Nom de Client</th>
@@ -43,4 +43,11 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block javascripts %}
+<script>
+    jQuery(document).ready(function() {
+        $("#customerFormation tr td:last-child").removeClass('td-action');
+    });
+</script>
 {% endblock %}

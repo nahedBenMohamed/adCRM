@@ -38,6 +38,7 @@
                                 <th scope="col">Nom</th>
                                 <th scope="col">Prénom</th>
                                 <th scope="col">Fonction</th>
+                                <th scope="col">Entreprise/Organisme</th>
                                 <th>
                                 </th>
                             </tr>
@@ -48,6 +49,7 @@
                                     <td>{{user.firstName}}</td>
                                     <td>{{user.lastName}}</td>
                                     <td>{{user.position}}</td>
+                                    <td>{% if user.customer|length >0 %} {{user.customer.name}} {% endif %}</td>
                                     <td class="text-center">
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_trainee',{ 'id': user.id })}}">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
