@@ -18,6 +18,7 @@ use Dompdf\Options;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -67,9 +68,13 @@ class CourseController extends AbstractController
     public function manageCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger,$type = null, $idCompany = null, $idFormation = null ): Response
     {
         $clients = $entityManager->getRepository(Customer::class)->findAll();
+        $view = "courses/formationManagement.html.twig";
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $view = "teacher/showFormation.html.twig";
+        }
         if ($idFormation ==  null){
             //add company info
-            return $this->render('courses/formationManagement.html.twig', [
+            return $this->render($view, [
                 'idFormation' => '',
                 'formInfo' => '',
                 'clients' => $clients,
@@ -90,7 +95,7 @@ class CourseController extends AbstractController
                     }
                 }
             } else{
-                return $this->render('courses/formationManagement.html.twig', [
+                return $this->render($view, [
                     'idFormation' => $idFormation,
                     'formInfo' => '',
                     'clients' => $clients,
@@ -149,7 +154,29 @@ class CourseController extends AbstractController
                 }
                 return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => $course->getId()]);
             }
-            return $this->render('courses/formationManagement.html.twig', [
+
+            // this part for teacher view
+            $defaultData = ['mailFormateurText' => $course->getMailFormateurText()];
+            $formMail = $this->createFormBuilder($defaultData)
+                ->add('mailFormateurText', TextareaType::class,[
+                    'label' =>"Contenu de l'email",
+                    'required' => false
+                ])
+                ->getForm();
+            $formMail->handleRequest($request);
+            if ($formMail->isSubmitted() && $formMail->isValid()) {
+                $data = $formMail->getData();
+                if($data['mailFormateurText'] !== null) {
+                    $course->setMailFormateurText($data['mailFormateurText']);
+                } else {
+                    $course->setMailFormateurText('');
+                }
+
+                $entityManager->persist($course);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => $course->getId()]);
+            }
+            return $this->render($view, [
                 'formationForm' => $form->createView(),
                 'formation' => $course,
                 'trainees' => $formationUser,
@@ -160,7 +187,8 @@ class CourseController extends AbstractController
                 'clients' => $clients,
                 'type' => $type,
                 'courseName' => $course->getNomFormation(),
-                'selectedClient' => $selectedClient
+                'selectedClient' => $selectedClient,
+                'formMail' => $formMail->createView()
             ]);
         }
         return 'true';
@@ -266,7 +294,7 @@ class CourseController extends AbstractController
             $mailer->send($emailTraineer);
             /**************end send mail to Traineer and copy to adconseil******/
             //send specific mail to contact client
-            $client = $formation->getCustomer();
+            $client = $formation->getCustomers();
             if($client) {
                 /*********** Send copy of mail client to adconseil *****************/
                 $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
@@ -299,7 +327,7 @@ class CourseController extends AbstractController
                    $mailer->send($emailClient);
                 }
                 /**** send mail to contact administrative ***/
-                $contactAdmin = $formation->getCompany()->getContactAdministratif();
+                /*$contactAdmin = $formation->getCustomers()->getContactAdministratif();
                 if($contactAdmin) {
                     $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
                         'dataF' => $formation,
@@ -313,7 +341,7 @@ class CourseController extends AbstractController
                         ->html($htmlClient)
                         ->to($cl->getEmail());
                     $mailer->send($contactAdmin);
-                }
+                }*/
 
                 /**** fin send mail to all client ************/
 
@@ -443,7 +471,7 @@ class CourseController extends AbstractController
         return $this->render('emails/convocation_client.html.twig', [
             'dataF' => $formation,
             'traineesFormation' => $listOfTrainees,
-            'client' => $formation->getCustomer()[0]
+            'client' => $formation->getCustomers()[0]
         ]);
     }
 
@@ -480,7 +508,6 @@ class CourseController extends AbstractController
 
                             $user_existant = $entityManager->getRepository(Trainee::class)->findOneBy(array('email' => $email));
                             // make sure that the user does not already exists in your db
-
                             if (!$user_existant && $email != null)
                             {
                                 $student = new Trainee();
@@ -513,7 +540,7 @@ class CourseController extends AbstractController
                 }
             }
         }
-        $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
+       // $this->addFlash('success', "Les stagiaires sont enregistrés avec succès.");
         $this->saveInlog('AddTrainee',"Ajout des stagiaires à la formation: <b>".$formation->getNomFormation()."</b> à partir un fichier excel", $entityManager);
         return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $formation->getId()]);
     }
@@ -579,7 +606,7 @@ class CourseController extends AbstractController
         return $this->render('emails/alert_teacher.html.twig', [
             'dataF' => $formation,
             'traineesFormation' => $listOfTrainees,
-            'client' => $formation->getCustomer()[0]
+            'client' => $formation->getCustomers()[0]
         ]);
     }
 
@@ -599,7 +626,7 @@ class CourseController extends AbstractController
         $html = $this->renderView('emails/mail_alert_teacher.html.twig', [
             'dataF' => $formation,
             'traineesFormation' => $listOfTrainees,
-            'client' => $formation->getCustomer()[0]
+            'client' => $formation->getCustomers()[0]
         ]);
         $email = (new Email())
             ->from('formation@adconseil.org')
@@ -669,7 +696,7 @@ class CourseController extends AbstractController
             $evalTrainee = $form->getData();
             $entityManager->persist($evalTrainee);
             $entityManager->flush();
-            return $this->redirectToRoute('app_trainer_course', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $formation->getId()]);
+            return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $formation->getId()]);
         }
         $this->generate_pdf($formation,$trainee);
         return $this->render('trainees/evalutaion.html.twig', [

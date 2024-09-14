@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TraineeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use http\Client;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TraineeRepository::class)]
@@ -29,7 +30,10 @@ class Trainee
     private ?string $civility = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    private ?string $position= null;
+    private ?string $position = null;
+
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: "trainee")]
+    private ?Customer $customer = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateAdd = null;
@@ -100,15 +104,15 @@ class Trainee
         return $this;
     }
 
-    public function getDateAdd(): ?\DateTimeInterface
+    // getter and setter methods
+    public function getCustomer(): ?Customer
     {
-        return $this->dateAdd;
+        return $this->customer;
     }
 
-    public function setDateAdd(?\DateTimeInterface $dateAdd): self
+    public function setCustomer(Customer $customer): self
     {
-        $this->dateAdd = $dateAdd;
-
+        $this->customer = $customer;
         return $this;
     }
 }

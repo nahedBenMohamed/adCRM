@@ -99,7 +99,7 @@
 
 
                     , exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
-                    au sein de l'entreprise / l'organisme ...
+                    au sein de l'entreprise / l'organisme {% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }} {% endif %}
                     a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {{ dataF.dureeFormation|striptags|raw }} heures.								</p>
                 <p>
                     <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>

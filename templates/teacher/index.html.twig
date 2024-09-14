@@ -33,8 +33,8 @@
                                     <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
                                     <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
                                     <td>
-                                        <a href="{{ path('app_trainer_course', { 'idCompany':0,'idFormation': course.id }) }}" class="" title="modifier">
-                                            <img src="{{asset('assets/img/icon/eye-solid.svg')}}">
+                                        <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':course.type }) }}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
                                         {% set fill1 = '' %}
                                         {% set fill2 = '' %}

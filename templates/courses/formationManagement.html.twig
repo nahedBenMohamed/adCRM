@@ -104,7 +104,7 @@
                             {% if clients|length > 0 %}
                                 <label for="selectClient">Choisissez la liste des clients de cette formation</label>
                                 <!-- Table of clients-->
-                                <table class="table table-striped" id="tableClient">
+                                <table class="table table-striped datatable" id="tableClient">
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -363,6 +363,12 @@
                                                 <td>{{ stg.trainee.lastName }}</td>
                                                 <td>{{ stg.trainee.position }}</td>
                                                 <td class="td-action">
+                                                    <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
+                                                        Attestation
+                                                    </a>
+                                                    <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
+                                                        Certificat
+                                                    </a>
                                                     <a href="{{ path('app_edit_user_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
