@@ -47,6 +47,10 @@ class TraineeFormType extends AbstractType
                 'label' =>'Fonction',
                 'required' => false,
             ])
+            ->add('tel',   textType::class,[
+                'label' =>'Téléphone',
+                'required' => false,
+            ])
             ->add('customer',   EntityType::class, [
                 'class' => Customer::class,
                 'choice_label' => function($client) {

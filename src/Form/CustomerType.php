@@ -29,7 +29,7 @@ class CustomerType extends AbstractType
             ])
             ->add('email',   EmailType::class,[
                 'label' =>'Email',
-                'required' => false,
+                'required' => true,
             ])
             ->add('infoFilename', FileType::class, [
                 'label' => 'Fiche de liaison (PDF file)',

@@ -33,6 +33,13 @@
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
+                        {% if typeFormation =="intra" %}
+                            <div class="row mb-3">
+                                {{ form_row(registrationForm.tel,
+                                    {'attr': {'class': 'form-control form-control-user'}}
+                                ) }}
+                            </div>
+                        {% endif %}
                         <div class="row mb-3">
                             {{ form_row(registrationForm.customer,
                                 {'attr': {'class': 'form-control form-control-user'}}

@@ -331,6 +331,12 @@
                                                     <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="25" class="float-end">
                                                 </a>
                                             </div>
+                                            <div class="mx-lg-2">
+                                                <a href="{{path('app_download_certif_attestation',{'idFormation': formation.id })}}" title="Télecharger Attestations et certificats" class="float-end mt-4 mb-4" style="display: contents">
+                                                    <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="25" class="float-end">
+                                                </a>
+                                            </div>
+
                                         </div>
                                     </div>
                                     <div class="row hidden">
@@ -368,6 +374,9 @@
                                                     </a>
                                                     <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
                                                         Certificat
+                                                    </a>
+                                                    <a href="" data-bs-toggle="modal" data-bs-target="#updateTime" class="first-btn updateNbhour" title="Nombre d'heure" data-add-time-url="{{path('app_update_time',{ 'id': stg.trainee.id })}}">
+                                                        <img src="{{asset('assets/img/icon/clock-solid.svg')}}">
                                                     </a>
                                                     <a href="{{ path('app_edit_user_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
@@ -436,6 +445,23 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="updateTime" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Introduire le nombre d'heure </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="number" name="numberHour" id="nomberHourStudent" class="form-control" placeholder="Nombre d'heure de présence">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+                    <button type="button" class="btn btn-primary updateNumberhour">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     <script>
@@ -702,5 +728,29 @@
             sDom: 'Rfrtlip',
             dom: '<"top"f>rt<"bottom"ilp><"clear">'
         });*/
+        $('.updateNbhour').on('click', function () {
+            let updatetTimeURl = $(this).attr('data-add-time-url');
+            $('.updateNumberhour').attr('data-updateNumberhour', updatetTimeURl);
+        });
+        $(".updateNumberhour").click(function () {
+            let updatetTimeURl = $(this).attr('data-updateNumberhour');
+            $.ajax({
+                url: updatetTimeURl,
+                type: 'POST',
+                data: {},
+                contentType: 'text',
+                success: function(data)
+                {
+                    let newData = JSON.parse(data);
+                    if(newData) {
+                        $('#updateTime').modal('hide');
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                    }
+                },
+                error: function(jqXHR){
+                    // $('div.modal-content').html(jqXHR.responseText)
+                }
+            });
+        });
     </script>
 {% endblock %}

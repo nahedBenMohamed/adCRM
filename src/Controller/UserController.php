@@ -110,6 +110,11 @@ class UserController extends AbstractController
         $user = new Trainee();
         $form = $this->createForm(TraineeFormType::class, $user);
         $form->handleRequest($request);
+        $type = "";
+        if($formationId) {
+            $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $formationId]);
+            $type = $formation->getType();
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $entityManager->persist($user);
@@ -128,7 +133,8 @@ class UserController extends AbstractController
         }
         return $this->render('trainees/new_trainee.html.twig', [
             'registrationForm' => $form->createView(),
-            'formationId' => $formationId
+            'formationId' => $formationId,
+            'typeFormation' => $type
         ]);
     }
     /** Teacher CRUD */
@@ -172,6 +178,11 @@ class UserController extends AbstractController
     {
         $user = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
         $form = $this->createForm(TraineeFormType::class, $user);
+        $type = "";
+        if($idFormation) {
+            $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $idFormation]);
+            $type = $formation->getType();
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
@@ -184,6 +195,7 @@ class UserController extends AbstractController
         }
         return $this->render('trainees/update_trainee.html.twig', [
             'setTraineeForm' => $form->createView(),
+            'typeFormation' => $type
         ]);
     }
 
