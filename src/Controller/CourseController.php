@@ -17,10 +17,13 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Part\DataPart;
@@ -766,5 +769,56 @@ class CourseController extends AbstractController
         $output2 = $dompdf2->output();
         file_put_contents('documents/convocations/attestation_'.$formation->getId().'_'.$trainee->getId().'.pdf', $output2);
     }
+
+    #[Route('/downloadCertifAttestationByFormation/{idFormation}', name: 'app_download_certif_attestation')]
+    public function downloadTraineeByFormation(EntityManagerInterface $entityManager, $idFormation = null): Response
+    {
+        $course =  $entityManager->getRepository(Formation::class)->find($idFormation);
+        $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $course]);
+        $zip = new \ZipArchive();
+        $zipFileName = 'certif.zip';
+        $zipFilePath = sys_get_temp_dir() . '\\' . $zipFileName;
+
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== TRUE) {
+            return new Response('Failed to create zip file', 500);
+        }
+
+        foreach ($formationUser as $item) {
+            $certif = $this->generate_pdf_certif_attestation($course,$item, $entityManager);
+        }
+        // Specify the directory containing files
+        $directoryPath ='documents/convocations/';
+        // Iterate through the files in the directory
+        foreach (new \DirectoryIterator($directoryPath) as $fileInfo) {
+            if(strpos($fileInfo->getFilename(), 'certif')) {
+                if ($fileInfo->isFile()) {
+                // Add the file to the zip
+                $zip->addFile($fileInfo->getRealPath(), $fileInfo->getFilename());
+                }
+            }
+        }
+
+        $zip->close();
+        // Create a BinaryFileResponse to return the zip file
+        return new BinaryFileResponse($zipFilePath, 200, [
+            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
+        ]);
+
+        /* $fileName = "ExportEmails_".str_replace(' ','',$course->getNomFormation())."_".date('m-d-Y_hia').".xls";
+         $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+         $response->headers->set('Content-Disposition', 'attachment; filename=' . '"' . $fileName . '"');
+         $response->headers->set('Cache-Control','max-age=0');
+         return $response;*/
+        //$this->addFlash('success', "Les stagiaires sont télechargées avec succès.");
+        // return $this->redirectToRoute('app_trainees');
+    }
+    #[Route('/courses/updateTimeFormation/{id}', name: 'app_update_time')]
+    public function updateTimeFormation(EntityManagerInterface $entityManager, $id): Response
+    {
+        dump($id);
+        exit();
+
+    }
+
 
 }

@@ -9,7 +9,6 @@ use http\Client;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TraineeRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cette email')]
 class Trainee
 {
     #[ORM\Id]
@@ -31,8 +30,10 @@ class Trainee
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $position = null;
+    #[ORM\Column(length: 60, nullable: true)]
+    private ?string $tel = null;
 
-    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: "trainee")]
+    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ['remove'], inversedBy: "trainee")]
     private ?Customer $customer = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -101,6 +102,17 @@ class Trainee
     public function setPosition(?string $position): self
     {
         $this->position = $position;
+        return $this;
+    }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?string $tel): self
+    {
+        $this->tel = $tel;
         return $this;
     }
 
