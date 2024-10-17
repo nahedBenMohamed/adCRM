@@ -6,7 +6,6 @@ use App\Repository\TraineeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use http\Client;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TraineeRepository::class)]
 class Trainee
