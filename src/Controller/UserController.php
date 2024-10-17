@@ -264,17 +264,11 @@ class UserController extends AbstractController
     {
         $trainee = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
         //find if trainee is affected to formation
-        $traineeFormation = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
         $object = new \stdClass();
-        if ($traineeFormation) {
-            $object->status = false;
-            $object->message = "Ce stagiaire est inscrit dans une formation et il est impossible de le supprimer.";
-        } else {
-            $entityManager->remove($trainee);
-            $entityManager->flush();
-            $object->status = true;
-            $object->message = "Le stagiaire est supprimé avec succès";
-        }
+        $entityManager->remove($trainee);
+        $entityManager->flush();
+        $object->status = true;
+        $object->message = "Le stagiaire est supprimé avec succès";
         return new Response(json_encode($object));
     }
     #[Route('/teacher/delete/{id}', name: 'app_delete_teacher')]

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Entity\Formation;
+use App\Entity\Trainee;
 use App\Form\CustomerType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -106,13 +107,17 @@ class CustomerController extends AbstractController
     public function deleteCustomer(EntityManagerInterface $entityManager, $id): Response
     {
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
+        $traineebyCustomers = $entityManager->getRepository(Trainee::class)->findBy(['customer' => $customer]);
         $object = new \stdClass();
-
+        foreach ($traineebyCustomers as $tr) {
+            $tr->removeCustomer($customer);
+            $entityManager->persist($tr);
+        }
+        $entityManager->flush();
         $entityManager->remove($customer);
         $entityManager->flush();
         $object->status = true;
         $object->message = "Le client est supprimé avec succès";
-
         return new Response(json_encode($object));
     }
 
