@@ -775,42 +775,88 @@ class CourseController extends AbstractController
     {
         $course =  $entityManager->getRepository(Formation::class)->find($idFormation);
         $formationUser = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $course]);
-        $zip = new \ZipArchive();
-        $zipFileName = 'certif.zip';
-        $zipFilePath = sys_get_temp_dir() . '\\' . $zipFileName;
-
-        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== TRUE) {
-            return new Response('Failed to create zip file', 500);
-        }
-
         foreach ($formationUser as $item) {
-            $certif = $this->generate_pdf_certif_attestation($course,$item, $entityManager);
+            $this->generate_pdf_certif_attestation($course,$item, $entityManager);
         }
         // Specify the directory containing files
         $directoryPath ='documents/convocations/';
+        // Files to include in the ZIP
+        $files = [];
         // Iterate through the files in the directory
         foreach (new \DirectoryIterator($directoryPath) as $fileInfo) {
-            if(strpos($fileInfo->getFilename(), 'certif')) {
-                if ($fileInfo->isFile()) {
-                // Add the file to the zip
-                $zip->addFile($fileInfo->getRealPath(), $fileInfo->getFilename());
-                }
+            if(str_contains($fileInfo->getFilename(), 'certif_'.$idFormation)) {
+               // if ($fileInfo->isFile()) {
+                    // Add the file to the zip
+                    $files[$fileInfo->getRealPath()] = $fileInfo->getFilename();
+               // }
             }
         }
 
-        $zip->close();
-        // Create a BinaryFileResponse to return the zip file
-        return new BinaryFileResponse($zipFilePath, 200, [
-            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
-        ]);
+        $zipFilePath = sys_get_temp_dir() . '/manual_certif.zip';
 
-        /* $fileName = "ExportEmails_".str_replace(' ','',$course->getNomFormation())."_".date('m-d-Y_hia').".xls";
-         $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-         $response->headers->set('Content-Disposition', 'attachment; filename=' . '"' . $fileName . '"');
-         $response->headers->set('Cache-Control','max-age=0');
-         return $response;*/
-        //$this->addFlash('success', "Les stagiaires sont télechargées avec succès.");
-        // return $this->redirectToRoute('app_trainees');
+        // Open a new file pointer to write the ZIP
+        $zipFile = fopen($zipFilePath, 'w');
+        if (!$zipFile) {
+            return new Response('Could not create ZIP file.', 500);
+        }
+        // Add the ZIP file structure
+        //fwrite($zipFile, $this->createZipFileHeader($files));
+
+        // Close the ZIP file
+        fclose($zipFile);
+
+        // Serve the ZIP file as a download
+       // return $this->downloadZipFile($zipFilePath, 'manual_certif.zip');
+        $downloadFileName ='manual_certif.zip';
+        if (!file_exists($zipFilePath)) {
+            throw $this->createNotFoundException('The file does not exist.');
+        }
+
+        // Serve the file as a download
+        return new BinaryFileResponse($zipFilePath, 200, [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment;filename="' . $downloadFileName . '"'
+        ]);
+    }
+
+    /**
+     * Create a simple ZIP file header.
+     */
+    private function createZipFileHeader(array $files): string
+    {
+        $zipData = '';
+
+        foreach ($files as $filePath => $filename) {
+            if (file_exists($filePath)) {
+                $fileContent = file_get_contents($filePath);
+                // Generate ZIP file structure (simplified)
+                $zipData .= "File: $filename\n" . $fileContent;
+            }
+        }
+
+        return $zipData;
+    }
+    public function downloadZip(string $zipFilePath, string $downloadFileName): StreamedResponse
+    {
+        // Ensure the file exists
+        if (!file_exists($zipFilePath)) {
+            throw $this->createNotFoundException('The file does not exist.');
+        }
+
+        $response = new StreamedResponse(function() use ($zipFilePath) {
+            readfile($zipFilePath);
+        });
+
+        // Set headers to force download
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Disposition', 'attachment;filename="' . $downloadFileName . '"');
+        $response->headers->set('Content-length', filesize($zipFilePath));
+
+        // Optionally delete the file after streaming it
+        $response->sendHeaders();
+        register_shutdown_function('unlink', $zipFilePath);
+
+        return $response;
     }
     #[Route('/courses/updateTimeFormation/{id}', name: 'app_update_time')]
     public function updateTimeFormation(EntityManagerInterface $entityManager, $id): Response

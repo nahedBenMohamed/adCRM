@@ -91,7 +91,7 @@
         </tr>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
-                <p style="font-size: 13px">Je soussigné(e) {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %}, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493,
+                <p style="font-size: 13px">Je soussigné(e) {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }}{% endif %}, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493,
                     certifie que
                     {% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}
                     {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %}
@@ -99,7 +99,7 @@
 
 
                     , exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
-                    au sein de l'entreprise / l'organisme {% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }} {% endif %},
+                    au sein de l'entreprise / l'organisme{% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }} {% endif %},
                     a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {{ dataF.dureeFormation|striptags|raw }} heures.								</p>
                 <p>
                     <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>
@@ -119,22 +119,22 @@
                     <thead>
                     <tr>
                         <td style="border: 0px solid #ccc; padding: 5px"></td>
-                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;">Peu ou pas maîtrisé</td>
-                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;">Maîtrisé partiellement</td>
-                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;">Maîtrisé totalement</td>
-                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;">N.C.</td>
+                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;background: #d2d2d2;">Peu ou pas maîtrisé</td>
+                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;background: #d2d2d2;">Maîtrisé partiellement</td>
+                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;background: #d2d2d2;">Maîtrisé totalement</td>
+                        <td style="border: 1px solid #ccc; padding: 5px 0px;font-size: 14px;background: #d2d2d2;">N.C.</td>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td style="border: 1px solid #ccc; padding: 5px;font-size: 14px;">Connaissances</td>
+                        <td style="border: 1px solid #ccc; padding: 5px;font-size: 14px;background: #d2d2d2;">Connaissances</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.knowledge is defined and evalTrainee.knowledge == '0' %} X {% endif %}</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.knowledge is defined and evalTrainee.knowledge == '1' %} X {% endif %}</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.knowledge is defined and evalTrainee.knowledge == '2' %} X {% endif %}</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.knowledge is defined and evalTrainee.knowledge == '3' %} X {% endif %}</td>
                     </tr>
                     <tr>
-                        <td style="border: 1px solid #ccc; padding: 5px;font-size: 14px;">Compétences</td>
+                        <td style="border: 1px solid #ccc; padding: 5px;font-size: 14px;background: #d2d2d2;">Compétences</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.skills is defined and evalTrainee.skills == '0' %} X {% endif %}</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.skills is defined and evalTrainee.skills == '1' %} X {% endif %}</td>
                         <td style="border: 1px solid #ccc; padding: 5px">{% if evalTrainee.skills is defined and evalTrainee.skills == '2' %} X {% endif %}</td>
@@ -142,9 +142,11 @@
                     </tr>
                     </tbody>
                 </table>
-                {% if evalTrainee.comments is defined and  evalTrainee.comments|length >0 %}
                 <p><b style="text-align: left">Commentaires</b></p>
-                <p>{{ evalTrainee.comments }}</p>
+                {% if evalTrainee.comments is defined and  evalTrainee.comments|length >0 %}
+                <p style="height: 100px; border: 2px solid #ccc; padding: 5px">{{ evalTrainee.comments }}</p>
+                    {% else %}
+                    <p style="height: 100px; border: 2px solid #ccc; padding: 5px"></p>
                 {% endif %}
                 <p></p>
                 <p style="font-size: 13px">

@@ -33,7 +33,7 @@ class Trainee
     #[ORM\Column(length: 60, nullable: true)]
     private ?string $tel = null;
 
-    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ['remove'], inversedBy: "trainee")]
+    #[ORM\ManyToOne(targetEntity: Customer::class, cascade: ["remove","persist"], inversedBy: "trainee")]
     private ?Customer $customer = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -127,4 +127,10 @@ class Trainee
         $this->customer = $customer;
         return $this;
     }
+    public function removeCustomer(Customer $customer): self
+    {
+        $this->customer = null;
+        return $this;
+    }
+
 }
