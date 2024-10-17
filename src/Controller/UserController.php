@@ -263,8 +263,16 @@ class UserController extends AbstractController
     public function deleteTrainee(EntityManagerInterface $entityManager, $id): Response
     {
         $trainee = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
+        $traineeFormation = $entityManager->getRepository(TraineeFormation::class)->findBy(['trainee' => $trainee]);
         //find if trainee is affected to formation
         $object = new \stdClass();
+        if($traineeFormation) {
+            foreach ($traineeFormation as $trfor) {
+                 $entityManager->remove($trfor);
+            }
+            $entityManager->flush();
+        }
+
         $entityManager->remove($trainee);
         $entityManager->flush();
         $object->status = true;
