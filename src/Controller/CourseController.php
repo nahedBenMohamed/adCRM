@@ -667,11 +667,13 @@ class CourseController extends AbstractController
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
         $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $this->generate_pdf($formation,$trainee);
         return $this->render('emails/attestation.html.twig', [
             'dataF' => $formation,
             'dataS' => $trainee,
-            'evalTrainee' => $evalTrainee
+            'evalTrainee' => $evalTrainee,
+            'traineesFormation' => $traineesFormation
         ]);
     }
 
@@ -680,10 +682,12 @@ class CourseController extends AbstractController
     {
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $this->generate_pdf($formation,$trainee);
         return $this->render('emails/certif.html.twig', [
             'dataF' => $formation,
-            'dataS' => $trainee
+            'dataS' => $trainee,
+            'traineesFormation' => $traineesFormation
         ]);
     }
 
@@ -745,13 +749,15 @@ class CourseController extends AbstractController
     {
 
         $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
+        $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $options = new Options();
         $options->set('defaultFont', 'Roboto');
         //create certif
         $dompdf = new Dompdf($options);
         $html = $this->renderView('emails/certif.html.twig', [
             'dataF' => $formation,
-            'dataS' => $trainee
+            'dataS' => $trainee,
+            'traineesFormation' => $traineesFormation
         ]);
         $dompdf->loadHtml($html);
         $dompdf->render();
@@ -762,7 +768,8 @@ class CourseController extends AbstractController
         $html2 = $this->renderView('emails/attestation.html.twig', [
             'dataF' => $formation,
             'dataS' => $trainee,
-            'evalTrainee' => $evalTrainee
+            'evalTrainee' => $evalTrainee,
+            'traineesFormation' => $traineesFormation
         ]);
         $dompdf2->loadHtml($html2);
         $dompdf2->render();
@@ -858,11 +865,17 @@ class CourseController extends AbstractController
 
         return $response;
     }
-    #[Route('/courses/updateTimeFormation/{id}', name: 'app_update_time')]
-    public function updateTimeFormation(EntityManagerInterface $entityManager, $id): Response
+    #[Route('/courses/updateTimeFormation/{id}/{formationId}', name: 'app_update_time')]
+    public function updateTimeFormation(Request $request,EntityManagerInterface $entityManager, $id, $formationId): Response
     {
-        dump($id);
-        exit();
+        $trainee = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $formationId]);
+        $traineeFormation = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee,'formation' => $formation]);
+        $nbHour = $request->request->get('nbHour');
+        $traineeFormation->setNbHour($nbHour);
+        $entityManager->persist($traineeFormation);
+        $entityManager->flush();
+        return new Response('true');
 
     }
 
