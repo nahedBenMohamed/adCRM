@@ -75,9 +75,15 @@ class CourseController extends AbstractController
         if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
             $view = "teacher/showFormation.html.twig";
         }
+        if($type == 'inter') {
+            $view = "courses/formationManagementInter.html.twig";
+        }
         if ($idFormation ==  null){
+            $course = new Formation();
             //add company info
+            $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
             return $this->render($view, [
+                'formationForm' => $form->createView(),
                 'idFormation' => '',
                 'formInfo' => '',
                 'clients' => $clients,
@@ -98,7 +104,9 @@ class CourseController extends AbstractController
                     }
                 }
             } else{
+                $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
                 return $this->render($view, [
+                    'formationForm' => $form->createView(),
                     'idFormation' => $idFormation,
                     'formInfo' => '',
                     'clients' => $clients,
@@ -666,7 +674,7 @@ class CourseController extends AbstractController
     {
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
         $trainee =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
-        $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee]);
+        $evalTrainee = $entityManager->getRepository(TraineeFormation::class)->findOneBy(['trainee' => $trainee,'formation' => $formation]);
         $traineesFormation =  $entityManager->getRepository(TraineeFormation::class)->findOneBy(['formation' => $formation, 'trainee' => $trainee]);
         $this->generate_pdf($formation,$trainee);
         return $this->render('emails/attestation.html.twig', [

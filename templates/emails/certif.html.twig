@@ -91,16 +91,13 @@
         </tr>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
-                <p style="font-size: 13px">Je soussigné(e) Je soussigné(e) {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %}, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493,
+                <p style="font-size: 13px">Je soussigné(e){% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }}{% endif %}, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493,
                     certifie que
                     {% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}
                     {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %}
-                    {% if dataS.firstName is defined %} {{ dataS.firstName }} {% endif %}
-
-
-                    , exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
+                    {% if dataS.firstName is defined %} {{ dataS.firstName }}{% endif %}, exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
                     au sein de l'entreprise / l'organisme {% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }} {% endif %}
-                    a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {{ traineesFormation.nbHour|striptags|raw }} heures.								</p>
+                    a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {% if (traineesFormation.nbHour|striptags|raw > 0) %}{{ traineesFormation.nbHour|striptags|raw }} {% else %} {{ dataF.dureeFormation|striptags|raw }}{% endif %}heures.								</p>
                 <p>
                     <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>
                 </p>

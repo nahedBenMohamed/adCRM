@@ -23,6 +23,7 @@
                                 <th scope="col">Nom de client</th>
                                 <th scope="col">Contact Administratif</th>
                                 <th scope="col">Email</th>
+                                <th scope="col">Tél</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -32,6 +33,7 @@
                                     <td>{{customer.name}}</td>
                                     <td>{{customer.contactAdministrative}}</td>
                                     <td>{{customer.email}}</td>
+                                    <td>{{customer.tel}}</td>
                                     <td>
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_customer',{ 'id': customer.id })}}">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">

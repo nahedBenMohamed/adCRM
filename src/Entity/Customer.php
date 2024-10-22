@@ -30,6 +30,9 @@ class Customer
     #[ORM\Column(type: 'string',nullable: true)]
     private ?string $infoFilename = "";
 
+    #[ORM\Column(length: 60, nullable: true)]
+    private ?string $tel = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,4 +96,16 @@ class Customer
 
         return $this;
     }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?string $tel): self
+    {
+        $this->tel = $tel;
+        return $this;
+    }
+
 }
