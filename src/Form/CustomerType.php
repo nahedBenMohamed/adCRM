@@ -31,6 +31,10 @@ class CustomerType extends AbstractType
                 'label' =>'Email',
                 'required' => true,
             ])
+            ->add('tel',   textType::class,[
+                'label' =>'Téléphone',
+                'required' => false,
+            ])
             ->add('infoFilename', FileType::class, [
                 'label' => 'Fiche de liaison (PDF file)',
 
