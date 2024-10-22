@@ -17,7 +17,7 @@ class TraineeFormation
     #[ORM\JoinColumn(name: "formation_id", referencedColumnName: "id")]
     private $formation;
 
-    #[ORM\ManyToOne(targetEntity: "Trainee", cascade: ["remove","persist"], inversedBy: "TraineeFormation")]
+    #[ORM\ManyToOne(targetEntity: "Trainee", inversedBy: "TraineeFormation")]
     #[ORM\JoinColumn(name: "trainee_id", referencedColumnName: "id")]
     private $trainee;
 
