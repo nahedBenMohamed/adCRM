@@ -332,7 +332,7 @@
                                                     <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="25" class="float-end">
                                                 </a>
                                             </div>
-                                            <div class="mx-lg-2">
+                                            <div class="mx-lg-2 hidden">
                                                 <a href="{{path('app_download_certif_attestation',{'idFormation': formation.id })}}" title="Télecharger Attestations et certificats" class="float-end mt-4 mb-4" style="display: contents">
                                                     <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="25" class="float-end">
                                                 </a>
@@ -373,8 +373,14 @@
                                                     <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
                                                         Attestation
                                                     </a>
+                                                    <a href="{{path('app_download_attestation_tr',{'idFormation': formation.id,'idTrainee': stg.trainee.id })}}" title="Télecharger Attestation" class="first-btn">
+                                                        <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="10">
+                                                    </a>
                                                     <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
                                                         Certificat
+                                                    </a>
+                                                    <a href="{{path('app_download_certif_tr',{'idFormation': formation.id,'idTrainee': stg.trainee.id })}}" title="Télecharger Certificat" class="first-btn">
+                                                        <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="10">
                                                     </a>
                                                     <a href="" data-bs-toggle="modal" data-bs-target="#updateTime" class="first-btn updateNbhour" title="Nombre d'heure {{ stg.nbHour }}" data-nbHour="{{ stg.nbHour }}" data-add-time-url="{{path('app_update_time',{ 'id': stg.trainee.id, 'formationId' : idFormation })}}">
                                                         <img src="{{asset('assets/img/icon/clock-solid.svg')}}">
