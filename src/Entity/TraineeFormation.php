@@ -27,6 +27,9 @@ class TraineeFormation
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $sendCertif = false;
 
+    #[ORM\Column(type: 'integer',nullable: true)]
+    private ?int $nbHour = 0;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateAffectationFormation = null;
 
@@ -144,6 +147,18 @@ class TraineeFormation
     public function setSendCertif(?string $sendCertif): self
     {
         $this->sendCertif = $sendCertif;
+        return $this;
+    }
+
+    public function getNbHour(): ?int
+    {
+        return $this->nbHour;
+    }
+
+    public function setNbHour(int $nbHour): self
+    {
+        $this->nbHour = $nbHour;
+
         return $this;
     }
 }
