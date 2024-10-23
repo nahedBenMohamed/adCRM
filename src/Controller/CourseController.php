@@ -83,6 +83,35 @@ class CourseController extends AbstractController
             $course = new Formation();
             //add company info
             $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $course = $form->getData();
+                $this->saveInlog('addFormation',"Création d'une nouvelle Formation: ". $course->getNomFormation(), $entityManager);
+                if ($request->request->get('otherProgram') != '') {
+                    //create new link
+                    $link = new Link();
+                    $link->setName('lien statique');
+                    $link->setValue($request->request->get('otherProgram'));
+                    $entityManager->persist($link);
+                    $entityManager->flush();
+                    //affect the new link to the new course
+                    $course->setLinkToProgram($link);
+                }
+                if($request->request->get('otherLinkFormateur') != '') {
+                    $link = new Link();
+                    $link->setName('lien statique');
+                    $link->setValue($request->request->get('otherLinkFormateur'));
+                    $entityManager->persist($link);
+                    $entityManager->flush();
+                    //affect the new link to the new course
+                    $course->setLinkformateur($link);
+                }
+                $course->setType($type);
+                $entityManager->persist($course);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => $course->getId()]);
+            }
+
             return $this->render($view, [
                 'formationForm' => $form->createView(),
                 'idFormation' => '',
