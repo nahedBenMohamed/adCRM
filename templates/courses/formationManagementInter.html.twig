@@ -85,12 +85,12 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
+                <button class="nav-link" id="tab-0" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
                     Entreprise/Organisme
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link " id="tab-2" data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+                <button class="nav-link " id="tab-2"  {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
@@ -98,7 +98,7 @@
         </ul>
         <div class="tab-content" id="myTabContent">
 
-            <div class="tab-pane fade tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+            <div class="tab-pane fade active show tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
                 <div class="card">
                     <div class="card-body">
                             {{ form_start(formationForm) }}
@@ -224,7 +224,6 @@
             <div class="tab-pane fade tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
                     <div class="card-body">
-                        {% if type == "inter" %}
                             {% if clients|length > 0 %}
                                 <label for="selectClient">Choisissez la liste des clients de cette formation</label>
                                 <!-- Table of clients-->
@@ -259,28 +258,6 @@
                                     </div>
                                 </div>
                             {% endif %}
-                        {% else %}
-                            <div class="row mb-3">
-                                <div class="col-sm-6">
-                                    <h3 class="card-title">Choisir le client de la formation</h3>
-                                    <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
-                                        <option selected="" value="0">Choisir un client de la liste</option>
-                                        {% for client in clients %}
-                                            <option value="{{ client.id }}" {% if client.id in selectedClient %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto me-auto">
-                                </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-primary" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
-                                        Suivant
-                                    </button>
-                                </div>
-                            </div>
-                        {% endif %}
                         <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
                         <div class="row">
                             <div class="col-auto">
@@ -292,7 +269,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                 <div class="card">
@@ -332,7 +308,7 @@
                                                     <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="25" class="float-end">
                                                 </a>
                                             </div>
-                                            <div class="mx-lg-2">
+                                            <div class="mx-lg-2 hidden">
                                                 <a href="{{path('app_download_certif_attestation',{'idFormation': formation.id })}}" title="Télecharger Attestations et certificats" class="float-end mt-4 mb-4" style="display: contents">
                                                     <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="25" class="float-end">
                                                 </a>
@@ -373,8 +349,14 @@
                                                     <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
                                                         Attestation
                                                     </a>
+                                                    <a href="{{path('app_download_attestation_tr',{'idFormation': formation.id,'idTrainee': stg.trainee.id })}}" title="Télecharger Attestation" class="first-btn">
+                                                        <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="10">
+                                                    </a>
                                                     <a href="{{ path('app_trainee_see_certif', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir Certificat" class="" target="_blank">
                                                         Certificat
+                                                    </a>
+                                                    <a href="{{path('app_download_certif_tr',{'idFormation': formation.id,'idTrainee': stg.trainee.id })}}" title="Télecharger Certificat" class="first-btn">
+                                                        <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="10">
                                                     </a>
                                                     <a href="" data-bs-toggle="modal" data-bs-target="#updateTime" class="first-btn updateNbhour" title="Nombre d'heure {{ stg.nbHour }}" data-nbHour="{{ stg.nbHour }}" data-add-time-url="{{path('app_update_time',{ 'id': stg.trainee.id, 'formationId' : idFormation })}}">
                                                         <img src="{{asset('assets/img/icon/clock-solid.svg')}}">

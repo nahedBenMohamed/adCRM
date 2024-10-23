@@ -23,6 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -82,6 +83,35 @@ class CourseController extends AbstractController
             $course = new Formation();
             //add company info
             $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $course = $form->getData();
+                $this->saveInlog('addFormation',"Création d'une nouvelle Formation: ". $course->getNomFormation(), $entityManager);
+                if ($request->request->get('otherProgram') != '') {
+                    //create new link
+                    $link = new Link();
+                    $link->setName('lien statique');
+                    $link->setValue($request->request->get('otherProgram'));
+                    $entityManager->persist($link);
+                    $entityManager->flush();
+                    //affect the new link to the new course
+                    $course->setLinkToProgram($link);
+                }
+                if($request->request->get('otherLinkFormateur') != '') {
+                    $link = new Link();
+                    $link->setName('lien statique');
+                    $link->setValue($request->request->get('otherLinkFormateur'));
+                    $entityManager->persist($link);
+                    $entityManager->flush();
+                    //affect the new link to the new course
+                    $course->setLinkformateur($link);
+                }
+                $course->setType($type);
+                $entityManager->persist($course);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => $course->getId()]);
+            }
+
             return $this->render($view, [
                 'formationForm' => $form->createView(),
                 'idFormation' => '',
@@ -887,5 +917,43 @@ class CourseController extends AbstractController
 
     }
 
+    #[Route('/downloadCertifByFormationTr/{idFormation}/{idTrainee}', name: 'app_download_certif_tr')]
+    public function downloadCertifByFormationTr(EntityManagerInterface $entityManager, $idFormation = null, $idTrainee= null): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee   =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $this->generate_pdf_certif_attestation($formation,$trainee, $entityManager);
+        $certificat = $this->getParameter('certif_file_directory').'/certif_'.$idFormation.'_'.$idTrainee.'.pdf';
+        $attestation = $this->getParameter('certif_file_directory').'/attestation_'.$formation->getId().'_'.$idTrainee.'.pdf';
+        // Create a BinaryFileResponse to download the file
+        $response = new BinaryFileResponse($certificat);
+
+        // Set headers to download the file instead of displaying it
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'certif_'.$trainee->getFirstName().'.pdf'
+        );
+
+        return $response;
+    }
+
+    #[Route('/downloadAttestationByFormationTr/{idFormation}/{idTrainee}', name: 'app_download_attestation_tr')]
+    public function downloadAttestationTr(EntityManagerInterface $entityManager, $idFormation = null, $idTrainee= null): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $trainee   =  $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $idTrainee]);
+        $this->generate_pdf_certif_attestation($formation,$trainee, $entityManager);
+        $attestation = $this->getParameter('certif_file_directory').'/attestation_'.$formation->getId().'_'.$idTrainee.'.pdf';
+        // Create a BinaryFileResponse to download the file
+        $response = new BinaryFileResponse($attestation);
+
+        // Set headers to download the file instead of displaying it
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'attestation_'.$trainee->getFirstName().'.pdf'
+        );
+
+        return $response;
+    }
 
 }
