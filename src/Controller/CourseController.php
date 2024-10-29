@@ -54,15 +54,9 @@ class CourseController extends AbstractController
     #[Route('/coursesInter', name: 'app_courses_inter')]
     public function viewCoursesInter(EntityManagerInterface $entityManager): Response
     {
-        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
-        $interCourses = [];
-        foreach ($courses as $course) {
-            if( count($course->getCustomers()) > 1) {
-                $interCourses[] = $course;
-            }
-        }
+        $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'inter'],['id' => 'DESC']);
         return $this->render('courses/index.html.twig', [
-            'courses' => $interCourses,
+            'courses' => $courses,
             'alowAddNew' => false,
             'idCompany' => null
         ]);
@@ -465,13 +459,20 @@ class CourseController extends AbstractController
     {
         $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $id]);
         $traineeFormation = $entityManager->getRepository(TraineeFormation::class)->findBy(['formation' => $formation]);
+
         $deleted = 0;
         foreach ($traineeFormation as $item) {
+            //delete customer for the trainer
            $entityManager->remove($item);
-           $entityManager->flush();
            $deleted ++;
         }
-
+        $FormationCustomers = $formation->getCustomers();
+        if (!empty($FormationCustomers)) {
+            foreach($FormationCustomers as $customer) {
+                $formation->removeCustomer($customer);
+            }
+        }
+        $entityManager->flush();
         if($deleted == count($traineeFormation)) {
             $entityManager->remove($formation);
             $entityManager->flush();

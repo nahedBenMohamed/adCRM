@@ -124,19 +124,16 @@ class CustomerController extends AbstractController
     #[Route('/customerCourse', name: 'app_customer_course')]
     public function customerForFormation(EntityManagerInterface $entityManager): Response
     {
-        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
+        $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'intra'],['id' => 'DESC']);
         $customerWithCourses = [];
         foreach ($courses as $formation) {
-            if($formation->getType() == 'intra') {
-                $customers = $formation->getCustomers();
-                if($customers[0]) {
-                    $customers[0]->formationId = $formation->getId();
-                    if(!in_array($customerWithCourses, array($customers[0]))) {
-                        $customerWithCourses[] = $customers[0];
-                    }
+            $customers = $formation->getCustomers();
+            if($customers[0]) {
+                $customers[0]->formationId = $formation->getId();
+                if(!in_array($customerWithCourses, array($customers[0]))) {
+                    $customerWithCourses[] = $customers[0];
                 }
             }
-
         }
         return $this->render('customer/customerWithFormation.html.twig', [
             'customers' => $customerWithCourses,
