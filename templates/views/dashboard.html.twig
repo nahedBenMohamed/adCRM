@@ -150,7 +150,7 @@
                 document.addEventListener("DOMContentLoaded", () => {
                     new ApexCharts(document.querySelector("#reportsChart"), {
                     series: [{
-                        name: 'Tous les stagiaires',
+                        name: 'Nombre des stagiaires',
                         data: valTabs,
                     }],
                     chart: {
@@ -197,11 +197,11 @@
                     <div class="card info-card revenue-card">
 
                         <div class="card-body">
-                            <h5 class="card-title small">Nombre d'entreprises / organismes</h5>
+                            <h5 class="card-title small">Nombre des formateurs</h5>
 
                             <div class="text-center">
                                 <div class="ps-3">
-                                    <h6>{{ nbOrganisme }}</h6>
+                                    <h6>{{ nbTeachers }}</h6>
                                 </div>
                             </div>
                         </div>

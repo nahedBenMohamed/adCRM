@@ -32,6 +32,7 @@ class TraineeFormationRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('du')
             ->select('du.dateConvocation, COUNT(du.id) AS total')
             ->where('du.sendConvocation = 1')
+            ->orderBy('du.dateConvocation', 'ASC')
             ->groupBy('du.dateConvocation')
             ->getQuery()
             ->execute();

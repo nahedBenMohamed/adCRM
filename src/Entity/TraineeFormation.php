@@ -30,10 +30,10 @@ class TraineeFormation
     #[ORM\Column(type: 'integer',nullable: true)]
     private ?int $nbHour = 0;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateAffectationFormation = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateConvocation = null;
 
     #[ORM\Column(length: 255, nullable: true)]

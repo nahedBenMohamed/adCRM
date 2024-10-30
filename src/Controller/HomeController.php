@@ -10,6 +10,7 @@ use App\Entity\Link;
 use App\Entity\Log;
 use App\Entity\Trainee;
 use App\Entity\TraineeFormation;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,11 +83,12 @@ class HomeController extends AbstractController
         $valTab = [];
         foreach ($allTraineeConvo as $key => $trainee ) {
             if ($trainee['dateConvocation'] != null) {
-                array_push($datesTab, $trainee['dateConvocation']->format('Y-m-d h:i:s'));
+                array_push($datesTab, $trainee['dateConvocation']->format('Y-m-d'));
                 array_push($valTab, $trainee['total']);
             }
         }
-        $nbOrganisme = count($entityManager->getRepository(Company::class)->findAll());
+
+        $nbTeachers = count($entityManager->getRepository(User::class)->findUsers('ROLE_TEACHER'));
         $nbLink = count($entityManager->getRepository(Link::class)->findAll());
         $nbContactClient = count($entityManager->getRepository(Customer::class)->findAll());
         $nbFinanceur = count($entityManager->getRepository(Financier::class)->findAll());
@@ -101,12 +103,10 @@ class HomeController extends AbstractController
             'log' => $log,
             'datesTab' => $datesTab,
             'valTab' => $valTab,
-            'nbOrganisme' =>$nbOrganisme,
             'nbLink' => $nbLink,
             'nbContactClient' => $nbContactClient,
-            'nbFinanceur' => $nbFinanceur
-
-
+            'nbFinanceur' => $nbFinanceur,
+            'nbTeachers' => $nbTeachers
         ]);
     }
 
