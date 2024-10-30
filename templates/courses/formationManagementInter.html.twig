@@ -80,17 +80,17 @@
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
+                <button class="nav-link {% if courseName == "" %} active {% endif %} " id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
                     Informations générales
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-0" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
+                <button class="nav-link {% if courseName != "" and selectedClient|length == 0 %} active {% endif %} " id="tab-0" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
                     Entreprise/Organisme
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link " id="tab-2"  {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+                <button class="nav-link {% if courseName != "" and selectedClient|length > 0 %} active {% endif %} " id="tab-2"  {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
@@ -98,7 +98,7 @@
         </ul>
         <div class="tab-content" id="myTabContent">
 
-            <div class="tab-pane fade active show tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+            <div class="tab-pane fade {% if courseName == "" %} active show  {% endif %}tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
                 <div class="card">
                     <div class="card-body">
                             {{ form_start(formationForm) }}
@@ -213,7 +213,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <button type="submit" class="btn btn-primary">
-                                        Suivant
+                                        Enregistrer
                                     </button>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@
                         </div>
                 </div>
             </div>
-            <div class="tab-pane fade tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
+            <div class="tab-pane fade {% if courseName != "" and selectedClient|length == 0 %} active show  {% endif %} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
                     <div class="card-body">
                             {% if clients|length > 0 %}
@@ -253,7 +253,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <button class="btn btn-primary" id="create-formation-interne" data-url="{{path('app_add_customers')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
-                                            Suivant
+                                            Enregistrer
                                         </button>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
+            <div class="tab-pane fade {% if courseName != "" and selectedClient|length > 0 %} active show  {% endif %}" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                 <div class="card">
                     {% if formation is defined %}
                         <div class="card">
@@ -415,7 +415,7 @@
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary">
-                                                Terminer
+                                                Enregistrer
                                             </button>
                                         </div>
                                     </div>

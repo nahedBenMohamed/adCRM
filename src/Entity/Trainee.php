@@ -56,7 +56,7 @@ class Trainee
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->id;
     }
 
     public function getFirstName(): ?string
