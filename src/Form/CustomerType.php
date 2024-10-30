@@ -20,7 +20,7 @@ class CustomerType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label'=>'Nom',
+                'label'=>'Client',
                 'required' => true
             ])
             ->add('contactAdministrative', TextType::class, [
