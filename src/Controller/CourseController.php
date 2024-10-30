@@ -258,8 +258,10 @@ class CourseController extends AbstractController
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-       $mailer->send($email);
+        $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
+        $dateConv = new \DateTime();
+        $traineesFormation->setDateConvocation($dateConv);
         $entityManager->persist($traineesFormation);
         $formation->setStatus(1);
         $entityManager->persist($formation);
@@ -422,6 +424,8 @@ class CourseController extends AbstractController
             if ($userInFormation == null) {
                 $TraineeFormation->setTrainee($user);
                 $TraineeFormation->setFormation($formation);
+                $dateAffectation = new \DateTime();
+                $TraineeFormation->setDateAffectationFormation($dateAffectation);
                 $entityManager->persist($TraineeFormation);
                 $entityManager->flush();
                 $object = new \stdClass();
