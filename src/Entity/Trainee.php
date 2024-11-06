@@ -15,7 +15,7 @@ class Trainee
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 180, nullable: false)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
