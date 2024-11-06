@@ -40,7 +40,7 @@ class FormationFormType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'form-control js-datepicker', 'placeholder' => 'Date de début'],
+                'attr' => ['class' => 'form-control js-datepicker', 'placeholder' => 'Date de début', 'autocomplete' => 'off'],
             ])
 
             ->add('dateFinFormation',   DateType::class, [
@@ -48,7 +48,7 @@ class FormationFormType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'dd/MM/yyyy',
-                'attr' => ['class' => 'form-control js-datepicker', 'placeholder' => 'Date de fin'],
+                'attr' => ['class' => 'form-control js-datepicker', 'placeholder' => 'Date de fin', 'autocomplete' => 'off'],
             ])
 
             ->add('dureeFormation',   TextType::class, [

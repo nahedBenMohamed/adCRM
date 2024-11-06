@@ -66,6 +66,9 @@
 {% endblock %}
 {% block body %}
     <section class="section" style="margin-top: -75px;">
+        <div id="loader" class="loader-overlay" style="display: none">
+            <div class="loader"></div>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <h3 class="card-title">
@@ -93,70 +96,41 @@
                 <button class="nav-link {% if courseName != "" %} active {% endif %}" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+                <button class="nav-link" id="tab-3" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
             </li>
+            {% if courseName and trainees|length > 0%}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-4" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#evalchaud" type="button" role="tab" aria-controls="evalchaud" aria-selected="false">Evaluation à chaud</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-5" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#evalfroid" type="button" role="tab" aria-controls="evalfroid" aria-selected="false">Evaluation à froid</button>
+            </li>
+            {% endif %}
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade {% if selectedClient|length == 0  %} show active {% endif%} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
                     <div class="card-body">
-                        {% if type == "inter" %}
-                            {% if clients|length > 0 %}
-                                <label for="selectClient">Choisissez la liste des clients de cette formation</label>
-                                <!-- Table of clients-->
-                                <table class="table table-striped datatable" id="tableClient">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th scope="col">Nom de client</th>
-                                        <th scope="col">Email</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <h3 class="card-title">Choisir le client de la formation</h3>
+                                <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
+                                    <option selected="" value="0">Choisir un client de la liste</option>
                                     {% for client in clients %}
-                                        <tr>
-                                            <td><input type="checkbox" class="item-checkbox" value="{{ client.id  }}" {% if client.id in selectedClient %} checked {% endif %}></td>
-                                            <td>{{ client.name }}</td>
-                                            <td>
-                                                {{ client.email }}
-                                            </td>
-                                        </tr>
+                                        <option value="{{ client.id }}" {% if client.id in selectedClient %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
                                     {% endfor %}
-                                    </tbody>
-                                </table>
-                                <!-- End Table of clients -->
-                                <div class="row">
-                                    <div class="col-auto me-auto">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button class="btn btn-primary" id="create-formation-interne" data-url="{{path('app_add_customers')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
-                                            Suivant
-                                        </button>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="row mb-3">
-                                <div class="col-sm-6">
-                                    <h3 class="card-title">Choisir le client de la formation</h3>
-                                    <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
-                                        <option selected="" value="0">Choisir un client de la liste</option>
-                                        {% for client in clients %}
-                                            <option value="{{ client.id }}" {% if client.id in selectedClient %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                                </select>
                             </div>
-                            <div class="row">
-                                <div class="col-auto me-auto">
-                                </div>
-                                <div class="col-auto">
-                                    <button class="btn btn-primary" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
-                                        Suivant
-                                    </button>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto me-auto">
                             </div>
-                        {% endif %}
+                            <div class="col-auto">
+                                <button class="btn btn-primary" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
+                                    Suivant
+                                </button>
+                            </div>
+                        </div>
                         <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
                         <div class="row">
                             <div class="col-auto">
@@ -449,7 +423,90 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="tab-pane fade" id="evalchaud" role="tabpanel" aria-labelledby="tab-4">
+                <div class="card">
+                    <div class="card-body">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row mb-3">
+                                               <label>Sujet de mail</label>
+                                                <input type="text" class="form-control" name="subjectEvalChaud" id="subjectEvalChaud"  value="Evaluation à chaud commanditaire formation '{{ courseName }}'">
+                                            </div>
+                                            <div class="row mb-3">
+                                               <label>Contenu de mail</label>
+                                                <textarea class="" name="evaluationChaud" id="evaluationChaud">
+                                                   Bonjour,
+                                                    Nous avons réalisé l'action de formation « {{ courseName }} » pour votre compte,
+                                                    et nous espérons qu'elle a répondu à vos attentes.
+                                                    En votre qualité de commanditaire, nous vous serions très reconnaissants de prendre trois minutes
+                                                    pour compléter ce questionnaire d'évaluation de la formation
+                                                    Evaluation de la satisfaction des commanditaires de nos formations
+                                                    Vos retours seront précieux dans le cadre de notre processus d'amélioration continue.
+                                                    Nous vous remercions sincèrement et restons à votre écoute pour tout besoin complémentaire.
+
+                                                    Bien cordialement
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-auto me-auto">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-primary" id="submit-eval-chaud" data-url="{{path('app_send_eval_chaud')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
+                                                Envoyer Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="evalfroid" role="tabpanel" aria-labelledby="tab-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row mb-3">
+                                            <label>Sujet de mail</label>
+                                            <input type="text" class="form-control" name="subjectEvalFroid" id="subjectEvalFroid" value="Evaluation à froid client '{{ courseName }}'">
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label>Contenu de mail</label>
+                                            <textarea class="" name="evaluationFroid" id="evaluationFroid">
+                                                Bonjour,
+                                                Il y a quelques mois, nous avons eu le plaisir de réaliser pour votre compte la formation "{{ courseName }}" des 12 et 13/09/2022
+                                                A présent, nous souhaiterions évaluer avec du recul le degré de réponse de cette prestation à vos attentes et vos besoins.
+                                                Pour cela, nous vous serions reconnaissants de prendre trois minutes pour compléter ce questionnaire d'évaluation à froid :
+                                                Evaluation à froid commanditaire
+                                                Vos retours seront précieux dans le cadre de notre processus d'amélioration continue.
+                                                Nous vous remercions sincèrement et restons à votre écoute pour tout besoin complémentaire.
+
+                                                Bien cordialement,
+                                             </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                        <div class="col-auto me-auto">
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-primary" id="submit-eval-froid" data-url="{{path('app_send_eval_froid')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
+                                                Envoyer Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                 </div>
+            </div>
     </section>
     <div class="modal fade" id="updateTime" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -698,34 +755,18 @@
                 //save client for the new formations
                 let addCustomer = $(this).attr('data-url');
                 let formationId = $(this).attr('data-formationId');
-                console.log(tabClient.length)
-                console.log(JSON.stringify(tabClient));
-                console.log(addCustomer);
-                console.log(formationId);
-                var tabClientParam = [];
                 let typeFormation = "intra";
-                if(tabClient.length === 0) {
-                    const checkboxes = document.querySelectorAll('.item-checkbox');
-
-                    // Récupérer uniquement celles qui sont cochées
-                    const checkedItems = Array.from(checkboxes)
-                        .filter(checkbox => checkbox.checked)
-                        .map(checkbox => checkbox.value); // Vous pouvez récupérer une autre propriété comme 'id' ou 'name'
-                    tabClient = checkedItems;
-                    typeFormation = "inter";
-                }
-
-               $.ajax({
-                    url: addCustomer,
-                    type: 'POST',
-                    data: {'selectedItems': JSON.stringify(tabClient), 'formationId': formationId},
-                    success: function(data)
-                    {
-                        if(data !== 'false') {
+                if (tabClient.length > 0) {
+                    $.ajax({
+                        url: addCustomer,
+                        type: 'POST',
+                        data: {'selectedItems': JSON.stringify(tabClient), 'formationId': formationId, 'typeFormation' : typeFormation},
+                        success: function(data)
+                        {
                             window.location.href = '/courses/courseManagement/'+typeFormation+'/'+data;
                         }
-                    }
-                });
+                    });
+                }
             })
         });
         /*const datatable = document.getElementById('tableClient');
@@ -759,6 +800,58 @@
                 error: function(jqXHR){
                 }
             });
+        });
+        tinymce.init({
+            selector: '#evaluationChaud',
+            plugins: 'lists link image', // Only add essential plugins
+            toolbar: 'bold italic | alignleft aligncenter alignright | bullist numlist'
+        });
+        $('#submit-eval-chaud').on('click', function () {
+            $('.loader-overlay').css('display','flex')
+            let urlEvalChaud = $(this).attr('data-url');
+            let formationId = $(this).attr('data-formationId');
+            let subject = $('#subjectEvalChaud').val();
+            // Get content from TinyMCE editor
+            const content = tinymce.get('evaluationChaud').getContent();
+            if(formationId) {
+                $.ajax({
+                    url: urlEvalChaud,
+                    type: 'POST',
+                    data: {'subject': subject,'text': content, 'formationId': formationId},
+                    success: function(data)
+                    {
+                        $('.loader-overlay').css('display','none')
+                        window.location.reload()
+                    }
+                });
+            }
+        })
+        tinymce.init({
+            selector: '#evaluationFroid',
+            plugins: 'lists link image', // Only add essential plugins
+            toolbar: 'bold italic | alignleft aligncenter alignright | bullist numlist'
+        });
+        $('#submit-eval-froid').on('click', function () {
+            $('.loader-overlay').css('display','flex')
+            let urlEvalFroid = $(this).attr('data-url');
+            let formationId = $(this).attr('data-formationId');
+            let subject = $('#subjectEvalFroid').val();
+            const content = tinymce.get('evaluationFroid').getContent();
+            if(formationId) {
+                $.ajax({
+                    url: urlEvalFroid,
+                    type: 'POST',
+                    data: {'subject': subject,'text': content, 'formationId': formationId},
+                    success: function(data)
+                    {  $('.loader-overlay').css('display','none')
+                        window.location.reload()
+                    }
+                });
+            }
+        })
+        $("button[type='submit']").on("click", function(event) {
+            // Show the loader
+            $('.loader-overlay').css('display','flex')
         });
     </script>
 {% endblock %}
