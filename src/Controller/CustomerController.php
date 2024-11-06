@@ -181,7 +181,7 @@ class CustomerController extends AbstractController
                     ->html($text)
                     ->to('nahedbenmohamed57@gmail.com');
                 //$mailer->send($email);
-                $this->addFlash('success', "L'evaluation à chaud a été envoyée au client avec succès.");
+               // $this->addFlash('success', "L'evaluation à chaud a été envoyée au client avec succès.");
             }
         }
         return new Response('false');
@@ -205,7 +205,7 @@ class CustomerController extends AbstractController
                     ->html($text)
                     ->to('nahedbenmohamed57@gmail.com');
                 //$mailer->send($email);
-                $this->addFlash('success', "L'evaluation à froid a été envoyée au client avec succès.");
+               // $this->addFlash('success', "L'evaluation à froid a été envoyée au client avec succès.");
             }
         }
         return new Response('true');
