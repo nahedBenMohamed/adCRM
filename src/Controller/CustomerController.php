@@ -179,8 +179,8 @@ class CustomerController extends AbstractController
                     ->from('formation@adconseil.org')
                     ->subject($subject)
                     ->html($text)
-                    ->to('nahedbenmohamed57@gmail.com');
-                //$mailer->send($email);
+                    ->to($emailCustomer);
+                $mailer->send($email);
                // $this->addFlash('success', "L'evaluation à chaud a été envoyée au client avec succès.");
             }
         }
@@ -203,8 +203,8 @@ class CustomerController extends AbstractController
                     ->from('formation@adconseil.org')
                     ->subject($subject)
                     ->html($text)
-                    ->to('nahedbenmohamed57@gmail.com');
-                //$mailer->send($email);
+                    ->to($emailCustomer);
+                $mailer->send($email);
                // $this->addFlash('success', "L'evaluation à froid a été envoyée au client avec succès.");
             }
         }
