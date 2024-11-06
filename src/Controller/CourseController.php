@@ -121,7 +121,10 @@ class CourseController extends AbstractController
             $selectedClient = [];
             if($formationClient) {
                 if ($type == 'intra') {
-                    $selectedClient[] = $formationClient[0]->getId();
+                    foreach ($formationClient as $client) {
+                        $selectedClient[] = $client->getId();
+                    }
+
                 } else {
                     foreach ($formationClient as $client) {
                         $selectedClient[] = $client->getId();
@@ -596,6 +599,7 @@ class CourseController extends AbstractController
 
         $itemIds =  json_decode($request->request->get('selectedItems'), true);
         $formationId = $request->request->get('formationId');
+        $typeFormation = $request->request->get('typeFormation');
         if($formationId) {
             $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
         } else {

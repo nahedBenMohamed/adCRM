@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -159,5 +161,53 @@ class CustomerController extends AbstractController
             'courses' => $customerCourses,
             'alowAddNew' => true
         ]);
+    }
+
+    #[Route('/sendEvalChaud', name: 'app_send_eval_chaud')]
+    public function sendEvalChaud(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
+    {
+        $subject = $request->request->get('subject');
+        $text = $request->request->get('text');
+        $formationId = $request->request->get('formationId');
+        $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
+        if($formation) {
+            $customer = $formation->getCustomers();
+            //sen mail for all customers
+            foreach ($customer as $item) {
+                $emailCustomer = $item->getEmail();
+                $email = (new Email())
+                    ->from('formation@adconseil.org')
+                    ->subject($subject)
+                    ->html($text)
+                    ->to('nahedbenmohamed57@gmail.com');
+                //$mailer->send($email);
+                $this->addFlash('success', "L'evaluation à chaud a été envoyée au client avec succès.");
+            }
+        }
+        return new Response('false');
+    }
+
+    #[Route('/sendEvalFroid', name: 'app_send_eval_froid')]
+    public function sendEvalFroid(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer): Response
+    {
+        $subject = $request->request->get('subject');
+        $text = $request->request->get('text');
+        $formationId = $request->request->get('formationId');
+        $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
+        if($formation) {
+            $customer = $formation->getCustomers();
+            //sen mail for all customers
+            foreach ($customer as $item) {
+                $emailCustomer = $item->getEmail();
+                $email = (new Email())
+                    ->from('formation@adconseil.org')
+                    ->subject($subject)
+                    ->html($text)
+                    ->to('nahedbenmohamed57@gmail.com');
+                //$mailer->send($email);
+                $this->addFlash('success', "L'evaluation à froid a été envoyée au client avec succès.");
+            }
+        }
+        return new Response('true');
     }
 }
