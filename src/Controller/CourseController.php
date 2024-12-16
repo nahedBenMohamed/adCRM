@@ -246,7 +246,7 @@ class CourseController extends AbstractController
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-        //$mailer->send($email);
+        $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $dateConv = new \DateTime();
         $traineesFormation->setDateConvocation($dateConv);
