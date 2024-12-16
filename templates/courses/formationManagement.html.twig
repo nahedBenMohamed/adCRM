@@ -72,7 +72,7 @@
         <div class="row">
             <div class="col-md-6">
                 <h3 class="card-title">
-                    Détaille de la formation {{ courseName }}
+                    Détails de la formation {{ courseName }}
                 </h3>
             </div>
             {% if formation is defined %}
@@ -117,7 +117,7 @@
                                 <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
                                     <option selected="" value="0">Choisir un client de la liste</option>
                                     {% for client in clients %}
-                                        <option value="{{ client.id }}" {% if client.id in selectedClient %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
+                                        <option value="{{ client.id }}">{{ client.name }} / {{ client.email }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -126,7 +126,7 @@
                             <div class="col-auto me-auto">
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-primary" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
+                                <button class="btn btn-primary btn-save" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
                                     Suivant
                                 </button>
                             </div>
@@ -134,7 +134,7 @@
                         <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
                         <div class="row">
                             <div class="col-auto">
-                                <a href="{{ path('app_customer_add') }}" class="btn btn-primary" target="_blank">
+                                <a href="{{path('app_customer_add',{ 'idFormation': idFormation })}}" class="btn btn-primary">
                                     Ajouter client
                                 </a>
                             </div>
@@ -849,8 +849,9 @@
                 });
             }
         })
-        $("button[type='submit']").on("click", function(event) {
+        $(".btn-save").on("click", function(event) {
             // Show the loader
+            console.log(this.checkValidity())
             $('.loader-overlay').css('display','flex')
         });
     </script>

@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Company;
 use App\Entity\Customer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

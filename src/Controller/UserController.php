@@ -189,7 +189,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             if ($idFormation !== null) {
-                //return $this->redirectToRoute('app_courses_edit', ['id' => $idFormation]);
+                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => $idFormation]);
             }
             return $this->redirectToRoute('app_trainees');
         }

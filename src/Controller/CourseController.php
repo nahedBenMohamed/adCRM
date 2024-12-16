@@ -2,14 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Formation;
 use App\Entity\Link;
 use App\Entity\Log;
 use App\Entity\Trainee;
 use App\Entity\TraineeFormation;
-use App\Form\CompanyFormType;
 use App\Form\FormationFormType;
 use App\Form\FormationInfoFormType;
 use App\Form\TraineeFormationEvalType;
@@ -37,19 +35,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CourseController extends AbstractController
 {
-  
-
-    #[Route('/courses', name: 'app_courses')]
-    public function viewCourses(EntityManagerInterface $entityManager): Response
-    {
-        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
-        return $this->render('courses/index.html.twig', [
-            'courses' => $courses,
-            'alowAddNew' => false,
-            'idCompany' => null
-        ]);
-
-    }
 
     #[Route('/coursesInter', name: 'app_courses_inter')]
     public function viewCoursesInter(EntityManagerInterface $entityManager): Response
@@ -57,15 +42,14 @@ class CourseController extends AbstractController
         $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'inter'],['id' => 'DESC']);
         return $this->render('courses/index.html.twig', [
             'courses' => $courses,
-            'alowAddNew' => false,
-            'idCompany' => null
+            'alowAddNew' => false
         ]);
 
     }
     #[Route('/courses/courseManagement/{type}/{idFormation}', name: 'app_courses_manage')]
-    public function manageCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger,$type = null, $idCompany = null, $idFormation = null ): Response
+    public function manageCourse(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger,$type = null, $idFormation = null ): Response
     {
-        $clients = $entityManager->getRepository(Customer::class)->findAll();
+        $clients = $entityManager->getRepository(Customer::class)->findBy([], ['id' => 'DESC']);
         $view = "courses/formationManagement.html.twig";
         if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
             $view = "teacher/showFormation.html.twig";
@@ -75,7 +59,6 @@ class CourseController extends AbstractController
         }
         if ($idFormation ==  null){
             $course = new Formation();
-            //add company info
             $form = $this->createForm(FormationFormType::class, $course, ['allow_extra_fields' =>true]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -113,7 +96,8 @@ class CourseController extends AbstractController
                 'clients' => $clients,
                 'type' => $type,
                 'courseName' => '',
-                'selectedClient' => []
+                'selectedClient' => [],
+                'formationClient' => []
             ]);
         } else {
             $course =  $entityManager->getRepository(Formation::class)->find($idFormation);
@@ -139,7 +123,8 @@ class CourseController extends AbstractController
                     'clients' => $clients,
                     'type' => $type,
                     'courseName' => '',
-                    'selectedClient' => []
+                    'selectedClient' => [],
+                    'formationClient' => $formationClient
                 ]);
             }
             $courseStatus = 'new';
@@ -220,12 +205,12 @@ class CourseController extends AbstractController
                 'trainees' => $formationUser,
                 'formInfo' => $formInfo->createView(),
                 'allTrainees' => $AllTrainees,
-                'idCompany' => $idCompany,
                 'idFormation' =>  $course->getId(),
                 'clients' => $clients,
                 'type' => $type,
                 'courseName' => $course->getNomFormation(),
                 'selectedClient' => $selectedClient,
+                'formationClient' => $course->getCustomers(),
                 'formMail' => $formMail->createView()
             ]);
         }
@@ -261,7 +246,7 @@ class CourseController extends AbstractController
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
             ->to($trainee->getEmail());
-        $mailer->send($email);
+        //$mailer->send($email);
         $traineesFormation->setSendConvocation(true);
         $dateConv = new \DateTime();
         $traineesFormation->setDateConvocation($dateConv);
@@ -269,7 +254,7 @@ class CourseController extends AbstractController
         $formation->setStatus(1);
         $entityManager->persist($formation);
         $entityManager->flush();
-        $this->addFlash('success', "La convocation a été envoyée avec succès.");
+       // $this->addFlash('success', "La convocation a été envoyée avec succès.");
         $this->saveInlog('EnvoiConnvForOneStag_'.$idFormation,"Envoi d'une Convocation à la formation ".$formation->getNomFormation().'. Email de stagiaire:'.$trainee->getEmail(), $entityManager);
         return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
     }
@@ -789,7 +774,7 @@ class CourseController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', "Le certificat et l'attestation ont a été envoyée avec succès.");
         $this->saveInlog('EnvoiCertifAttestationForOneStag_'.$idFormation,"Envoi de certificat et l'attestation à la formation ".$formation->getNomFormation().'. Email de stagiaire:'.$trainee->getEmail(), $entityManager);
-        return $this->redirectToRoute('app_trainer_course', ['idCompany' => $formation->getCompany()->getId(), 'idFormation' => $idFormation]);
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $formation->getId()]);
     }
 
     public function generate_pdf_certif_attestation($formation, $trainee, $entityManager)
@@ -963,6 +948,54 @@ class CourseController extends AbstractController
         );
 
         return $response;
+    }
+
+    #[Route('/courses/addOneCustomerToformation', name: 'app_add_one_customers')]
+    public function addOneCustomerToformation(Request $request,  EntityManagerInterface $entityManager): Response
+    {
+
+        $itemId = json_decode($request->request->get('selectedItem'), true);
+        $formationId = $request->request->get('formationId');
+
+        if ($formationId && $itemId) {
+            $formation  = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $formationId]);
+            $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id'=> $itemId]);
+            if(!empty($formation->getCustomers())) {
+                foreach($formation->getCustomers() as $cust) {
+                    if ($cust->getId() == $itemId) {
+                        $object = new \stdClass();
+                        $object->status = false;
+                        $object->message = 'Client existe déjà';
+                        return new Response(json_encode($object));
+                    }
+                }
+            }
+            if ($customer != null) {
+                $formation->addCustomer($customer);
+                $entityManager->persist($formation);
+                $entityManager->flush();
+                $object = new \stdClass();
+                $object->status = true;
+                $object->id = $customer->getId();
+                $object->name = $customer->getName()?$customer->getName():'';
+                $object->email = $customer->getEmail()?$customer->getEmail(): '';
+                return new Response(json_encode($object));
+            }
+        }
+        return new Response('false');
+    }
+
+    #[Route('/courses/deleteTCustomerFromFormation/{idFormation}/{idCustomer}', name: 'app_customer_formation_delete')]
+    public function deleteCustomerFromFormation(Request $request, EntityManagerInterface $entityManager, $idFormation, $idCustomer ): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id'=> $idFormation]);
+        $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id'=> $idCustomer]);
+        if(!empty($formation->getCustomers())) {
+            $formation->removeCustomer($customer);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
+
     }
 
 }
