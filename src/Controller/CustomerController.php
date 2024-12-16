@@ -26,12 +26,23 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/customer/add', name: 'app_customer_add')]
-    public function add(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger): Response
+    #[Route('/customer/add/{idFormation}', name: 'app_customer_add')]
+    public function add(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger, $idFormation = null): Response
     {
         $customer = new Customer();
         $form = $this->createForm(CustomerType::class,$customer);
         $form->handleRequest($request);
+        /*$referer = $request->headers->get('referer');
+        $redirectToFormation = false;
+        $type = "inter";
+        if($referer && str_contains($referer, 'courses/courseManagement/intra')) {
+            $redirectToFormation = true;
+            $type = "intra";
+        }
+        if($referer && str_contains($referer, 'courses/courseManagement/inter')) {
+            $redirectToFormation = true;
+            $type= "inter";
+        }*/
         if ($form->isSubmitted() && $form->isValid()) {
             $infoFile = $form->get('infoFilename')->getData();
             // this condition is needed because the 'brochure' field is not required
@@ -59,6 +70,13 @@ class CustomerController extends AbstractController
             $customer = $form->getData();
             $entityManager->persist($customer);
             $entityManager->flush();
+            if($idFormation) {
+                $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $idFormation]);
+                return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
+            }
+            /*if($redirectToFormation) {
+                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => null]);
+            }*/
             return $this->redirectToRoute('app_customer');
         }
 

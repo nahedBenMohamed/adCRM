@@ -66,10 +66,13 @@
 {% endblock %}
 {% block body %}
     <section class="section" style="margin-top: -75px;">
+        <div id="loader" class="loader-overlay" style="display: none">
+            <div class="loader"></div>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <h3 class="card-title">
-                    Détaille de la formation {{ courseName }}
+                    Détails de la formation {{ courseName }}
                 </h3>
             </div>
             {% if formation is defined %}
@@ -95,6 +98,14 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
             </li>
+            {% if courseName and trainees|length > 0%}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-4" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#evalchaud" type="button" role="tab" aria-controls="evalchaud" aria-selected="false">Evaluation à chaud</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-5" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#evalfroid" type="button" role="tab" aria-controls="evalfroid" aria-selected="false">Evaluation à froid</button>
+                </li>
+            {% endif %}
         </ul>
         <div class="tab-content" id="myTabContent">
 
@@ -225,47 +236,48 @@
                 <div class="card">
                     <div class="card-body">
                             {% if clients|length > 0 %}
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
                                 <label for="selectClient">Choisissez la liste des clients de cette formation</label>
+                                <select class="js-example-basic-single selectClient" name="selectClient" data-url="{{path('app_add_one_customers')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} style="width: 100%">
+                                    <option selected="" value="0">Choisir un client de la liste</option>
+                                    {% for client in clients %}
+                                        <option value="{{ client.id }}">{{ client.name }} / {{ client.email }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="add-client-alert mt-2">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 offset-md-3 d-inline-flex list-btn">
+                                <div class="mx-lg-2">
+                                    <a href="{{path('app_customer_add',{ 'idFormation': idFormation })}}" title="Ajouter client à la formation"> <img src="/assets/img/icon/user-plus-solid.svg" width="40"></a>
+                                </div>
+                            </div>
+                        </div>
                                 <!-- Table of clients-->
-                                <table class="table table-striped datatable" id="tableClient">
+                                <table class="table table-striped" id="tableClient" style="margin-top: 10px;">
                                     <thead>
                                     <tr>
-                                        <th></th>
-                                        <th scope="col">Nom de client</th>
-                                        <th scope="col">Email</th>
+                                        <th scope="col" style="background: #132438 ; color: #fff">Nom de client</th>
+                                        <th scope="col" style="background: #132438 ; color: #fff">Email</th>
+                                        <th style="background: #132438; color: #fff"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for client in clients %}
+                                    {% for client in formationClient %}
                                         <tr>
-                                            <td><input type="checkbox" class="item-checkbox" value="{{ client.id  }}" {% if client.id in selectedClient %} checked {% endif %}></td>
                                             <td>{{ client.name }}</td>
                                             <td>
                                                 {{ client.email }}
+                                            </td>
+                                            <td class='td-action'>
+                                                <a href='{{path('app_customer_formation_delete',{ 'idFormation': idFormation,'idCustomer': client.id})}}' class='first-btn' title='supprimer'><img src='/assets/img/icon/circle-delete-solid-red.svg'></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
-                                <!-- End Table of clients -->
-                                <div class="row">
-                                    <div class="col-auto me-auto">
-                                    </div>
-                                    <div class="col-auto">
-                                        <button class="btn btn-primary" id="create-formation-interne" data-url="{{path('app_add_customers')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
-                                            Enregistrer
-                                        </button>
-                                    </div>
-                                </div>
                             {% endif %}
-                        <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
-                        <div class="row">
-                            <div class="col-auto">
-                                <a href="{{ path('app_customer_add') }}" class="btn btn-primary" target="_blank">
-                                    Ajouter client
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -298,10 +310,11 @@
                                                 <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
                                             </div>
                                             <div class="mx-lg-2 send-conv {% if trainees|length == 0 %} hidden {% endif %}">
-                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" Envoyer convocation à tous les stagiaires> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
+                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" class="btn-save" title="Envoyer convocation à tous les stagiaires"> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
                                             </div>
                                             <div class="mx-lg-2">
-                                                <a href="{{path('app_teacher_send_alert',{ 'idFormation': formation.id })}}" title="Rappel des informations clés"> <img src="{{asset('assets/img/icon/reply-all-solid.svg')}}" width="40"></a>
+                                                <a href="{{path('app_teacher_send_alert',{ 'idFormation': formation.id })}}" class="btn-save"
+                                                   title="Rappel des informations clés"> <img src="{{asset('assets/img/icon/reply-all-solid.svg')}}" width="40"></a>
                                             </div>
                                             <div class="mx-lg-2">
                                                 <a href="{{path('app_download_trainee_by_formation',{'idFormation': formation.id })}}" title="Télecharger stagiaires" class="float-end mt-4 mb-4" style="display: contents">
@@ -310,7 +323,7 @@
                                             </div>
                                             <div class="mx-lg-2 hidden">
                                                 <a href="{{path('app_download_certif_attestation',{'idFormation': formation.id })}}" title="Télecharger Attestations et certificats" class="float-end mt-4 mb-4" style="display: contents">
-                                                    <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="25" class="float-end">
+                                                    <img src="{{asset('assets/img/icon/download-solid.svg')}}" width="25" class="float-end btn-save">
                                                 </a>
                                             </div>
 
@@ -364,7 +377,7 @@
                                                     <a href="{{ path('app_edit_user_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="first-btn" title="modifier">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Envoyer convocation" class="">
+                                                    <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn btn-save" title="Envoyer convocation" class="">
                                                         <img src="{{asset('assets/img/icon/envelope-solid.svg')}}">
                                                     </a>
                                                     <a href="{{ path('app_trainee_see_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir convocation" class="" target="_blank">
@@ -426,6 +439,90 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-pane fade" id="evalchaud" role="tabpanel" aria-labelledby="tab-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row mb-3">
+                                            <label>Sujet de mail</label>
+                                            <input type="text" class="form-control" name="subjectEvalChaud" id="subjectEvalChaud"  value="Evaluation à chaud commanditaire formation '{{ courseName }}'">
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label>Contenu de mail</label>
+                                            <textarea class="" name="evaluationChaud" id="evaluationChaud">
+                                                   Bonjour,
+                                                    Nous avons réalisé l'action de formation « {{ courseName }} » pour votre compte,
+                                                    et nous espérons qu'elle a répondu à vos attentes.
+                                                    En votre qualité de commanditaire, nous vous serions très reconnaissants de prendre trois minutes
+                                                    pour compléter ce questionnaire d'évaluation de la formation
+                                                    Evaluation de la satisfaction des commanditaires de nos formations
+                                                    Vos retours seront précieux dans le cadre de notre processus d'amélioration continue.
+                                                    Nous vous remercions sincèrement et restons à votre écoute pour tout besoin complémentaire.
+
+                                                    Bien cordialement
+                                                </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-auto me-auto">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary" id="submit-eval-chaud" data-url="{{path('app_send_eval_chaud')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
+                                            Envoyer Email
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="evalfroid" role="tabpanel" aria-labelledby="tab-5">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row mb-3">
+                                            <label>Sujet de mail</label>
+                                            <input type="text" class="form-control" name="subjectEvalFroid" id="subjectEvalFroid" value="Evaluation à froid client '{{ courseName }}'">
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label>Contenu de mail</label>
+                                            <textarea class="" name="evaluationFroid" id="evaluationFroid">
+                                                Bonjour,
+                                                Il y a quelques mois, nous avons eu le plaisir de réaliser pour votre compte la formation "{{ courseName }}" des 12 et 13/09/2022
+                                                A présent, nous souhaiterions évaluer avec du recul le degré de réponse de cette prestation à vos attentes et vos besoins.
+                                                Pour cela, nous vous serions reconnaissants de prendre trois minutes pour compléter ce questionnaire d'évaluation à froid :
+                                                Evaluation à froid commanditaire
+                                                Vos retours seront précieux dans le cadre de notre processus d'amélioration continue.
+                                                Nous vous remercions sincèrement et restons à votre écoute pour tout besoin complémentaire.
+
+                                                Bien cordialement,
+                                             </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-auto me-auto">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary" id="submit-eval-froid" data-url="{{path('app_send_eval_froid')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
+                                            Envoyer Email
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
     <div class="modal fade" id="updateTime" tabindex="-1" style="display: none;" aria-hidden="true">
@@ -440,7 +537,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
-                    <button type="button" class="btn btn-primary updateNumberhour">Valider</button>
+                    <button type="button" class="btn btn-primary updateNumberhour btn-save">Valider</button>
                 </div>
             </div>
         </div>
@@ -666,19 +763,39 @@
                 console.log(selecedItem)
                 //let addTrainee = $(this).attr('data-url');
                 if(parseInt(selecedItem) !== 0) {
-                    tabClient[0] = selecedItem;
-                    // tabClient.push(parseInt(selecedItem))
-                    // $('#selectedClientItem').append('<li>'+ $(".selectClient :selected").text()+'</li>');
+                    let addClient = $(this).attr('data-url');
+                    let formationId = $(this).attr('data-formationId');
+                    $.ajax({
+                        url: addClient,
+                        type: 'POST',
+                        data: {'selectedItem': selecedItem, 'formationId': formationId},
+                        success: function(data)
+                        {
+                            if(data !== false) {
+                                let newData = JSON.parse(data);
+                                if(newData && newData.status == true) {
+                                    let deleteLink = '/courses/deleteCustomerFromFormation/'+formationId+'/'+newData.id;
+                                    $('#tableClient').find('tbody').append("<tr><td>"+newData.name+"</td><td>"+newData.email+"</td>" +
+                                        "<td class='td-action'>"+
+                                        "<a href='"+ deleteLink+"' class='first-btn' title='supprimer'>" +
+                                        "<img src='/assets/img/icon/circle-delete-solid-red.svg'></a></td></tr>");
+                                } else {
+                                    //show alert exist already
+                                    $('.add-client-alert').append('<div class="alert alert-danger alert-dismissible fade show" role="alert"> ' +
+                                        newData.message+
+                                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ' +
+                                        '</div>');
+                                }
+
+                            }
+                        }
+                    });;
                 }
             });
             $('#create-formation-interne').on('click', function () {
                 //save client for the new formations
                 let addCustomer = $(this).attr('data-url');
                 let formationId = $(this).attr('data-formationId');
-                console.log(tabClient.length)
-                console.log(JSON.stringify(tabClient));
-                console.log(addCustomer);
-                console.log(formationId);
                 var tabClientParam = [];
                 let typeFormation = "intra";
                 if(tabClient.length === 0) {
@@ -736,6 +853,57 @@
                 error: function(jqXHR){
                 }
             });
+        });
+        tinymce.init({
+            selector: '#evaluationChaud',
+            plugins: 'lists link image', // Only add essential plugins
+            toolbar: 'bold italic | alignleft aligncenter alignright | bullist numlist'
+        });
+        $('#submit-eval-chaud').on('click', function () {
+            $('.loader-overlay').css('display','flex')
+            let urlEvalChaud = $(this).attr('data-url');
+            let formationId = $(this).attr('data-formationId');
+            let subject = $('#subjectEvalChaud').val();
+            // Get content from TinyMCE editor
+            const content = tinymce.get('evaluationChaud').getContent();
+            if(formationId) {
+                $.ajax({
+                    url: urlEvalChaud,
+                    type: 'POST',
+                    data: {'subject': subject,'text': content, 'formationId': formationId},
+                    success: function(data)
+                    {
+                        $('.loader-overlay').css('display','none')
+                        window.location.reload()
+                    }
+                });
+            }
+        })
+        tinymce.init({
+            selector: '#evaluationFroid',
+            plugins: 'lists link image', // Only add essential plugins
+            toolbar: 'bold italic | alignleft aligncenter alignright | bullist numlist'
+        });
+        $('#submit-eval-froid').on('click', function () {
+            $('.loader-overlay').css('display','flex')
+            let urlEvalFroid = $(this).attr('data-url');
+            let formationId = $(this).attr('data-formationId');
+            let subject = $('#subjectEvalFroid').val();
+            const content = tinymce.get('evaluationFroid').getContent();
+            if(formationId) {
+                $.ajax({
+                    url: urlEvalFroid,
+                    type: 'POST',
+                    data: {'subject': subject,'text': content, 'formationId': formationId},
+                    success: function(data)
+                    {  $('.loader-overlay').css('display','none')
+                        window.location.reload()
+                    }
+                });
+            }
+        })
+        $('.btn-save').on('click', function () {
+            $('.loader-overlay').css('display', 'flex');
         });
     </script>
 {% endblock %}

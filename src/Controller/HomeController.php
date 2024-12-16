@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Financier;
 use App\Entity\Formation;
