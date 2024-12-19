@@ -271,6 +271,9 @@
                                                 {{ client.email }}
                                             </td>
                                             <td class='td-action'>
+                                                <a href="{{ path('app_customer_edit', { 'id':client.id, 'idFormation': idFormation }) }}" class="" title="modifier">
+                                                    <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                                </a>
                                                 <a href='{{path('app_customer_formation_delete',{ 'idFormation': idFormation,'idCustomer': client.id})}}' class='first-btn' title='supprimer'><img src='/assets/img/icon/circle-delete-solid-red.svg'></a>
                                             </td>
                                         </tr>

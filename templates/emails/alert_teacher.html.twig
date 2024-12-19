@@ -66,8 +66,10 @@
             text-decoration: underline !important;
         }
     </style>
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- End stylesheet -->
-
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <!-- You can change background colour here -->
@@ -134,6 +136,7 @@
 
                     </p>
                 {% endif %}
+                {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null or ( dataF.linkGuide is defined and dataF.linkGuide is not null) %}
                 <p><b>Liens utiles : </b></p>
                 <ul>
                     {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
@@ -143,29 +146,24 @@
                         <li><a href="{{ dataF.linkGuide.value }}" target="_blank" class="bleu-link ">La check-liste des formateurs.trices : merci d’en suivre les processus </a></li>
                     {% endif %}
                 </ul>
-                <p><b>Liste des stagiaires convoqués à la formation : </b></p>
-                <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
-                    <thead>
-                    <tr>
-                        <th style="border: 1px solid #ccc; padding: 5px">Prénom</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Nom</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Fonction</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Mail</th>
-                    </tr>
-                    </thead>
-                    {% for trainee in traineesFormation %}
-                        <tr><td style="border: 1px solid #ccc; padding: 5px">{{ trainee.firstName }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.lastName }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.position }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.email }}</td></tr>
-                    {% endfor %}
-                </table>
+                {% endif %}
                 {% if dataF.infoFormateur is not null %}
                     <b style="text-align: left">Informations complémentaire formateur :</b>
                     <p>{{ dataF.infoFormateur|striptags }}</p>
                 {% endif %}
+
+                <p> Sur le <a href="{% if dataF.linkDrive is defined and dataF.linkDrive is not null %}{{ dataF.linkDrive|striptags}}{% endif %}" target="_blank" class="bleu-link " id="linkDriveFormation"> lien suivant</a>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#updateDriveLink" id="updateDriveLinkModale" title="modifier"  data-pathUpdateLink="{{path('app_update_link_drive',{'formationId' : dataF.id })}}">
+                        <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                    </a>, tu trouveras l’ensemble des documents utiles pour ta formation :</p>
+                <ul>
+                    <li> La liste des stagiaires</li>
+                    <li> Les feuilles d’émargement en cas de session présentielle</li>
+                    <li> Les attestations individuelles de fin de formation,</li>
+                    <li> Les certificats de réalisation</li>
+                </ul>
                 <p>Tous les autres outils du formateur / de la formatrice sont accessible sur la page <a href="https://adconseil.ovh/index.php/formations/" target="_blank"  class="bleu-link ">Méthodes Formation</a> de l’Extranet (émargements électroniques, évaluation à chaud, suivi des émargements et des évaluations, etc.).</p>
-                <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans la check-list des formateurs.trices. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
+                <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans <a href="https://1drv.ms/b/s!AhOBLFujHscUhekqzBiCgnGHV13sXw?e=9vRbnx" target="_blank"  class="bleu-link ">la check-list des formateurs.trices</a>. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
             <p>Je reste à disposition pour tout complément d’information et te souhaite une agréable formation.</p>
             </td>
         </tr>
@@ -198,7 +196,51 @@
 
     <!-- End footer -->
 </div>
-
+<div class="modal fade" id="updateDriveLink" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Introduire le lien drive </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="lienDrive" id="lienDrive" class="form-control" placeholder="Lien Drive de la formation">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+                <button type="button" class="btn btn-primary updateLinkDrive">Valider</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 </html>
+<script type="text/javascript">
+    $('#updateDriveLinkModale').on('click', function (e){
+        e.preventDefault();
+        $('#lienDrive').val($('#linkDriveFormation').attr('href'));
+        $('#updateDriveLink').modal('show');
+
+    })
+    $(".updateLinkDrive").on('click',function () {
+        var pathUpdateLink =  $('#updateDriveLinkModale').attr('data-pathUpdateLink');
+        let link = $('#lienDrive').val();
+        $.ajax({
+            url: pathUpdateLink,
+            type: 'POST',
+            data: {'linkDrive':link},
+            success: function(data)
+            {
+                let newData = JSON.parse(data);
+                if(newData) {
+                    $('#updateDriveLink').modal('hide');
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                }
+                window.location.reload()
+            },
+            error: function(jqXHR){
+            }
+        });
+    })
+</script>

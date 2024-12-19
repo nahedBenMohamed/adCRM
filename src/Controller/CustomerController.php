@@ -72,6 +72,9 @@ class CustomerController extends AbstractController
             $entityManager->flush();
             if($idFormation) {
                 $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $idFormation]);
+                $formation->addCustomer($customer);
+                $entityManager->persist($formation);
+                $entityManager->flush();
                 return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
             }
             /*if($redirectToFormation) {
@@ -85,8 +88,8 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/customer/edit/{id}', name: 'app_customer_edit')]
-    public function edit(EntityManagerInterface $entityManager, Request $request,SluggerInterface $slugger, $id): Response
+    #[Route('/customer/edit/{id}/{idFormation}', name: 'app_customer_edit')]
+    public function edit(EntityManagerInterface $entityManager, Request $request,SluggerInterface $slugger, $id, $idFormation = null): Response
     {
         $customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
         $form = $this->createForm(CustomerType::class,$customer);
@@ -115,6 +118,10 @@ class CustomerController extends AbstractController
             $customer = $form->getData();
             $entityManager->persist($customer);
             $entityManager->flush();
+            if ($idFormation) {
+                $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $idFormation]);
+                return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
+            }
             return $this->redirectToRoute('app_customer');
         }
 

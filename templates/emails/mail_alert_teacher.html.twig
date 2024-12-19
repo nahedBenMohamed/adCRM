@@ -134,6 +134,7 @@
 
                     </p>
                 {% endif %}
+                {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null or ( dataF.linkGuide is defined and dataF.linkGuide is not null) %}
                 <p><b>Liens utiles : </b></p>
                 <ul>
                     {% if dataF.linkToProgram is defined and dataF.linkToProgram is not null %}
@@ -143,29 +144,21 @@
                         <li><a href="{{ dataF.linkGuide.value }}" target="_blank" class="bleu-link ">La check-liste des formateurs.trices : merci d’en suivre les processus </a></li>
                     {% endif %}
                 </ul>
-                <p><b>Liste des stagiaires convoqués à la formation : </b></p>
-                <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
-                    <thead>
-                    <tr>
-                        <th style="border: 1px solid #ccc; padding: 5px">Prénom</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Nom</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Fonction</th>
-                        <th style="border: 1px solid #ccc; padding: 5px">Mail</th>
-                    </tr>
-                    </thead>
-                    {% for trainee in traineesFormation %}
-                        <tr><td style="border: 1px solid #ccc; padding: 5px">{{ trainee.firstName }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.lastName }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.position }}</td>
-                            <td style="border: 1px solid #ccc; padding: 5px">{{ trainee.email }}</td></tr>
-                    {% endfor %}
-                </table>
+                {% endif %}
                 {% if dataF.infoFormateur is not null %}
                     <b style="text-align: left">Informations complémentaire formateur :</b>
                     <p>{{ dataF.infoFormateur|striptags }}</p>
                 {% endif %}
+
+                <p> Sur le <a href="{% if dataF.linkDrive is defined and dataF.linkDrive is not null %}{{ dataF.linkDrive|striptags}}{% endif %}" target="_blank" class="bleu-link " id="linkDriveFormation"> lien suivant</a>, tu trouveras l’ensemble des documents utiles pour ta formation :</p>
+                <ul>
+                    <li> La liste des stagiaires</li>
+                    <li> Les feuilles d’émargement en cas de session présentielle</li>
+                    <li> Les attestations individuelles de fin de formation,</li>
+                    <li> Les certificats de réalisation</li>
+                </ul>
                 <p>Tous les autres outils du formateur / de la formatrice sont accessible sur la page <a href="https://adconseil.ovh/index.php/formations/" target="_blank"  class="bleu-link ">Méthodes Formation</a> de l’Extranet (émargements électroniques, évaluation à chaud, suivi des émargements et des évaluations, etc.).</p>
-                <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans la check-list des formateurs.trices. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
+                <p>Enfin, merci de bien prendre connaissance et d’appliquer l’ensemble des points recensés dans <a href="https://1drv.ms/b/s!AhOBLFujHscUhekqzBiCgnGHV13sXw?e=9vRbnx" target="_blank"  class="bleu-link ">la check-list des formateurs.trices</a>. Ils sont essentiels pour garantir le respect du référentiel national QUALIOPI que nous sommes engagés à respecter.</p></p>
                 <p>Je reste à disposition pour tout complément d’information et te souhaite une agréable formation.</p>
             </td>
         </tr>
