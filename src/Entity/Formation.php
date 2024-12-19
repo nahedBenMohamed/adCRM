@@ -89,6 +89,9 @@ class Formation
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $mailFormateurText = '';
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $linkDrive = null;
+
     public function __construct()
     {
         $this->customers = new ArrayCollection();
@@ -397,6 +400,17 @@ class Formation
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getLinkDrive(): ?string
+    {
+        return $this->linkDrive;
+    }
+    public function setLinkDrive(string $linkDrive): self
+    {
+        $this->linkDrive = $linkDrive;
 
         return $this;
     }

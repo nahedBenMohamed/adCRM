@@ -998,4 +998,16 @@ class CourseController extends AbstractController
 
     }
 
+    #[Route('/courses/app_update_link_drive/{formationId}', name: 'app_update_link_drive')]
+    public function updateDriveLink(Request $request,EntityManagerInterface $entityManager, $formationId): Response
+    {
+        $formation = $entityManager->getRepository(Formation::class)->findOneBy(['id' => $formationId]);
+        $driveLink = $request->request->get('linkDrive');
+        $formation->setLinkDrive($driveLink);
+        $entityManager->persist($formation);
+        $entityManager->flush();
+        return new Response('true');
+
+    }
+
 }
