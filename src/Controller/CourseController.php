@@ -590,6 +590,7 @@ class CourseController extends AbstractController
         } else {
             // create new formation and affect selected clients
             $formation = new Formation();
+            $formation->setType($typeFormation);
         }
         //remove all customer
         if ($formation->getCustomers()) {
@@ -667,6 +668,7 @@ class CourseController extends AbstractController
             ->from('formation@adconseil.org')
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
+            ->cc('formation@adconseil.org')
             ->to($formation->getFormateur()->getEmail());
         $mailer->send($email);
         $this->addFlash('success', "Le rappel des informations clés a été envoyée au formateur avec succès.");
