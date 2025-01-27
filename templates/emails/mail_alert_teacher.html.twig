@@ -101,7 +101,6 @@
 
                 <p> Tu animeras bientôt la formation <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :</p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
-                <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
                     <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags|raw }}</p>
                 {% elseif (dataF.lieuFormation == 'Distanciel')%}
@@ -122,6 +121,7 @@
                         {% endif %}
                     </p>
                 {% endif %}
+                <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if dataF.customer is defined and dataF.customer is not null %}
                     <p><b>📞Coordonnées du/des commanditaire(s) :</b></p>
                     <p>

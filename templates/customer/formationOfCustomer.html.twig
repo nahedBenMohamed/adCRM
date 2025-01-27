@@ -51,7 +51,7 @@
                                 <tr>
                                     <td>{{course.nomFormation}}</td>
                                     <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
-                                    <td>{{course.dateDebutFormation |date('d-m-Y')}}</td>
+                                    <td> {% if course.dateDebutFormation is defined and course.dateDebutFormation is not null %}{{course.dateDebutFormation |date('d-m-Y')}}{% endif %}</td>
                                     <td>
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">

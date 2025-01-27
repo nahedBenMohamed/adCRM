@@ -26,23 +26,13 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/customer/add/{idFormation}', name: 'app_customer_add')]
-    public function add(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger, $idFormation = null): Response
+    #[Route('/customer/add/{idFormation}/{referer}', name: 'app_customer_add')]
+    public function add(EntityManagerInterface $entityManager, Request $request, SluggerInterface $slugger, $idFormation = null, $referer = ''): Response
     {
         $customer = new Customer();
         $form = $this->createForm(CustomerType::class,$customer);
         $form->handleRequest($request);
-        /*$referer = $request->headers->get('referer');
-        $redirectToFormation = false;
-        $type = "inter";
-        if($referer && str_contains($referer, 'courses/courseManagement/intra')) {
-            $redirectToFormation = true;
-            $type = "intra";
-        }
-        if($referer && str_contains($referer, 'courses/courseManagement/inter')) {
-            $redirectToFormation = true;
-            $type= "inter";
-        }*/
+        if($idFormation == 0) $idFormation = null;
         if ($form->isSubmitted() && $form->isValid()) {
             $infoFile = $form->get('infoFilename')->getData();
             // this condition is needed because the 'brochure' field is not required
@@ -77,9 +67,12 @@ class CustomerController extends AbstractController
                 $entityManager->flush();
                 return $this->redirectToRoute('app_courses_manage', ['type' => $formation->getType(), 'idFormation' => $idFormation]);
             }
-            /*if($redirectToFormation) {
-                return $this->redirectToRoute('app_courses_manage', ['type' => $type, 'idFormation' => null]);
-            }*/
+            if($referer) {
+                if ($idFormation) {
+                    return $this->redirectToRoute('app_courses_manage', ['type' => $referer, 'idFormation' => $idFormation]);
+                }
+                return $this->redirectToRoute('app_courses_manage', ['type' => $referer, 'idFormation' => null]);
+            }
             return $this->redirectToRoute('app_customer');
         }
 
@@ -234,5 +227,23 @@ class CustomerController extends AbstractController
             }
         }
         return new Response('true');
+    }
+
+    #[Route('/customer/deleteFromFormation/{id}', name: 'app_delete_customer_from_formation')]
+    public function deleteCustomerFromFormation(EntityManagerInterface $entityManager, $id): Response
+    {
+        /*$customer = $entityManager->getRepository(Customer::class)->findOneBy(['id' => $id]);
+        $traineebyCustomers = $entityManager->getRepository(Trainee::class)->findBy(['customer' => $customer]);
+        $object = new \stdClass();
+        foreach ($traineebyCustomers as $tr) {
+            $tr->removeCustomer($customer);
+            $entityManager->persist($tr);
+        }
+        $entityManager->flush();
+        $entityManager->remove($customer);
+        $entityManager->flush();
+        $object->status = true;
+        $object->message = "Le client est supprimé avec succès";
+        return new Response(json_encode($object));*/
     }
 }

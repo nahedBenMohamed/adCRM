@@ -117,7 +117,7 @@
                                 <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
                                     <option selected="" value="0">Choisir un client de la liste</option>
                                     {% for client in clients %}
-                                        <option value="{{ client.id }}">{{ client.name }} / {{ client.email }}</option>
+                                        <option value="{{ client.id }}" {% if(client.id in selectedClient) %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -134,7 +134,9 @@
                         <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
                         <div class="row">
                             <div class="col-auto">
-                                <a href="{{path('app_customer_add',{ 'idFormation': idFormation })}}" class="btn btn-primary">
+                                {% set forId = 0 %}
+                                {% if idFormation != '' %} {% set forId = idFormation %} {% endif %}
+                                <a href="{{path('app_customer_add',{ 'referer':'intra', 'idFormation': forId })}}" class="btn btn-primary">
                                     Ajouter client
                                 </a>
                             </div>

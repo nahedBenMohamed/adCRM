@@ -101,7 +101,6 @@
 
                 <p>Nous vous confirmons la convocation de votre stagiaire à la formation  <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :
                 </p>
-                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 <p>✅ <b>Modalité :</b> {{ dataF.lieuFormation }}</p>
                 {% if (dataF.lieuFormation == 'Présentiel') %}
                     <p>📍 <b>Lieu de formation :</b> {{ dataF.formationAddress|striptags|raw }}</p>
@@ -124,6 +123,7 @@
                     </p>
                     <p>N. B. : Il arrive que les connexions vers nos liens de classes virtuelles soient bloquées par des pare-feux ou VPN. Merci de vérifier avec votre service informatique que le lien que nous transmettons aux stagiaires est bien accessible.</p>
                 {% endif %}
+                <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
                 {% if dataF.formateur is defined %}
                     <p><b>📞Coordonnées du formateur / de la formatrice :</b></p>
                     <p>{{ dataF.formateur.firstName }},  {{ dataF.formateur.lastname }},  {{ dataF.formateur.functionFormateur }}, {{ dataF.formateur.email }}</p>
