@@ -23,7 +23,7 @@
                             <tr>
                                 <th scope="col">Nom de Client</th>
                                 <th scope="col">Email de Client</th>
-                                <th scope="col"></th>
+                               <!-- <th scope="col"></th>-->
                             </tr>
                             </thead>
                             <tbody>
@@ -31,11 +31,11 @@
                                 <tr>
                                     <td> <a href="{{path('app_customer_formation',{ 'customerId':  customer.id })}}" class="company-link" title="Liste des formations">{{customer.name}}</a></td>
                                     <td> <a href="{{path('app_customer_formation',{ 'customerId':  customer.id })}}" class="company-link" title="Liste des formations">{{customer.email}}</a></td>
-                                    <td>
+                                   <!-- <td>
                                         <a href="{{ path('app_delete_customer_from_formation', { 'id':customer.id }) }}" class="first-btn" title="supprimer">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                         </a>
-                                    </td>
+                                    </td>-->
                                 </tr>
                             {% endfor %}
                             </tbody>
