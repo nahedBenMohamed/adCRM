@@ -135,11 +135,11 @@
                     </tr>
                     </tbody>
                 </table>
-                <p style="width: 85%;"><b style="text-align: left">Commentaires</b></p>
+                <p style="width: 100%;"><b style="text-align: left">Commentaires</b></p>
                 {% if evalTrainee.comments is defined and  evalTrainee.comments|length >0 %}
                 <p style="height: 70px; border: 2px solid #ccc; padding: 5px;width: 85%;">{{ evalTrainee.comments }}</p>
                     {% else %}
-                    <p style="height: 70px; border: 2px solid #ccc; padding: 5px; width: 85%;"></p>
+                    <p style="height: 70px; border: 2px solid #ccc; width: 100%;"></p>
                 {% endif %}
                 <p></p>
                 <p style="font-size: 13px;font-weight: normal;margin-top: 0">

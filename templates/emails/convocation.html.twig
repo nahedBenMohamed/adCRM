@@ -134,12 +134,22 @@
                     </p>
                 {% endif %}
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
-                <p>Pour suivre votre formation dans de bonnes conditions, vous aurez besoin :</p>
-                <ul>
-                    <li>D'une connexion Internet stable</li>
-                    <li>D'un ordinateur équipé d'une sortie son, d'une webcam et d'un micro</li>
-                    <li>De vous assurer d’être au calme pendant la durée de votre formation</li>
-                </ul>
+                {% if (dataF.lieuFormation == 'Présentiel') %}
+                <p>
+                    Dans le cadre de votre formation, <b>vous aurez besoin de scanner des QR code avec votre
+                        smartphone afin de réaliser l’évaluation de votre formation.</b>
+                    Si vous ne possédez pas de smartphone ou que cette modalité vous pose une difficulté,
+                    merci de le signaler à votre formateur.trice en amont de la formation.
+                </p>
+                {% else %}
+                    <p>Pour suivre votre formation dans de bonnes conditions, vous aurez besoin :</p>
+                    <ul>
+                        <li>D'une connexion Internet stable</li>
+                        <li>D'un ordinateur équipé d'une sortie son, d'une webcam et d'un micro</li>
+                        <li>De vous assurer d’être au calme pendant la durée de votre formation</li>
+                    </ul>
+                {% endif %}
+
                 <p>Vous trouverez joints à la présente convocation le programme de la formation, votre livret d’accueil et le guide d’utilisation de la classe virtuelle sous forme de liens en bas de page.</p>
                 <p>Nous vous rappelons qu’il est important :</p>
                 <ul>
@@ -155,8 +165,10 @@
                 {% if dataF.linkToLivretAccueil is defined and dataF.linkToLivretAccueil is not null %}
                 <p><a href="{{ dataF.linkToLivretAccueil.value }}" target="_blank" class="bleu-link">Livret d’accueil des stagiaires incluant le règlement intérieur applicable pendant la formation</a></p>
                 {% endif %}
-                {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
-                <p><a href="{{ dataF.linkGuide.value }}" target="_blank" class="bleu-link">Guide pratique d’utilisation de votre classe virtuelle</a></p>
+                {% if (dataF.lieuFormation != 'Présentiel') %}
+                    {% if dataF.linkGuide is defined and dataF.linkGuide is not null %}
+                    <p><a href="{{ dataF.linkGuide.value }}" target="_blank" class="bleu-link">Guide pratique d’utilisation de votre classe virtuelle</a></p>
+                    {% endif %}
                 {% endif %}
                 <p><b>Vous êtes en situation de handicap ?</b></p>
                 <p>N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <a href="mailto:referent-handicap@adconseil.org" class="bleu-link">referent-handicap@adconseil.org</a></p>
