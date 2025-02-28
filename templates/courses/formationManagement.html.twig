@@ -333,6 +333,7 @@
                                         <th scope="col">Nom</th>
                                         <th scope="col">Prénom</th>
                                         <th scope="col">Fonction</th>
+                                        <th scope="col">Email</th>
                                         <th>
                                         </th>
                                     </tr>
@@ -344,6 +345,7 @@
                                                 <td>{{ stg.trainee.firstName }}</td>
                                                 <td>{{ stg.trainee.lastName }}</td>
                                                 <td>{{ stg.trainee.position }}</td>
+                                                <td>{{ stg.trainee.email }}</td>
                                                 <td class="td-action">
                                                     <a href="{{ path('app_trainee_see_attestation', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="first-btn" title="Voir attestation" class="" target="_blank">
                                                         Attestation

@@ -49,8 +49,8 @@
                             {% endif %}
                             {% for course in courses %}
                                 <tr>
-                                    <td>{{course.nomFormation}}</td>
-                                    <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {% else %} - {% endif %}</td>
+                                    <td><a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="company-link"> {{course.nomFormation}}</a></td>
+                                    <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {{course.formateur.lastName}}{% else %} - {% endif %}</td>
                                     <td> {% if course.dateDebutFormation is defined and course.dateDebutFormation is not null %}{{course.dateDebutFormation |date('d-m-Y')}}{% endif %}</td>
                                     <td>
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
