@@ -22,7 +22,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">Nom de lien</th>
-                                <th scope="col">lien</th>
+                                <th scope="col" style="width: 60% !important;font-size: 10px">lien</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -32,12 +32,14 @@
                                     <td>{{link.name}}</td>
                                     <td>{{link.value}}</td>
                                     <td class="text-center">
-                                        <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="{{path('app_delete_link',{ 'id': link.id })}}" class="first-btn deleteBtn">
-                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
-                                        </a>
-                                        <a href="{{path('app_edit_link',{ 'id': link.id })}}" class="" title="modifier">
-                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
-                                        </a>
+                                        <div>
+                                            <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" data-remove-url="{{path('app_delete_link',{ 'id': link.id })}}" class="first-btn deleteBtn">
+                                                <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
+                                            </a>
+                                            <a href="{{path('app_edit_link',{ 'id': link.id })}}" class="" title="modifier">
+                                                <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
