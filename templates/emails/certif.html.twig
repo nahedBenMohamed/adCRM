@@ -117,6 +117,7 @@
                 </p>
                 <p style="font-size: 13px; font-weight: normal;">
                     Fait le {{ "now"|date("d/m/Y") }} à Tours pour faire valoir ce que de droit.
+                    {{ dataF.formationAddress|raw }}
                 </p>
                 {% if dataF.formateur is defined %}
                     <p style="text-align: right;padding-bottom: 10px;font-size: 13px">
