@@ -238,7 +238,7 @@
                                             {'attr': {'class': 'form-control form-control-user' }}
                                         ) }}
                                     </div>
-                                    <div class="row mb-3">
+                                    <div class="row mb-3 linkGuidFiled {% if formation.lieuFormation != 'Présentiel' %} hidden {% endif %}">
                                         {{ form_row(formationForm.linkGuide,
                                             {'attr': {'class': 'form-control form-control-user' }}
                                         ) }}
@@ -539,14 +539,17 @@
                 if(this.value == 'Distanciel') {
                     $('.lieuFormation').addClass('hidden');
                     $('.linkType').removeClass('hidden');
+                    $('.linkGuidFiled').removeClass('hidden');
                 } else if(this.value == 'Présentiel') {
                     $('.lieuFormation').removeClass('hidden');
                     $('.linkType').addClass('hidden');
                     $('.teacher').addClass('hidden');
                     $('.linkVirFormation').addClass('hidden');
+                    $('.linkGuidFiled').removeClass('hidden');
                 }else if(this.value == 'Mixte') {
                     $('.lieuFormation').removeClass('hidden');
                     $('.linkType').removeClass('hidden');
+                    $('.linkGuidFiled').removeClass('hidden');
                 }
             });
             $('.linkType input[type="radio"]:checked').each(function (e){
@@ -562,12 +565,15 @@
                 if(this.value == 'Distanciel') {
                     $('.lieuFormation').addClass('hidden');
                     $('.linkType').removeClass('hidden');
+                    $('.linkGuidFiled').removeClass('hidden');
                 } else if(this.value == 'Présentiel') {
                     $('.lieuFormation').removeClass('hidden');
                     $('.linkType').addClass('hidden');
+                    $('.linkGuidFiled').addClass('hidden');
                 }else if(this.value == 'Mixte') {
                     $('.lieuFormation').removeClass('hidden');
                     $('.linkType').removeClass('hidden');
+                    $('.linkGuidFiled').removeClass('hidden');
                 }
 
                 if(this.value == 'LienBBB') {

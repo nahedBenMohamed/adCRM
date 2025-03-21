@@ -107,7 +107,7 @@
                 {% if dataF.linkFormulaire is defined and dataF.linkFormulaire is not null %}
                 <b>
                     Important : merci de compléter le formulaire de recueil des attentes avant la formation ⇒
-                    <a href="{{ dataF.linkFormulaire.value }}" class="bleu-link">{{ dataF.linkFormulaire.value }}</a>
+                    <a href="{{ dataF.linkFormulaire.value }}" class="bleu-link">{{ dataF.linkFormulaire.name }}</a>
                 </b>
                 {% endif %}
                 <p style="text-align: left">{% if dataS.civility is defined and dataS.civility|length > 0%} {{ dataS.civility }}, {% else %}Bonjour, {% endif %}</p>
