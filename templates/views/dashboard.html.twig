@@ -1,4 +1,17 @@
 {% extends 'baseAdmin.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .dashboard .info-card .card-body {
+            height: 200px;
+            min-width: 140px;
+        }
+        .dashboard .info-card .card-body .text-center {
+            position: absolute;
+            bottom: 3px;
+            left: 30%;
+        }
+    </style>
+{% endblock %}
 {% block body %}
 <div class="pagetitle">
       <h1>Dashboard</h1>
@@ -19,7 +32,7 @@
                 <div class="col-xxl-2 col-md-2">
                     <div class="card info-card sales-card">
                         <div class="card-body">
-                            <h5 class="card-title">Nombre de formations brouillons</h5>
+                            <h5 class="card-title texte-carte">Nombre de formations brouillons</h5>
 
                             <div class="text-center">
                                 <div class="ps-3">
