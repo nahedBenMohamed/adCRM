@@ -1,7 +1,17 @@
 {% extends 'baseAdmin.html.twig' %}
 
 {% block title %}Hello UserController!{% endblock %}
-
+{% block stylesheets %}
+    <style>
+     .datatable-table > tbody > tr > td {
+         word-break: break-all;
+         white-space: normal;
+     }
+     .td-action {
+         display: table-cell;
+     }
+    </style>
+{% endblock %}
 {% block body %}
     <section class="section">
         <div class="row">
