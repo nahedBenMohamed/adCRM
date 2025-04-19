@@ -17,37 +17,37 @@ class Formation
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $nomFormation = null;
+    private ?string $nomFormation = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $dureeFormation = null;
+    private ?string $dureeFormation = '';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $timesheet = null;
+    private ?string $timesheet = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $linkType = null;
+    private ?string $linkType = '';
 
     #[ORM\Column(length: 255,nullable: true)]
-    private ?string $lienFormation = null;
+    private ?string $lienFormation = '';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $lieuFormation = null;
+    private ?string $lieuFormation = '';
 
     #[ORM\Column(length: 255,nullable: true)]
-    private ?string $formationAddress = null;
+    private ?string $formationAddress = '';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $objective = null;
+    private ?string $objective = '';
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $infoTrainees = null;
+    private ?string $infoTrainees = '';
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $infoCustomer = null;
+    private ?string $infoCustomer = '';
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $infoFormateur = null;
+    private ?string $infoFormateur = '';
     #[ORM\Column(length: 255,nullable: true)]
-    private ?string $pdfFormation = null;
+    private ?string $pdfFormation = '';
 
     #[ORM\ManyToOne(targetEntity: Link::class, inversedBy: "formations")]
     private ?Link $linkToProgram = null;
