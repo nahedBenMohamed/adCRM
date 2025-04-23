@@ -65,6 +65,11 @@
             font-weight: 600;
             text-decoration: underline !important;
         }
+        .TableParagraph, .TableParagraph >span {
+            font-size: 13px;font-weight: normal;text-align: justify;
+            line-height: 24px;
+            color: #000000 !important;
+        }
     </style>
     <!-- End stylesheet -->
 
@@ -89,8 +94,7 @@
                 <h1 style="font-size: 20px; line-height: 24px; font-weight: 600; text-decoration: none; color: #000000;">Certificat de réalisation</h1>
                 <hr>
                 <p style="text-align: center;font-size: 12px;">Action de formation professionnelle continue</p>
-                <p style="font-size: 13px;font-weight: normal;text-align: justify;">Je soussigné(e){% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }}{% endif %}, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493,
-                    certifie que
+                <p style="font-size: 13px;font-weight: normal;text-align: justify;">Je soussigné(e){% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }}{% endif %}, représentant l’organisme de formation AD CONSEIL, N° de DA 11930569493, certifie que
                     {% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}
                     {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %}
                     {% if dataS.firstName is defined %} {{ dataS.firstName }}{% endif %}, exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
@@ -116,8 +120,7 @@
                     aux obligations conventionnelles spécifiques.
                 </p>
                 <p style="font-size: 13px; font-weight: normal;">
-                    Fait le {{ "now"|date("d/m/Y") }} à Tours pour faire valoir ce que de droit.
-                    {{ dataF.formationAddress|raw }}
+                    Fait le {{ dataF.dateDebutFormation|date("d/m/Y") }} à {{ dataF.lieuSignature|raw }} pour faire valoir ce que de droit.
                 </p>
                 {% if dataF.formateur is defined %}
                     <p style="text-align: right;padding-bottom: 10px;font-size: 13px">

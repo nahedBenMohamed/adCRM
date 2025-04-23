@@ -65,6 +65,11 @@
             font-weight: 600;
             text-decoration: underline !important;
         }
+        .TableParagraph, .TableParagraph >span {
+            font-size: 13px;font-weight: normal;text-align: justify;
+            line-height: 24px;
+            color: #000000 !important;
+        }
     </style>
     <!-- End stylesheet -->
 
@@ -94,8 +99,7 @@
                     {% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}
                     {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %}
                     {% if dataS.firstName is defined %} {{ dataS.firstName }}{% endif %}, exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
-                    au sein de l'entreprise / l'organisme{% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }} {% endif %},
-                    a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {% if (traineesFormation.nbHour|striptags|raw>0) %}{{ traineesFormation.nbHour|striptags|raw }} {% else%} {{ dataF.dureeFormation|striptags|raw }} {% endif%} heures.								</p>
+                    au sein de l'entreprise / l'organisme{% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }}{% endif %}, a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {% if (traineesFormation.nbHour|striptags|raw>0) %}{{ traineesFormation.nbHour|striptags|raw }} {% else%} {{ dataF.dureeFormation|striptags|raw }} {% endif%} heures.								</p>
                 <p style="line-height: 10px">
                     <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>
                 </p>
@@ -143,8 +147,8 @@
                 {% endif %}
                 <p></p>
                 <p style="font-size: 13px;font-weight: normal;margin-top: 0">
-                    Fait le {{ "now"|date("d/m/Y") }} à Tours pour faire valoir ce que de droit.
-                    {{ dataF.formationAddress|raw }}
+                    Fait le {{ dataF.dateDebutFormation|date("d/m/Y") }} à {{ dataF.lieuSignature|raw }} pour faire valoir ce que de droit.
+
                 </p>
             </td>
         </tr>

@@ -7,6 +7,7 @@ use App\Entity\Financier;
 use App\Entity\Formation;
 use App\Entity\Link;
 use App\Entity\User;
+use App\Repository\LinkRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -70,6 +71,13 @@ class FormationFormType extends AbstractType
                 'attr' => ['placeholder' => "Modalité"]
             ])
 
+            ->add('lieuSignature',   TextType::class, [
+                'label' => false,
+                'required' => false,
+                'attr' => ['placeholder' => "Lieu de Signature"]
+
+            ])
+
             ->add('lienFormation',   TextType::class, [
                 'label' => false,
                 'required' => false,
@@ -103,6 +111,10 @@ class FormationFormType extends AbstractType
 
             ->add('linkToProgram',   EntityType::class, [
                 'class' => Link::class,
+                'query_builder' => function (LinkRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->where('l.linkStatus = 0');
+                },
                 'choice_label' => function($link) {
                 if($link->getName() == 'lien statique')
                     return $link->getValue().'##'.$link->getName() ;
@@ -116,6 +128,10 @@ class FormationFormType extends AbstractType
 
             ->add('linkToLivretAccueil',   EntityType::class, [
                 'class' => Link::class,
+                'query_builder' => function (LinkRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->where('l.linkStatus = 0');
+                },
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
@@ -126,6 +142,10 @@ class FormationFormType extends AbstractType
             ])
             ->add('linkGuide',   EntityType::class, [
                 'class' => Link::class,
+                'query_builder' => function (LinkRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->where('l.linkStatus = 0');
+                },
                 'choice_label' => function($link) {
                     return $link->getName();
                 },
@@ -136,6 +156,10 @@ class FormationFormType extends AbstractType
             ])
             ->add('linkFormulaire',   EntityType::class, [
                 'class' => Link::class,
+                'query_builder' => function (LinkRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->where('l.linkStatus = 0');
+                },
                 'choice_label' => function($link) {
                     return $link->getName();
                 },

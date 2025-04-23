@@ -19,6 +19,9 @@ class Link
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $linkStatus = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,21 @@ class Link
     {
         $this->name = $name;
 
+        return $this;
+    }
+
+    public function getLinkStatus(): ?bool
+    {
+        return $this->linkStatus;
+    }
+
+    /**
+     * @param bool $linkStatus
+     * @return $this
+     */
+    public function setLinkStatus(bool $linkStatus): self
+    {
+        $this->linkStatus = $linkStatus;
         return $this;
     }
 }
