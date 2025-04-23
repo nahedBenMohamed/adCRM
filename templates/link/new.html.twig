@@ -21,6 +21,9 @@
                                 {'attr': {'class': 'form-control form-control-user'}}
                             ) }}
                         </div>
+                        <div class="form-group hidden">
+                            {{ form_row(linkForm.linkStatus) }}
+                        </div>
                         <div class="row pages-links">
                             <div class="col-md-4">
                                 <a href="{{path('app_link')}}">

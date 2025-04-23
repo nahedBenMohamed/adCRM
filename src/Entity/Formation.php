@@ -37,6 +37,9 @@ class Formation
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $formationAddress = '';
 
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $lieuSignature = '';
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $objective = '';
 
@@ -227,6 +230,17 @@ class Formation
     public function setFormationAddress(string $formationAddress): self
     {
         $this->formationAddress = $formationAddress;
+
+        return $this;
+    }
+
+    public function getLieuSignature(): ?string
+    {
+        return $this->lieuSignature;
+    }
+    public function setLieuSignature(string $lieuSignature): self
+    {
+        $this->lieuSignature = $lieuSignature;
 
         return $this;
     }

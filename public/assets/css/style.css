@@ -1347,3 +1347,7 @@ tr.success-send-mail td {
 .datatable-table th button {
   padding: 0;
 }
+.checkboxStatus input{
+  margin-left: 10px;
+  margin-top: 12px;
+}
