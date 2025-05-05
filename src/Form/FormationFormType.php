@@ -101,6 +101,7 @@ class FormationFormType extends AbstractType
             ->add('formationAddress',   TextareaType::class, [
                 'label' => 'Lieu de formation',
                 'required' => false,
+                'empty_data' => '',
                 'attr'=> ['class' => 'tinymce-editor hidden', 'placeholder' => "Lieu de formation"]
             ])
 
