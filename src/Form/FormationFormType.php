@@ -32,6 +32,7 @@ class FormationFormType extends AbstractType
             ->add('timesheet',   TextareaType::class, [
                 'label' => 'Dates et horaires',
                 'required' => false,
+                'empty_data' => '',
                 'attr' => ['class' => 'tinymce-editor', 'placeholder' => 'Dates et horaires']
             ])
 
@@ -74,6 +75,7 @@ class FormationFormType extends AbstractType
             ->add('lieuSignature',   TextType::class, [
                 'label' => false,
                 'required' => false,
+                'empty_data' => '',
                 'attr' => ['placeholder' => "Lieu de Signature"]
 
             ])
@@ -108,6 +110,7 @@ class FormationFormType extends AbstractType
             ->add('objective',   TextareaType::class, [
                 'label' => "Objectifs de l'action de formation",
                 'required' => false,
+                'empty_data' => '',
                 'attr' => ['class' => 'tinymce-editor', 'placeholder' => "Objectifs de l'action de formation"]
             ])
 
