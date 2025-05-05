@@ -207,7 +207,7 @@
                                             {'attr': {'class': 'form-control form-control-user' }}
                                         ) }}
                                     </div>
-                                    <div class="row mb-3 linkGuidFiled {% if formation.lieuFormation != 'Présentiel' %} hidden {% endif %}">
+                                    <div class="row mb-3 linkGuidFiled {% if formation is defined and formation.lieuFormation != 'Présentiel' %} hidden {% endif %}">
                                         {{ form_row(formationForm.linkGuide,
                                             {'attr': {'class': 'form-control form-control-user' }}
                                         ) }}
