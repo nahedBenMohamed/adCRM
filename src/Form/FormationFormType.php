@@ -81,6 +81,7 @@ class FormationFormType extends AbstractType
             ->add('lienFormation',   TextType::class, [
                 'label' => false,
                 'required' => false,
+                'empty_data' => '',
                 'attr' => ['placeholder' => "Lien classe virtuelle"]
 
             ])
