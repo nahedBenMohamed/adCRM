@@ -26,7 +26,7 @@ class Formation
     private ?string $timesheet = '';
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $linkType = '';
+    private ?string $linkType = null;
 
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $lienFormation = '';
