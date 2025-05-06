@@ -25,8 +25,13 @@
 
     <!-- Start stylesheet -->
     <style type="text/css">
+        @page {
+            margin: 0;
+        }
         body {
             font-family:'Helvetica', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         a,a[href],a:hover, a:link, a:visited {
             /* This is the link colour */
@@ -103,9 +108,7 @@
                 <p style="line-height: 2px">
                     <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>
                 </p>
-                <p class="objectif">
-                    {{ dataF.objective|raw }}
-                </p>
+                {{ dataF.objective|raw }}
                 <p>
                     <strong> Nature de l'action de formation :</strong> Acquisition, entretien ou perfectionnement des connaissances.
                 </p>
