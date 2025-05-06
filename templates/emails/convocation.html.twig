@@ -102,7 +102,7 @@
                 <li>Apprenant.e : {% if dataS.civility is defined %} {{ dataS.civility }} {% endif %}
                     {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %} {% if dataS.firstName is defined %} {{ dataS.firstName }} {% endif %} {% if dataS.position is defined  and dataS.position|length >0 %} - {{ dataS.position }} {% endif %}</li>
                 <li>Entreprise/Organisme : {% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }} {% endif %}</li>
-                <li>Formateur.trice : {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %} - {% if dataF.formateur is defined %} {{ dataF.formateur.email }} {% endif %}</li>
+                <li>Formateur.trice : {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }} {{ dataF.formateur.lastName }} {% endif %} - {% if dataF.formateur is defined %} <a href="mailto:{{dataF.formateur.email }}"> {{ dataF.formateur.email }} </a>{% endif %}</li>
             </ul>
                 {% if dataF.linkFormulaire is defined and dataF.linkFormulaire is not null %}
                 <b>
@@ -153,7 +153,7 @@
                 <p>Vous trouverez joints à la présente convocation le programme de la formation, votre livret d’accueil et le guide d’utilisation de la classe virtuelle sous forme de liens en bas de page.</p>
                 <p>Nous vous rappelons qu’il est important :</p>
                 <ul>
-                    <li>De nous avertir dans les plus brefs délais, en cas d’absence ou de retard le jour de la formation aux coordonnées suivantes : 01 46 68 88 88 / <a href="mailto:formation@adconseil.org" class="bleu-link">formation@adconseil.org</a></li>
+                    <li>De nous avertir dans les plus brefs délais, en cas d’absence ou de retard le jour de la formation aux coordonnées suivantes: 01 46 68 88 88 / <a href="mailto:formation@adconseil.org" class="bleu-link">formation@adconseil.org</a></li>
                     <li>D’informer votre employeur en cas d’absence à la formation</li>
                     <li>De suivre la formation dans son intégralité</li>
                 </ul>
@@ -172,7 +172,7 @@
                 {% endif %}
                 <p><b>Vous êtes en situation de handicap ?</b></p>
                 <p>N’hésitez pas à contacter notre référent handicap pour étudier vos besoins d’aménagement pour cette formation : <a href="mailto:referent-handicap@adconseil.org" class="bleu-link">referent-handicap@adconseil.org</a></p>
-                {% if dataF.infoTrainees is not null %}
+                {% if dataF.infoTrainees is not null and dataF.infoTrainees|length > 0 %}
                 <b style="text-align: left">Informations complémentaire stagiaire</b>
                 <p>{{ dataF.infoTrainees|striptags }}</p>
                 {% endif %}
