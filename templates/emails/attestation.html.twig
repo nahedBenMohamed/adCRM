@@ -100,7 +100,7 @@
                     {% if dataS.lastName is defined %} {{ dataS.lastName }} {% endif %}
                     {% if dataS.firstName is defined %} {{ dataS.firstName }}{% endif %}, exerçant la fonction de {% if dataS.position is defined %} {{ dataS.position }} {% endif %}
                     au sein de l'entreprise / l'organisme{% if dataS.customer is defined and  dataS.customer|length > 0 %} {{ dataS.customer.name }}{% endif %}, a suivi la formation « {{ dataF.nomFormation }} » au cours de la période du {{ dataF.dateDebutFormation|date("d/m/Y") }} au {{ dataF.dateFinFormation|date("d/m/Y") }}, pendant une durée effective de {% if (traineesFormation.nbHour|striptags|raw>0) %}{{ traineesFormation.nbHour|striptags|raw }} {% else%} {{ dataF.dureeFormation|striptags|raw }} {% endif%} heures.								</p>
-                <p style="line-height: 10px">
+                <p style="line-height: 2px">
                     <strong>RAPPEL DES OBJECTIFS DE L'ACTION DE FORMATION</strong>
                 </p>
                 <p class="objectif">
@@ -109,7 +109,7 @@
                 <p>
                     <strong> Nature de l'action de formation :</strong> Acquisition, entretien ou perfectionnement des connaissances.
                 </p>
-                <p style="line-height: 10px">
+                <p style="line-height: 2px">
                     <strong>RESULTAT DE L'EVALUATION DES ACQUIS</strong>
                 </p>
                 <table width="100%" cellpadding="2" cellspacing="0" style="margin-bottom: 15px;">
@@ -139,11 +139,11 @@
                     </tr>
                     </tbody>
                 </table>
-                <p style="width: 100%;"><b style="text-align: left">Commentaires</b></p>
+                <p style="width: 100%;line-height: 2px"><b style="text-align: left">Commentaires</b></p>
                 {% if evalTrainee.comments is defined and  evalTrainee.comments|length >0 %}
                 <p style="height: 70px; border: 2px solid #ccc; padding: 5px;width: 85%;">{{ evalTrainee.comments }}</p>
                     {% else %}
-                    <p style="height: 70px; border: 2px solid #ccc; width: 100%;"></p>
+                    <p style="height: 70px; border: 2px solid #ccc; width: 100%;margin-bottom: 5px;"></p>
                 {% endif %}
                 <p></p>
                 <p style="font-size: 13px;font-weight: normal;margin-top: 0">
