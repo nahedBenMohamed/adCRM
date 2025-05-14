@@ -97,7 +97,7 @@
         <tbody>
         <tr>
             <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-bottom: 0;" width="596">
-                <p>Bonjour {% if dataF.formateur is defined %} {{ dataF.formateur.firstName }}, {% endif %}</p>
+                <p>Bonjour {% if dataF.formateur is defined %} {{ dataF.formateur.lastName }} {{ dataF.formateur.firstName }}, {% endif %}</p>
 
                 <p> Tu animeras bientôt la formation <strong>{{ dataF.nomFormation }}</strong> qui se tiendra selon les modalités pratiques suivantes :</p>
                 <p>📅 <b>Dates et horaires :</b>  {{ dataF.timesheet|striptags|raw }}</p>
