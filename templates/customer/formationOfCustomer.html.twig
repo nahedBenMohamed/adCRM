@@ -1,7 +1,16 @@
 {% extends 'baseAdmin.html.twig' %}
 
 {% block title %}Page formations!{% endblock %}
-
+{% block stylesheets %}
+<style>
+    .td-action-btn {
+        min-width: 75px;
+    }
+    .td-action-update {
+        padding: 0;
+    }
+</style>
+{% endblock %}
 {% block body %}
     <section class="section">
         <div class="row">
@@ -39,6 +48,7 @@
                                 <th scope="col">Formateur</th>
                                 <th scope="col">Date de début</th>
                                 <th scope="col"></th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -52,14 +62,16 @@
                                     <td><a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="company-link"> {{course.nomFormation}}</a></td>
                                     <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {{course.formateur.lastName}}{% else %} - {% endif %}</td>
                                     <td> {% if course.dateDebutFormation is defined and course.dateDebutFormation is not null %}{{course.dateDebutFormation |date('d-m-Y')}}{% endif %}</td>
-                                    <td>
-                                        <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
-                                            <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
-                                        </a>
+                                   <td>
+                                       <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
+                                           <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
+                                       </a>
 
-                                        <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="" title="modifier">
-                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
-                                        </a>
+                                       <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="" title="modifier">
+                                           <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                       </a>
+                                   </td>
+                                    <td>
                                         {% set fill1 = '' %}
                                         {% set fill2 = '' %}
                                         {% set fill3 = '' %}
@@ -110,6 +122,11 @@
         const datatablesSimple = document.getElementById('list-formations');
         new simpleDatatables.DataTable(datatablesSimple, {
             perPage: 100
+        });
+        jQuery(document).ready(function() {
+            $("#list-formations tr td:last-child").removeClass('td-action');
+            $("#list-formations tr td:nth-last-child(2)").addClass('td-action-btn');
+            $("#list-formations tr td:last-child").addClass('td-action-update');
         });
     </script>
 {% endblock %}

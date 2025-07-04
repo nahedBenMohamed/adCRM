@@ -283,6 +283,8 @@ class CourseController extends AbstractController
             /************ end send mail to all trainee ***/
 
             $item->setSendConvocation(true);
+            $dateConv = new \DateTime();
+            $item->setDateConvocation($dateConv);
             $entityManager->persist($item);
             $entityManager->flush();
         }
@@ -422,6 +424,7 @@ class CourseController extends AbstractController
                 $object->firstName = $user->getFirstName()?$user->getFirstName():'';
                 $object->lastName = $user->getLastName()?$user->getLastName(): '';
                 $object->position = $user->getPosition()?$user->getPosition(): '';
+                $object->email = $user->getEmail()?$user->getEmail(): '';
                 $object->message = '';
                 return new Response(json_encode($object));
             } else {
