@@ -1,15 +1,15 @@
-{% extends 'baseAdmin.html.twig' %}
+{% extends 'baseTeacher.html.twig' %}
 
 {% block title %}Page formations!{% endblock %}
 {% block stylesheets %}
-<style>
-    .td-action-btn {
-        min-width: 75px;
-    }
-    .td-action-update {
-        padding-top: 0 !important;
-    }
-</style>
+    <style>
+        .td-action-btn {
+            min-width: 75px;
+        }
+        .td-action-update {
+           padding-top: 0 !important;
+        }
+    </style>
 {% endblock %}
 {% block body %}
     <section class="section">
@@ -26,26 +26,11 @@
                 </div>
                 <div class="card">
                     <div class="card-body ps-0 pe-0">
-                        <div class="row">
-                            <div class="col-lg-9"></div>
-                            <div class="col-md-3">
-                                {% if alowAddNew %}
-                                    <a href="{{path('app_courses_manage',{ 'type':"intra", 'idFormation': null })}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
-                                        <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
-                                    </a>
-                                {% else %}
-                                    <a href="{{path('app_courses_manage', {'type':"inter"})}}" title="Ajouter une formation" class="float-end mt-4 mb-4 add-new">
-                                        <img src="{{asset('assets/img/icon/circle-plus-solid-blue.svg')}}" width="40">
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
                         <!-- Table with stripped rows -->
                         <table class="table table-striped" id="list-formations">
                             <thead>
                             <tr>
                                 <th scope="col">Intitulé de la formation</th>
-                                <th scope="col">Formateur</th>
                                 <th scope="col">Date de début</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
@@ -60,17 +45,12 @@
                             {% for course in courses %}
                                 <tr>
                                     <td><a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="company-link"> {{course.nomFormation}}</a></td>
-                                    <td>{% if course.formateur is defined and course.formateur is not null %} {{course.formateur.firstName}} {{course.formateur.lastName}}{% else %} - {% endif %}</td>
                                     <td> {% if course.dateDebutFormation is defined and course.dateDebutFormation is not null %}{{course.dateDebutFormation |date('d-m-Y')}}{% endif %}</td>
-                                   <td>
-                                       <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_formation',{ 'id': course.id })}}">
-                                           <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
-                                       </a>
-
-                                       <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="" title="modifier">
-                                           <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
-                                       </a>
-                                   </td>
+                                    <td>
+                                        <a href="{{ path('app_courses_manage', {'idFormation': course.id, 'type':type }) }}" class="" title="modifier">
+                                            <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
+                                        </a>
+                                    </td>
                                     <td>
                                         {% set fill1 = '' %}
                                         {% set fill2 = '' %}

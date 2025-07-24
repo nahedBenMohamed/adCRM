@@ -1,4 +1,4 @@
-{% extends 'baseAdmin.html.twig' %}
+{% extends 'baseTeacher.html.twig' %}
 {% block title %}
     Ajouter une formation
 {% endblock %}
@@ -87,210 +87,89 @@
                     Détails de la formation {{ courseName }}
                 </h3>
             </div>
-            {% if formation is defined %}
-                <div class="col-md-6">
-                    <a href="{{path('app_see_historic',{ 'formationId': formation.id })}}" class="custom-link">Historique</a>
-                </div>
-            {% endif %}
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link   {% if selectedClient|length == 0  %} active {% endif %}" id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
+                <button class="nav-link  active " id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
                     Entreprise/Organisme
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link {% if selectedClient|length > 0 and courseName == "" %} active {% endif %}" id="tab-1"  {% if selectedClient|length == 0 %}disabled="false" {% endif %}data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
+                <button class="nav-link " id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
                     Informations générales
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link {% if courseName != "" %} active {% endif %}" id="tab-2" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
+                <button class="nav-link" id="tab-2"  data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-3" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+                <button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
             </li>
-            {% if courseName and trainees|length > 0%}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-4" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#evalchaud" type="button" role="tab" aria-controls="evalchaud" aria-selected="false">Evaluation à chaud</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-5" {% if courseName == "" %} disabled="false" {% endif %} data-bs-toggle="tab" data-bs-target="#evalfroid" type="button" role="tab" aria-controls="evalfroid" aria-selected="false">Evaluation à froid</button>
-            </li>
-            {% endif %}
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade {% if selectedClient|length == 0  %} show active {% endif%} tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
+            <div class="tab-pane fade show active tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-sm-6">
-                                <h3 class="card-title">Choisir le client de la formation</h3>
-                                <select class="js-example-basic-single selectClient" name="selectClient" data-formationId="" data-url="" style="width: 100%">
-                                    <option selected="" value="0">Choisir un client de la liste</option>
-                                    {% for client in clients %}
-                                        <option value="{{ client.id }}" {% if(client.id in selectedClient) %} selected {% endif %}>{{ client.name }} / {{ client.email }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto me-auto">
-                            </div>
-                            <div class="col-auto">
-                                <button class="btn btn-primary btn-save" id="create-formation-interne" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %} data-url="{{ path('app_add_customers') }}">
-                                    Suivant
-                                </button>
-                            </div>
-                        </div>
-                        <h3 class="card-title">Ajouter un nouveau client si vous ne l'avez pas trouvé dans la liste</h3>
-                        <div class="row">
-                            <div class="col-auto">
-                                {% set forId = 0 %}
-                                {% if idFormation != '' %} {% set forId = idFormation %} {% endif %}
-                                <a href="{{path('app_customer_add',{ 'referer':'intra', 'idFormation': forId })}}" class="btn btn-primary">
-                                    Ajouter client
-                                </a>
+                                {% set clientName = "" %}
+                                {% for client in clients %}
+                                   {% if(client.id in selectedClient) %}
+                                       {% set clientName = client.name%}
+                                   {% endif %}
+                                {% endfor %}
+
+                                <h3 class="card-title">Le client est: {{ clientName }}</h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade {% if selectedClient|length > 0 and courseName|length == 0 %} show active {% endif%} tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
+            <div class="tab-pane fade tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
                 <div class="card">
-                    {% if selectedClient|length > 0 %}
                     <div class="card-body">
-                            {{ form_start(formationForm) }}
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.nomFormation,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3 bloc-add">
-                                        {{ form_row(formationForm.formateur,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                        <a href="{{path('app_add_teacher')}}" target="_blank">
-                                            <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
-                                        </a>
-                                    </div>
-                                    <div class="row mb-3 bloc-add">
-                                        {{ form_row(formationForm.financier,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                        <a href="{{path('app_financier_add')}}" target="_blank">
-                                            <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="30" class="">
-                                        </a>
-                                    </div>
-                                    <div class="row mb-3 checkboxLieu">
-                                        {{ form_row(formationForm.lieuFormation,
-                                            {'attr': {'class': '' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3 hidden lieuFormation">
-                                        {{ form_row(formationForm.formationAddress,
-                                            {'attr': {'class': 'form-control form-control-user addr-form hidden' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.lieuSignature,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3 hidden linkType">
-                                        {{ form_row(formationForm.linkType,
-                                            {'attr': {'class': '' }}
-                                        ) }}
-                                    </div>
-
-                                    <div class="row mb-3 hidden teacher">
-                                        <span id="link-formator">Aucun lien sélectionné</span>
-                                        <a href="#" class="bi-text-right" style="text-align: right" id="add-linkFormateur">Autre</a>
-                                    </div>
-                                    <div class="row mb-3 hidden" id="otherLinkFormateur">
-                                        <div>
-                                            <input type="text" name="otherLinkFormateur" id="inputOtherLinkFormateur" class="form-control" placeholder="Lien formateur">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 hidden linkVirFormation">
-                                        {{ form_row(formationForm.lienFormation,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.timesheet,
-                                            {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                        ) }}
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.dateDebutFormation
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.dateFinFormation
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.dureeFormation,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        <label>Lien vers le programme </label>
-                                        {{ form_row(formationForm.linkToProgram,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                        <a href="#" class="bi-text-right" style="text-align: right" id="add-program">Autre</a>
-                                    </div>
-                                    <div class="row mb-3 hidden" id="otherProgram">
-                                        <div>
-                                            <input type="text" name="otherProgram" class="form-control" id="staticValueProgramm" placeholder="Lien de programme" value="">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <label>Lien vers le livret d'accueil </label>
-                                        {{ form_row(formationForm.linkToLivretAccueil,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3 linkGuidFiled {% if formation.lieuFormation != 'Présentiel' %} hidden {% endif %}">
-                                        <label>Guide de votre classe virtuelle </label>
-                                        {{ form_row(formationForm.linkGuide,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        <label>Formulaire de recueil des attentes </label>
-                                        {{ form_row(formationForm.linkFormulaire,
-                                            {'attr': {'class': 'form-control form-control-user' }}
-                                        ) }}
-                                    </div>
-                                    <div class="row mb-3">
-                                        {{ form_row(formationForm.objective,
-                                            {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                        ) }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-auto me-auto">
-                                </div>
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary">
-                                        Enregistrer
-                                    </button>
-                                </div>
-                            </div>
-                            {{ form_end(formationForm) }}
-                        </div>
-                    {% endif %}
+                        <p>✅ <b>Modalité :</b> {{ formation.lieuFormation }}</p>
+                        <p>📅 <b>Dates et horaires :</b>  {{ formation.timesheet|striptags|raw }}</p>
+                        {% if (formation.lieuFormation == 'Présentiel') %}
+                            <p>📍 <b>Lieu de formation :</b> {{ formation.formationAddress|striptags|raw }}</p>
+                        {% elseif (formation.lieuFormation == 'Distanciel')%}
+                            <p>🎥 <b>Lien de classe virtuelle :</b>
+                                {% if (formation.formateur is defined and formation.formateur.linkFormateur) %}
+                                    <a href="{{  formation.formateur.linkFormateur  }}" target="_blank"  class="bleu-link "> {{  formation.formateur.linkFormateur }}</a>
+                                {% else %}
+                                    <a href="{{ formation.lienFormation }}" target="_blank"  class="bleu-link "> {{ formation.lienFormation }}</a>
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <p>📍 <b>Lieu de formation :</b> {{ formation.formationAddress|striptags|raw }}</p>
+                            <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
+                                {% if (formation.formateur is defined and formation.formateur.linkFormateur) %}
+                                    <a href="{{  formation.formateur.linkFormateur  }}" target="_blank"  class="bleu-link "> {{  formation.formateur.linkFormateur }}</a>
+                                {% else %}
+                                    <a href="{{ formation.lienFormation }}" target="_blank" class="bleu-link "> {{ formation.lienFormation }}</a>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                        <p><b>Date de début:</b> {{ formation.dateDebutFormation|date }}</p>
+                        <p><b>Date de fin:</b> {{ formation.dateFinFormation|date }}</p>
+                        <p><b>Nombre total d'heures:</b> {{ formation.dureeFormation }}</p>
+                        {% if  formation.linkToProgram is defined and formation.linkToProgram is not null%}
+                        <p><b>Lien vers le programme:</b> <a href="{{ formation.linkToProgram.value }}"  target="_blank"  class="bleu-link ">{{ formation.linkToProgram.name }}</a> </p>
+                        {% endif %}
+                        {% if  formation.linkToLivretAccueil is defined and formation.linkToLivretAccueil is not null%}
+                        <p><b>Lien vers le livret d'accueil:</b> <a href="{{ formation.linkToLivretAccueil.value }}"  target="_blank"  class="bleu-link ">{{ formation.linkToLivretAccueil.name }}</a> </p>
+                        {% endif %}
+                        {% if  formation.linkGuide is defined and formation.linkGuide is not null%}
+                        <p><b>Guide de votre classe virtuelle:</b> <a href="{{ formation.linkGuide.value }}"  target="_blank"  class="bleu-link ">{{ formation.linkGuide.name }}</a> </p>
+                        {% endif %}
+                        {% if  formation.linkFormulaire is defined and formation.linkFormulaire is not null%}
+                        <p><b>Formulaire de recueil des attentes:</b> <a href="{{ formation.linkFormulaire.value }}"  target="_blank"  class="bleu-link ">{{ formation.linkFormulaire.name }}</a> </p>
+                        {% endif %}
+                        <p><b>Objectifs de l'action de formation:</b> {{ formation.objective|raw }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="tab-pane fade {% if courseName != '' %} show active {% endif%}" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
+            <div class="tab-pane fade" id="stagiaires" role="tabpanel" aria-labelledby="tab-2">
                 <div class="card">
                     {% if formation is defined %}
                         <div class="card">
@@ -311,21 +190,9 @@
                                             <div class="mx-lg-2">
                                                 <a href="{{path('app_add_trainee',{ 'formationId': formation.id })}}" title="Ajouter Stagiaire à la formation"> <img src="{{asset('assets/img/icon/user-plus-solid.svg')}}" width="40"></a>
                                             </div>
-                                            <div class="custom-file-upload mx-lg-2">
-                                                <form id="importFile" action="{{path('app_upload_trainee',{ 'idFormation':formation.id})}}" method="post" name="trainees" enctype="multipart/form-data">
-                                                    <input type="file" id="html_btn" name= "fileTrainee" class="file-type" style="display: none">
-                                                </form>
-                                                <img src="{{asset('assets/img/icon/file-excel-solid.svg')}}" width="30" class="float-end new_Btn">
-                                            </div>
-                                            <div class="mx-lg-2 send-conv {% if trainees|length == 0 %} hidden {% endif %}">
-                                                <a href="{{path('app_allTrainees_send_conv',{ 'idFormation':formation.id})}}" title="Envoyer convocation à tous les stagiaires"> <img src="{{asset('assets/img/icon/paper-plane-solid.svg')}}" width="30"></a>
-                                            </div>
-                                            <div class="mx-lg-2">
-                                                <a href="{{path('app_teacher_send_alert',{ 'idFormation': formation.id })}}" title="Rappel des informations clés"> <img src="{{asset('assets/img/icon/reply-all-solid.svg')}}" width="40"></a>
-                                            </div>
                                             <div class="mx-lg-2">
                                                 <a href="{{path('app_download_trainee_by_formation',{'idFormation': formation.id })}}" title="Télecharger stagiaires" class="float-end mt-4 mb-4" style="display: contents">
-                                                    <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="25" class="float-end">
+                                                    <img src="{{asset('assets/img/icon/file-arrow-down-solid.svg')}}" width="30" class="float-end new_Btn">
                                                 </a>
                                             </div>
                                             <div class="mx-lg-2 hidden">
@@ -412,129 +279,15 @@
             <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="tab-3">
                 <div class="card">
                     <div class="card-body">
-                        {% if formInfo != '' %}
-                            <div class="card">
-                                <div class="card-body">
-                                    {{ form_start(formInfo) }}
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="row mb-3">
-                                                {{ form_row(formInfo.infoTrainees,
-                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                                ) }}
-                                            </div>
-                                            <div class="row mb-3">
-                                                {{ form_row(formInfo.infoFormateur,
-                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                                ) }}
-                                            </div>
-                                            <div class="row mb-3">
-                                                {{ form_row(formInfo.infoCustomer,
-                                                    {'attr': {'class': 'form-control form-control-user tinymce-editor' }}
-                                                ) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-auto me-auto">
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary">
-                                                Enregistrer
-                                            </button>
-                                        </div>
-                                    </div>
-                                    {{ form_end(formInfo) }}
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="evalchaud" role="tabpanel" aria-labelledby="tab-4">
-                <div class="card">
-                    <div class="card-body">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="row mb-3">
-                                               <label>Sujet de mail</label>
-                                                <input type="text" class="form-control" name="subjectEvalChaud" id="subjectEvalChaud"  value="Evaluation à chaud commanditaire formation '{{ courseName }}'">
-                                            </div>
-                                            <div class="row mb-3">
-                                               <label>Contenu de mail</label>
-                                                <textarea class="" name="evaluationChaud" id="evaluationChaud">
-                                                   Bonjour,
-                                                    Nous avons réalisé l'action de formation « {{ courseName }} » pour votre compte,
-                                                    et nous espérons qu'elle a répondu à vos attentes.
-                                                    En votre qualité de commanditaire, nous vous serions très reconnaissants de prendre trois minutes
-                                                    pour compléter ce questionnaire d'évaluation de la formation
-                                                    Evaluation de la satisfaction des commanditaires de nos formations
-                                                    Vos retours seront précieux dans le cadre de notre processus d'amélioration continue.
-                                                    Nous vous remercions sincèrement et restons à votre écoute pour tout besoin complémentaire.
-
-                                                    Bien cordialement
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-auto me-auto">
-                                        </div>
-                                        <div class="col-auto">
-                                            <button class="btn btn-primary" id="submit-eval-chaud" data-url="{{path('app_send_eval_chaud')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
-                                                Envoyer Email
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="evalfroid" role="tabpanel" aria-labelledby="tab-5">
-                <div class="card">
-                    <div class="card-body">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row mb-3">
-                                            <label>Sujet de mail</label>
-                                            <input type="text" class="form-control" name="subjectEvalFroid" id="subjectEvalFroid" value="Evaluation à froid client '{{ courseName }}'">
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label>Contenu de mail</label>
-                                            <textarea class="" name="evaluationFroid" id="evaluationFroid">
-                                                Bonjour,
-                                                Il y a quelques mois, nous avons eu le plaisir de réaliser pour votre compte la formation "{{ courseName }}" des 12 et 13/09/2022
-                                                A présent, nous souhaiterions évaluer avec du recul le degré de réponse de cette prestation à vos attentes et vos besoins.
-                                                Pour cela, nous vous serions reconnaissants de prendre trois minutes pour compléter ce questionnaire d'évaluation à froid :
-                                                Evaluation à froid commanditaire
-                                                Vos retours seront précieux dans le cadre de notre processus d'amélioration continue.
-                                                Nous vous remercions sincèrement et restons à votre écoute pour tout besoin complémentaire.
-
-                                                Bien cordialement,
-                                             </textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                        <div class="col-auto me-auto">
-                                        </div>
-                                        <div class="col-auto">
-                                            <button class="btn btn-primary" id="submit-eval-froid" data-url="{{path('app_send_eval_froid')}}" {% if idFormation != "" %} data-formationId="{{ idFormation }}" {% else %} data-formationId="" {% endif %}>
-                                                Envoyer Email
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{ formation.infoFormateur|raw }}
                             </div>
-                         </div>
+                        </div>
                     </div>
-                 </div>
+                </div>
             </div>
+        </div>
     </section>
     <div class="modal fade" id="updateTime" tabindex="-1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

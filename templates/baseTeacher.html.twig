@@ -94,12 +94,49 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link {% if 'app_trainer' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_trainer')}}" title="Formations">
-          <img src="{{asset('assets/img/icon/book-solid-white.svg')}}" class="icon-menu">
-          <span>Formations</span>
+        <a class="nav-link {% if 'app_home_trainer' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_home_trainer')}}" title="Dashboard">
+          <img src="{{asset('assets/img/icon/chart-pie-solid-white.svg')}}" class="icon-menu">
+          <span>Tableau de bord</span>
         </a>
-      </li><!-- End Formations Page Nav -->
+      </li><!-- End Dashboard Nav -->
+      <li class="nav-item">
+        <a class="nav-link {% if  'app_courses_inter' not in app.request.attributes.get('_route') and 'app_customer_course' not in app.request.attributes.get('_route') and 'app_customer_formation' not in app.request.attributes.get('_route') and  'app_courses_manage' not in app.request.attributes.get('_route') %} collapsed {% endif %}" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false" title="Formations">
+          <img src="{{asset('assets/img/icon/book-solid-white.svg')}}" class="icon-menu">
+          <span>Formations</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content collapse {% if 'app_customer_course' in app.request.attributes.get('_route') or 'app_courses_inter' in app.request.attributes.get('_route') or 'app_customer_formation' in app.request.attributes.get('_route') or 'intra' in app.request.pathinfo or 'inter' in app.request.pathinfo %} show {% endif %}" data-bs-parent="#sidebar-nav" style="">
+          <li>
+            <a  href="{{path('app_customer_course')}}" class="{% if 'app_customer_course' in app.request.attributes.get('_route') or 'app_customer_formation' in app.request.attributes.get('_route') or 'intra' in app.request.pathinfo %} active {% endif %}">
+              <i class="bi bi-circle"></i><span>Intra</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{path('app_courses_inter')}}" class="{% if 'app_courses_inter' in app.request.attributes.get('_route') or 'inter' in app.request.pathinfo %} active {% endif %}">
+              <i class="bi bi-circle"></i><span>Inter</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End Formations Page Nav -->
+      <li class="nav-item">
+        <a class="nav-link {% if ('app_customer' not in app.request.attributes.get('_route')  or 'app_customer_formation' in app.request.attributes.get('_route')  or 'app_customer_course' in app.request.attributes.get('_route')) %} collapsed {% endif %}" href="{{path('app_customer')}}" title="Clients">
+          <img src="{{asset('assets/img/icon/landmark-solid-white.svg')}}" class="icon-menu">
+          <span>Contact Clients</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if 'app_trainees' not in app.request.attributes.get('_route') and 'app_edit_trainee' not in app.request.attributes.get('_route') and 'app_add_trainee' not in app.request.attributes.get('_route')  %} collapsed {% endif %}" href="{{path('app_trainees')}}" title="Stagiaires">
+          <img src="{{asset('assets/img/icon/graduation-cap-solid-white.svg')}}" class="icon-menu">
+          <span>Contact stagiaires</span>
+        </a>
+      </li><!-- End Stagiaire Page Nav -->
 
+      <li class="nav-item">
+        <a class="nav-link {% if 'app_trainer_documents' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_trainer_documents')}}" title="Documents">
+          <img src="/assets/img/icon/link-solid-white.svg" class="icon-menu">
+          <span>Documents</span>
+        </a>
+      </li><!-- End Documents Page Nav -->
       <li class="nav-item">
         <a class="nav-link {% if 'app_edit_user' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_edit_user',{ 'id': app.user.id })}}" title="Compte">
           <img src="{{asset('assets/img/icon/user-solid-white.svg')}}" class="icon-menu">
