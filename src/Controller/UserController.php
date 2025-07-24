@@ -99,8 +99,13 @@ class UserController extends AbstractController
     public function listOfTrainees(EntityManagerInterface $entityManager): Response
     {
         $users = $entityManager->getRepository(Trainee::class)->findBy([],['id' => 'DESC']);
+        $isTeacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $isTeacher = true;
+        }
         return $this->render('trainees/trainees.html.twig', [
             'users' => $users,
+            'base_template' => $isTeacher ? 'baseTeacher.html.twig' : 'baseAdmin.html.twig'
         ]);
     }
 
@@ -131,10 +136,15 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('app_trainees');
             }
         }
+        $isTeacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $isTeacher = true;
+        }
         return $this->render('trainees/new_trainee.html.twig', [
             'registrationForm' => $form->createView(),
             'formationId' => $formationId,
-            'typeFormation' => $type
+            'typeFormation' => $type,
+            'base_template' => $isTeacher ? 'baseTeacher.html.twig' : 'baseAdmin.html.twig'
         ]);
     }
     /** Teacher CRUD */
@@ -173,7 +183,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/trainee/edit/{id}/{idFormation}', name: 'app_edit_user_trainee')]
+    #[Route('/trainee/edit/{id}/{idFormation}', name: 'app_edit_trainee')]
     public function updateTrainee(Request $request, EntityManagerInterface $entityManager, $id, $idFormation = null): Response
     {
         $user = $entityManager->getRepository(Trainee::class)->findOneBy(['id' => $id]);
@@ -193,9 +203,14 @@ class UserController extends AbstractController
             }
             return $this->redirectToRoute('app_trainees');
         }
+        $isTeacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $isTeacher = true;
+        }
         return $this->render('trainees/update_trainee.html.twig', [
             'setTraineeForm' => $form->createView(),
-            'typeFormation' => $type
+            'typeFormation' => $type,
+            'base_template' => $isTeacher ? 'baseTeacher.html.twig' : 'baseAdmin.html.twig'
         ]);
     }
 

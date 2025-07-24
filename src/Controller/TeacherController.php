@@ -27,4 +27,14 @@ class TeacherController extends AbstractController
             'courses' => $courses
         ]);
     }
+
+    #[Route('/documentsTrainer', name: 'app_trainer_documents')]
+    public function documentsTrainer(EntityManagerInterface $entityManager): Response
+    {
+        $trainer = $this->getUser();
+        $courses = $entityManager->getRepository(Formation::class)->findBy(['formateur' => $trainer],['id' => 'DESC']);
+        return $this->render('teacher/documents.html.twig', [
+            'courses' => $courses
+        ]);
+    }
 }

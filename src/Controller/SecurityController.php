@@ -14,7 +14,7 @@ class SecurityController extends AbstractController
     {
         if ($this->getUser()) {
             if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
-                return $this->redirectToRoute('app_trainer');
+                return $this->redirectToRoute('app_home_trainer');
             } else {
                 return $this->redirectToRoute('app_home');
             }

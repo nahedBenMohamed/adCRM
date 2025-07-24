@@ -1,4 +1,4 @@
-{% extends 'baseAdmin.html.twig' %}
+{% extends base_template %}
 
 {% block title %}Hello UserController!{% endblock %}
 {% block stylesheets %}
@@ -60,7 +60,7 @@
                                         <a href data-bs-toggle="modal" data-bs-target="#confirmationModal" class="first-btn deleteBtn" title="supprimer" data-remove-url="{{path('app_delete_trainee',{ 'id': user.id })}}">
                                             <img src="{{asset('assets/img/icon/circle-delete-solid-red.svg')}}">
                                         </a>
-                                        <a href="{{path('app_edit_user_trainee',{ 'id': user.id })}}" class="" title="modifier">
+                                        <a href="{{path('app_edit_trainee',{ 'id': user.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
                                     </td>

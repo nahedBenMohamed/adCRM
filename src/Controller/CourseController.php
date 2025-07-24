@@ -39,8 +39,14 @@ class CourseController extends AbstractController
     #[Route('/coursesInter', name: 'app_courses_inter')]
     public function viewCoursesInter(EntityManagerInterface $entityManager): Response
     {
-        $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'inter'],['id' => 'DESC']);
-        return $this->render('courses/index.html.twig', [
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'inter', 'formateur' =>$this->getUser()],['id' => 'DESC']);
+            $view = 'coursesFormateur/index.html.twig';
+        } else {
+            $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'inter'],['id' => 'DESC']);
+            $view = 'courses/index.html.twig';
+        }
+        return $this->render($view, [
             'courses' => $courses,
             'alowAddNew' => false
         ]);
@@ -52,10 +58,14 @@ class CourseController extends AbstractController
         $clients = $entityManager->getRepository(Customer::class)->findBy([], ['id' => 'DESC']);
         $view = "courses/formationManagement.html.twig";
         if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
-            $view = "teacher/showFormation.html.twig";
+           // $view = "teacher/showFormation.html.twig";
+            $view = "coursesFormateur/formationManagement_tr.html.twig";
         }
         if($type == 'inter') {
             $view = "courses/formationManagementInter.html.twig";
+            if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+                $view = "coursesFormateur/formationManagementInter_tr.html.twig";
+            }
         }
         if ($idFormation ==  null){
             $course = new Formation();

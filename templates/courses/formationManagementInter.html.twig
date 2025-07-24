@@ -403,7 +403,7 @@
                                                     <a href="" data-bs-toggle="modal" data-bs-target="#updateTime" class="updateNbhour" title="Nombre d'heure {{ stg.nbHour }}" data-nbHour="{{ stg.nbHour }}" data-add-time-url="{{path('app_update_time',{ 'id': stg.trainee.id, 'formationId' : idFormation })}}">
                                                         <img src="{{asset('assets/img/icon/clock-solid.svg')}}">
                                                     </a>
-                                                    <a href="{{ path('app_edit_user_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="" title="modifier">
+                                                    <a href="{{ path('app_edit_trainee', { 'id':stg.trainee.id, 'idFormation':formation.id }) }}" class="" title="modifier">
                                                         <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                                     </a>
                                                     <a href="{{ path('app_trainee_send_conv', { 'idFormation':formation.id, 'idTrainee': stg.trainee.id }) }}" class="btn-save" title="Envoyer convocation">

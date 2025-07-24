@@ -1,0 +1,103 @@
+{% extends 'baseTeacher.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .dashboard .info-card .card-body {
+            height: 200px;
+            min-width: 140px;
+        }
+        .dashboard .info-card .card-body .text-center {
+            position: absolute;
+            bottom: 3px;
+            left: 30%;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item active">Tableau de board</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+                    <div class="row bloc-numbers">
+                        <div class="col-xxl-3 col-md-3">
+                            <div class="card info-card revenue-card bg-info">
+
+                                <div class="card-body">
+                                    <h5 class="card-title small">Nombre de session réalisée</h5>
+
+                                    <div class="text-center">
+                                        <div class="ps-3">
+                                            <h6></h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div><!-- End Revenue Card -->
+
+                        <!-- Customers Card -->
+                        <div class="col-xxl-3 col-md-3">
+
+                            <div class="card info-card customers-card bg-info">
+                                <div class="card-body">
+                                    <h5 class="card-title small ">Nombre de session à venir</h5>
+                                    <div class="text-center">
+                                        <div class="ps-3">
+                                            <h6></h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div><!-- End Customers Card -->
+                        <!-- Customers Card -->
+                        <div class="col-xxl-3 col-md-3">
+
+                            <div class="card info-card customers-card bg-info">
+                                <div class="card-body">
+                                    <h5 class="card-title small">Nombre de sessions encours</h5>
+
+                                    <div class="text-center">
+                                        <div class="ps-3">
+                                            <h6></h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div><!-- End Customers Card -->
+                        <div class="col-xxl-3 col-md-3">
+
+                            <div class="card info-card customers-card bg-info">
+                                <div class="card-body">
+                                    <h5 class="card-title small">Nombre de sessions à clôturer</h5>
+
+                                    <div class="text-center">
+                                        <div class="ps-3">
+                                            <h6></h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div><!-- End Customers Card -->
+                    </div>
+
+                </div>
+            </div><!-- End Left side columns -->
+
+
+        </div>
+    </section>
+{% endblock %}

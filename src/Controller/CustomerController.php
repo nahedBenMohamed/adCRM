@@ -21,8 +21,13 @@ class CustomerController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $customers = $entityManager->getRepository(Customer::class)->findBy([],['id' => 'DESC']);
+       $isTeacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $isTeacher = true;
+        }
         return $this->render('customer/index.html.twig', [
             'customers' => $customers,
+            'base_template' => $isTeacher ? 'baseTeacher.html.twig' : 'baseAdmin.html.twig'
         ]);
     }
 
@@ -75,9 +80,13 @@ class CustomerController extends AbstractController
             }
             return $this->redirectToRoute('app_customer');
         }
-
+        $isTeacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $isTeacher = true;
+        }
         return $this->render('customer/new.html.twig', [
             'newCustomer' => $form->createView(),
+            'base_template' => $isTeacher ? 'baseTeacher.html.twig' : 'baseAdmin.html.twig',
         ]);
     }
 
@@ -117,9 +126,13 @@ class CustomerController extends AbstractController
             }
             return $this->redirectToRoute('app_customer');
         }
-
+        $isTeacher = false;
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $isTeacher = true;
+        }
         return $this->render('customer/edit.html.twig', [
             'newCustomer' => $form->createView(),
+            'base_template' => $isTeacher ? 'baseTeacher.html.twig' : 'baseAdmin.html.twig'
         ]);
     }
 
@@ -144,7 +157,13 @@ class CustomerController extends AbstractController
     #[Route('/customerCourse', name: 'app_customer_course')]
     public function customerForFormation(EntityManagerInterface $entityManager): Response
     {
-        $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'intra'],['id' => 'DESC']);
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'intra','formateur'=>$this->getUser()],['id' => 'DESC']);
+            $view = 'coursesFormateur/customerWithFormation.html.twig';
+        } else {
+            $courses = $entityManager->getRepository(Formation::class)->findBy(['type' =>'intra'],['id' => 'DESC']);
+            $view = 'customer/customerWithFormation.html.twig';
+        }
         $customerWithCourses = [];
         foreach ($courses as $formation) {
             $customers = $formation->getCustomers();
@@ -155,7 +174,7 @@ class CustomerController extends AbstractController
                 }
             }
         }
-        return $this->render('customer/customerWithFormation.html.twig', [
+        return $this->render($view, [
             'customers' => $customerWithCourses,
         ]);
     }
@@ -163,7 +182,14 @@ class CustomerController extends AbstractController
     #[Route('/customerFormation/{customerId}', name: 'app_customer_formation')]
     public function customerFormations(EntityManagerInterface $entityManager, $customerId): Response
     {
-        $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
+        $view = 'customer/formationOfCustomer.html.twig';
+        if (in_array('ROLE_TEACHER', $this->getUser()->getRoles(), true)) {
+            $view = "teacher/formationOfCustomer_tr.html.twig";
+            $courses = $entityManager->getRepository(Formation::class)->findBy(['formateur' =>$this->getUser()],['id' => 'DESC']);
+        } else {
+            $courses = $entityManager->getRepository(Formation::class)->findBy([],['id' => 'DESC']);
+        }
+
         $customerCourses = [];
         foreach ($courses as $formation) {
             if($formation->getType() == "intra") {
@@ -175,7 +201,8 @@ class CustomerController extends AbstractController
                 }
             }
         }
-        return $this->render('customer/formationOfCustomer.html.twig', [
+
+        return $this->render($view, [
             'courses' => $customerCourses,
             'alowAddNew' => true
         ]);
