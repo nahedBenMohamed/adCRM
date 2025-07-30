@@ -89,13 +89,8 @@
             </div>
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link  active " id="tab-0" data-bs-toggle="tab" data-bs-target="#organisme" type="button" role="tab" aria-controls="organisme" aria-selected="true">
-                    Entreprise/Organisme
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link " id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
+            <li class="nav-item " role="presentation">
+                <button class="nav-link active" id="tab-1" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="false">
                     Informations générales
                 </button>
             </li>
@@ -103,37 +98,19 @@
                 <button class="nav-link" id="tab-2"  data-bs-toggle="tab" data-bs-target="#stagiaires" type="button" role="tab" aria-controls="stagiaires" aria-selected="false">Stagiaires</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Compléments</button>
+                <button class="nav-link" id="tab-3" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Info Formation</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active tab0" id="organisme" role="tabpanel" aria-labelledby="tab-0">
+            <div class="tab-pane fade active show  tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-sm-6">
-                                {% set clientName = "" %}
-                                {% for client in clients %}
-                                   {% if(client.id in selectedClient) %}
-                                       {% set clientName = client.name%}
-                                   {% endif %}
-                                {% endfor %}
-
-                                <h3 class="card-title">Le client est: {{ clientName }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade tab1" id="details" role="tabpanel" aria-labelledby="tab-1">
-                <div class="card">
-                    <div class="card-body">
-                        <p>✅ <b>Modalité :</b> {{ formation.lieuFormation }}</p>
-                        <p>📅 <b>Dates et horaires :</b>  {{ formation.timesheet|striptags|raw }}</p>
+                        <p>✅ <b>Modalité:</b> {{ formation.lieuFormation }}</p>
+                        <p>📅 <b>Dates et horaires:</b>  {{ formation.timesheet|striptags|raw }}</p>
                         {% if (formation.lieuFormation == 'Présentiel') %}
-                            <p>📍 <b>Lieu de formation :</b> {{ formation.formationAddress|striptags|raw }}</p>
+                            <p>📍 <b>Lieu de formation:</b> {{ formation.formationAddress|striptags|raw }}</p>
                         {% elseif (formation.lieuFormation == 'Distanciel')%}
-                            <p>🎥 <b>Lien de classe virtuelle :</b>
+                            <p>🎥 <b>Lien de classe virtuelle:</b>
                                 {% if (formation.formateur is defined and formation.formateur.linkFormateur) %}
                                     <a href="{{  formation.formateur.linkFormateur  }}" target="_blank"  class="bleu-link "> {{  formation.formateur.linkFormateur }}</a>
                                 {% else %}
@@ -141,7 +118,7 @@
                                 {% endif %}
                             </p>
                         {% else %}
-                            <p>📍 <b>Lieu de formation :</b> {{ formation.formationAddress|striptags|raw }}</p>
+                            <p>📍 <b>Lieu de formation:</b> {{ formation.formationAddress|striptags|raw }}</p>
                             <p>🎥 <b>Lien de connexion à votre classe virtuelle :</b>
                                 {% if (formation.formateur is defined and formation.formateur.linkFormateur) %}
                                     <a href="{{  formation.formateur.linkFormateur  }}" target="_blank"  class="bleu-link "> {{  formation.formateur.linkFormateur }}</a>
@@ -165,7 +142,11 @@
                         {% if  formation.linkFormulaire is defined and formation.linkFormulaire is not null%}
                         <p><b>Formulaire de recueil des attentes:</b> <a href="{{ formation.linkFormulaire.value }}"  target="_blank"  class="bleu-link ">{{ formation.linkFormulaire.name }}</a> </p>
                         {% endif %}
-                        <p><b>Objectifs de l'action de formation:</b> {{ formation.objective|raw }}</p>
+                        <b>Objectifs de l'action de formation:</b>
+                            <div class="training-objectives">
+                            {{ formation.objective|raw }}
+                        </div>
+
                     </div>
                 </div>
             </div>
