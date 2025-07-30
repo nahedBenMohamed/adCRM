@@ -152,6 +152,12 @@
           <span>Liens</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link {% if 'app_admin_documents' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_admin_documents')}}" title="Documents">
+          <img src="/assets/img/icon/link-solid-white.svg" class="icon-menu">
+          <span>Documents</span>
+        </a>
+      </li><!-- End Documents Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link {% if 'app_user' not in app.request.attributes.get('_route') and 'app_add_user' not in app.request.attributes.get('_route') and 'app_edit_admin' not in app.request.attributes.get('_route') %} collapsed {% endif %}" href="{{path('app_user')}}" title="Administrateurs">
