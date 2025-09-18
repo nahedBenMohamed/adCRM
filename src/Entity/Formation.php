@@ -34,7 +34,7 @@ class Formation
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $lieuFormation = '';
 
-    #[ORM\Column(length: 255,nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $formationAddress = '';
 
     #[ORM\Column(length: 255,nullable: true)]
