@@ -255,6 +255,7 @@ class CourseController extends AbstractController
             ->from('formation@adconseil.org')
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
+            ->cc('y.chicha@adconseil.org ')
             ->to($trainee->getEmail());
         $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
@@ -288,6 +289,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
+                ->cc('y.chicha@adconseil.org ')
                 ->to($trainee->getEmail());
             $mailer->send($email);
             /************ end send mail to all trainee ***/
@@ -313,6 +315,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html2)
+                ->cc('y.chicha@adconseil.org ')
                 ->to('formation@adconseil.org');
            $mailer->send($emailAdmin);
 
@@ -326,7 +329,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject("Récap’ formation ".$formation->getNomFormation())
                 ->html($htmlRecap)
-                ->cc('formation@adconseil.org')
+                ->cc(['formation@adconseil.org','y.chicha@adconseil.org'])
                 ->to($traineer->getEmail());
             $mailer->send($emailTraineer);
             /**************end send mail to Traineer and copy to adconseil******/
@@ -344,6 +347,7 @@ class CourseController extends AbstractController
                     ->from('formation@adconseil.org')
                     ->subject('Convocation de vos apprenant.es à la formation '.$formation->getNomFormation())
                     ->html($htmlClient)
+                    ->cc('y.chicha@adconseil.org')
                     ->to('formation@adconseil.org');
                 $mailer->send($emailClient);
                 /******* end mail to adconseil *****/
