@@ -255,7 +255,7 @@ class CourseController extends AbstractController
             ->from('formation@adconseil.org')
             ->subject('Convocation à la formation '.$formation->getNomFormation())
             ->html($html)
-            ->cc('y.chicha@adconseil.org ')
+            ->cc('y.chicha@adconseil.org')
             ->to($trainee->getEmail());
         $mailer->send($email);
         $traineesFormation->setSendConvocation(true);
@@ -289,7 +289,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
-                ->cc('y.chicha@adconseil.org ')
+                ->cc('y.chicha@adconseil.org')
                 ->to($trainee->getEmail());
             $mailer->send($email);
             /************ end send mail to all trainee ***/
@@ -315,7 +315,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html2)
-                ->cc('y.chicha@adconseil.org ')
+                ->cc('y.chicha@adconseil.org')
                 ->to('formation@adconseil.org');
            $mailer->send($emailAdmin);
 
