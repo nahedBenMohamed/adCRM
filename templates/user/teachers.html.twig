@@ -43,6 +43,9 @@
                                         <a href="{{path('app_edit_formateur',{ 'id': user.id })}}" class="" title="modifier">
                                             <img src="{{asset('assets/img/icon/pen-solid.svg')}}">
                                         </a>
+                                        <a href="{{path('app_login_formateur',{ 'id': user.id })}}" class="" title="login" style="width: 17px;margin-left: 7px;">
+                                            <img src="{{asset('assets/img/icon/arrows-rotate-solid-full.svg')}}">
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}
