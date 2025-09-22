@@ -21,7 +21,9 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use App\Security\AppAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserController extends AbstractController
@@ -452,4 +454,29 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/user/loginTeacher/{id}', name: 'app_login_formateur')]
+    public function loginTeacher(EntityManagerInterface $entityManager,
+                                 UserAuthenticatorInterface $userAuthenticator,
+                                 AppAuthenticator $authenticator,
+                                 Request $request,
+        $id): Response
+    {
+        if (in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles(), true)) {
+            $admin =$this->getUser();
+            $request->getSession()->set('adminId', $admin->getId());
+        }
+
+        // Load the user by ID (assuming Doctrine)
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        // Authenticate the user
+        $userAuthenticator->authenticateUser($user, $authenticator, $request);
+
+        // Redirect to homepage (or another route)
+        if (in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles(), true)) {
+            return $this->redirectToRoute('app_home');
+        } else {
+            return $this->redirectToRoute('app_home_trainer');
+        }
+
+    }
 }
