@@ -66,25 +66,31 @@ class TeacherController extends AbstractController
         $nbdocAutre = $entityManager->getRepository(Documents::class)->count(['category' => 'autre']);
         if ($form->isSubmitted() && $form->isValid()) {
             // gérer l'upload de fichier ici si nécessaire
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form->get('filePath')->getData();
+            $file = $form->get('filePath')->getData();
+            $link = $form->get('fileLink')->getData();
+            if ($file) {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $form->get('filePath')->getData();
 
-            if ($uploadedFile) {
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                if ($uploadedFile) {
+                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
-                try {
-                    $uploadedFile->move(
-                        $this->getParameter('company_file_directory'), // define this in services.yaml
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    throw new \Exception('File upload failed');
+                    try {
+                        $uploadedFile->move(
+                            $this->getParameter('company_file_directory'), // define this in services.yaml
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        throw new \Exception('File upload failed');
+                    }
+
+                    // SET the filePath on the entity manually:
+                    $document->setFilePath($newFilename);
                 }
-
-                // SET the filePath on the entity manually:
-                $document->setFilePath($newFilename);
+            } else {
+                $document->setFilePath($link);
             }
 
             $entityManager->persist($document);

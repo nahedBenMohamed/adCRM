@@ -12,7 +12,7 @@
 
         .document-card {
             background-color: #fff;
-            width: 150px;
+            width: 200px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
             overflow: hidden;
@@ -91,6 +91,8 @@
                             <span class="nbDoc">{{ nbdocLivretAccueil }}</span>
                         </div>
                     </a>
+                </div>
+                <div class="documents-container">
                     <a href="{{path('app_admin_get_documents',{ 'category': 'processusInterne' })}}">
                         <div class="document-card">
                             <img src="/assets/img/news-4.jpg" alt="Document 4">
