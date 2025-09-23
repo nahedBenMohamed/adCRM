@@ -78,7 +78,7 @@
 
         .document-card {
             background-color: #fff;
-            width: 150px;
+            width: 200px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
             overflow: hidden;
@@ -128,6 +128,21 @@
                 max-width: 300px;
             }
         }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+        .form-control {
+            padding: 10px 12px;
+        }
+        #file-input, #link-input {
+            margin-bottom: 20px;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -136,11 +151,9 @@
             <div class="col-sm-12" bis_skin_checked="1">
                 <h1>Documents et outils clés</h1>
                 <div class="form-container">
-                    <h2>Ajouter un document</h2>
                     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
 
                     <div class="form-row">
-
                         <div class="form-group">
                             {{ form_label(form.category) }}
                             {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
@@ -152,18 +165,33 @@
                             {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
                             {{ form_errors(form.title) }}
                         </div>
-
-                        <div class="form-group">
-                            {{ form_label(form.filePath) }}
-                            {{ form_widget(form.filePath, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(form.filePath) }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><input type="radio" name="uploadType" value="file" checked> 📎 Télécharger un fichier</label>
+                                <label><input type="radio" name="uploadType" value="link"> 🔗 Ajouter un lien</label>
+                            </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group" id="file-input">
+                                {{ form_label(form.filePath) }}
+                                {{ form_widget(form.filePath, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.filePath) }}
+                            </div>
 
+                            <div class="form-group" id="link-input" style="display: none;">
+                                {{ form_label(form.fileLink) }}
+                                {{ form_widget(form.fileLink, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.fileLink) }}
+                            </div>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Téléverser</button>
 
                     {{ form_end(form) }}
+
                 </div>
                 <div class="documents-container">
                     <a href="{{path('app_admin_get_documents',{ 'category': 'qualite' })}}">
@@ -187,6 +215,8 @@
                             <span class="nbDoc">{{ nbdocLivretAccueil }}</span>
                         </div>
                     </a>
+                </div>
+                <div class="documents-container">
                     <a href="{{path('app_admin_get_documents',{ 'category': 'processusInterne' })}}">
                         <div class="document-card">
                             <img src="/assets/img/news-4.jpg" alt="Document 4">
@@ -212,5 +242,27 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.getElementById('file-input');
+            const linkInput = document.getElementById('link-input');
+            const radios = document.getElementsByName('uploadType');
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'file') {
+                        fileInput.style.display = 'block';
+                        linkInput.style.display = 'none';
+                    } else {
+                        fileInput.style.display = 'none';
+                        linkInput.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
 
 {% endblock %}

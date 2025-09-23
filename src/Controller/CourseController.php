@@ -289,7 +289,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject('Convocation à la formation '.$formation->getNomFormation())
                 ->html($html)
-                ->cc('y.chicha@adconseil.org')
+                ->cc('formation@adconseil.org','y.chicha@adconseil.org')
                 ->to($trainee->getEmail());
             $mailer->send($email);
             /************ end send mail to all trainee ***/
@@ -306,7 +306,7 @@ class CourseController extends AbstractController
         $traineer = $formation->getFormateur();
         if($traineer) {
             /************ send copy of convocation to adconseil admin ********/
-            $html2 = $this->renderView('emails/convocation.html.twig', [
+            /*$html2 = $this->renderView('emails/convocation.html.twig', [
                 'dataF' => $formation,
                 'dataS' => $traineesFormation[0]
             ]);
@@ -317,7 +317,7 @@ class CourseController extends AbstractController
                 ->html($html2)
                 ->cc('y.chicha@adconseil.org')
                 ->to('formation@adconseil.org');
-           $mailer->send($emailAdmin);
+           $mailer->send($emailAdmin);*/
 
             /************ send specific recap mail to formateur and copy to adconseil ******************/
             $htmlRecap = $this->renderView('emails/convocation_traineer.html.twig', [
@@ -329,7 +329,7 @@ class CourseController extends AbstractController
                 ->from('formation@adconseil.org')
                 ->subject("Récap’ formation ".$formation->getNomFormation())
                 ->html($htmlRecap)
-                ->cc(['formation@adconseil.org','y.chicha@adconseil.org'])
+                ->cc('formation@adconseil.org','y.chicha@adconseil.org')
                 ->to($traineer->getEmail());
             $mailer->send($emailTraineer);
             /**************end send mail to Traineer and copy to adconseil******/
@@ -337,7 +337,7 @@ class CourseController extends AbstractController
             $client = $formation->getCustomers();
             if($client) {
                 /*********** Send copy of mail client to adconseil *****************/
-                $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
+                /*$htmlClient = $this->renderView('emails/convocation_client.html.twig', [
                     'dataF' => $formation,
                     'dataS' => $traineesFormation[0],
                     'traineesFormation' => $listOfTrainees,
@@ -349,7 +349,7 @@ class CourseController extends AbstractController
                     ->html($htmlClient)
                     ->cc('y.chicha@adconseil.org')
                     ->to('formation@adconseil.org');
-                $mailer->send($emailClient);
+                $mailer->send($emailClient);*/
                 /******* end mail to adconseil *****/
 
                 /********* send mail to all clients ******/
@@ -364,11 +364,12 @@ class CourseController extends AbstractController
                         ->from('formation@adconseil.org')
                         ->subject('Convocation de vos apprenant.es à la formation '.$formation->getNomFormation())
                         ->html($htmlClient)
+                        ->cc('formation@adconseil.org,y.chicha@adconseil.org')
                         ->to($cl->getEmail());
                    $mailer->send($emailClient);
                 }
                 /**** send mail to contact administrative ***/
-                /*$contactAdmin = $formation->getCustomers()->getContactAdministratif();
+                $contactAdmin = $formation->getCustomers()->getContactAdministratif();
                 if($contactAdmin) {
                     $htmlClient = $this->renderView('emails/convocation_client.html.twig', [
                         'dataF' => $formation,
@@ -380,9 +381,10 @@ class CourseController extends AbstractController
                         ->from('formation@adconseil.org')
                         ->subject('Convocation de vos apprenant.es à la formation '.$formation->getNomFormation())
                         ->html($htmlClient)
+                        ->cc('formation@adconseil.org,y.chicha@adconseil.org')
                         ->to($cl->getEmail());
                     $mailer->send($contactAdmin);
-                }*/
+                }
 
                 /**** fin send mail to all client ************/
 
